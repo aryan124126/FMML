@@ -1,0 +1,70 @@
+# Freelance agent profile.
+# Edit this file to match your skills and target income. See ../SETUP.md.
+
+keywords:
+  # writing / content / marketing
+  - content writing
+  - copywriting
+  - blog writing
+  - seo content
+  - technical writing
+  - ghostwriting
+  - email marketing
+  - social media content
+  # data / AI
+  - data analysis
+  - data science
+  - data analyst
+  - machine learning
+  - python developer
+  - sql
+  - power bi
+  - tableau
+  - dashboard
+  # finance
+  - financial analysis
+  - financial modeling
+  - equity research
+  - valuation
+  - fp&a
+  - budgeting
+  - forecasting
+  - investment research
+  - business analyst
+  - market research
+
+# Listings containing any of these phrases are dropped even if a keyword matches.
+exclude_keywords:
+  - unpaid
+  - equity only
+  - no pay
+  - commission only
+  - internship (unpaid)
+
+# Your monthly income target, used only to size the "budget_ok" cutoff below.
+target_income_inr_month: [300000, 400000]
+inr_per_usd: 89
+
+# A single project/gig below this is treated as too small to matter (still shown,
+# just scored lower / filtered out) — tune this as you calibrate.
+min_project_usd: 150
+min_hourly_usd: 20
+
+# Which sources to query. "manual" only activates when you pass --manual-file.
+sources_enabled:
+  - remotive
+  - remoteok
+  - weworkremotely
+  - freelancer_com
+  - manual
+
+# WeWorkRemotely publishes one RSS feed per category. Slugs occasionally change —
+# if a feed 404s the source just logs a warning and skips it, verify current
+# slugs at https://weworkremotely.com if that happens.
+wwr_feeds:
+  - https://weworkremotely.com/categories/remote-marketing-jobs.rss
+  - https://weworkremotely.com/categories/remote-management-and-finance-jobs.rss
+  - https://weworkremotely.com/categories/remote-programming-jobs.rss
+  - https://weworkremotely.com/categories/remote-product-jobs.rss
+
+top_n: 25
