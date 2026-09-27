@@ -272,6 +272,7 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
 .meal-kcal{display:flex;flex-direction:column;gap:6px}
 .big-kcal{font-size:44px;font-weight:900;line-height:1}
 .conf{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;font-size:13px}
+body.dropping::after{content:"Drop photos to add them";position:fixed;inset:12px;border:3px dashed var(--ink);border-radius:16px;background:color-mix(in srgb,var(--bg) 80%,transparent);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;z-index:40;pointer-events:none}
 .privacy{background:var(--chip);border-radius:10px;padding:10px 14px;font-size:14px}
 .scan-card{display:flex;flex-direction:column;gap:14px}
 .scan-card h3{font-size:22px;font-weight:900;font-variation-settings:"wdth" 90}
@@ -413,6 +414,7 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
           <input type="file" id="galInput" accept="image/*" multiple hidden>
         </div>
         <ul class="shot-tips" id="scanTips"></ul>
+        <p class="hint" style="margin:0">On a computer you can also paste a screenshot here (Ctrl+V or ⌘V) or drag photos onto the page.</p>
         <div class="shots" id="shots"></div>
         <div class="grid2">
           <label class="field" id="scanDescWrap"><span class="label">What did you order? (optional)</span><input id="scanDesc" maxlength="160" placeholder="e.g. 1 butter chicken, 2 butter naan, 1 coke"></label>
@@ -1288,6 +1290,26 @@ function addShots(files){
   }
   renderScanForm();
 }
+// Paste (Ctrl/Cmd+V or long-press > Paste) and drag-and-drop images into the scanner or lab reports.
+function imagesFrom(list){ return [...(list||[])].map(x=>x.kind==="file" ? x.getAsFile() : x).filter(f=>f && /^image\//.test(f.type)); }
+function routeImages(files){
+  if(!files.length) return false;
+  if(tab==="health"){ addLabShots(files); toast(files.length+" photo"+(files.length===1?"":"s")+" added to the lab report."); return true; }
+  if(tab!=="scan") setTab("scan", false);
+  addShots(files); toast(files.length+" photo"+(files.length===1?"":"s")+" added. Tap “"+SCAN_MODES[scanMode].go+"” when ready.");
+  return true;
+}
+document.addEventListener("paste", ev=>{
+  const files = imagesFrom(ev.clipboardData && ev.clipboardData.items);
+  if(files.length && routeImages(files)) ev.preventDefault();
+});
+document.addEventListener("dragover", ev=>{ if([...(ev.dataTransfer?.types||[])].includes("Files")){ ev.preventDefault(); document.body.classList.add("dropping"); } });
+document.addEventListener("dragleave", ev=>{ if(!ev.relatedTarget) document.body.classList.remove("dropping"); });
+document.addEventListener("drop", ev=>{
+  document.body.classList.remove("dropping");
+  const files = imagesFrom(ev.dataTransfer && ev.dataTransfer.files);
+  if(files.length){ ev.preventDefault(); routeImages(files); }
+});
 $("#camInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
 $("#galInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
 $("#goScan").addEventListener("click", ()=>{ scanMode = "meal"; lsSet("junkfacts.scanmode","meal"); renderScanForm(); setTab("scan", true); });
