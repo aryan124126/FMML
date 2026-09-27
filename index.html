@@ -1255,6 +1255,7 @@ $("#setForm").addEventListener("submit", ev=>{
 const ORGANS = ["Blood","Heart and blood vessels","Brain","Liver","Kidneys","Pancreas","Stomach","Intestines and gut bacteria","Teeth","Body fat and weight"];
 const LEVEL_TEXT = {low:"Low concern", moderate:"Moderate concern", high:"High concern"};
 let sample = null, sampleReady = false, imgLimits = null;
+let photosBlocked = false;
 let shots = [], scanCtl = null, openScanId = null, pendingScanDel = null;
 
 async function connectSample(){
@@ -1285,8 +1286,8 @@ function renderScanForm(){
     el("button",{type:"button","aria-label":"Remove photo "+(i+1),onclick:()=>{ URL.revokeObjectURL(f.url); shots.splice(i,1); renderScanForm(); }},"×"))));
   const descOk = scanMode==="meal" && $("#scanDesc").value.trim().length>2;
   $("#scanGo").disabled = !!scanCtl || !sample || !(shots.length || descOk);
-  $("#scanGo").textContent = scanMode==="meal" && (!imgLimits && sampleReady && sample || (!shots.length && descOk)) ? "Estimate from description" : SCAN_MODES[scanMode].go;
-  const nh = $("#noPhotoNote"); if(nh) nh.hidden = !(sampleReady && sample && !imgLimits);
+  $("#scanGo").textContent = scanMode==="meal" && !shots.length && descOk ? "Estimate from description" : SCAN_MODES[scanMode].go;
+  const nh = $("#noPhotoNote"); if(nh) nh.hidden = !photosBlocked;
 }
 async function toSupported(f){
   // Convert HEIC or other formats the phone can display into JPEG that Claude accepts.
@@ -1425,7 +1426,7 @@ $("#scanGo").addEventListener("click", async ()=>{
   const amount = $("#scanAmount").value.trim(), price = +$("#scanPrice").value || 0, who = me, kind = scanMode, desc = $("#scanDesc").value.trim();
   if(!sample || scanCtl) return;
   if(!shots.length && !(kind==="meal" && desc)) return;
-  if(kind==="label" && !imgLimits){ toast("This app view can't send photos to Claude. Open the link in Chrome or Safari on your phone to scan labels."); $("#phoneHelp").open = true; return; }
+
   scanCtl = new AbortController();
   $("#scanProgress").hidden = false; $("#scanStatus").textContent = SCAN_MODES[kind].status;
   renderScanForm();
@@ -1433,24 +1434,31 @@ $("#scanGo").addEventListener("click", async ()=>{
     const onText = ({text})=>{ $("#scanStatus").textContent = "Writing the report… "+(text.length/1000).toFixed(1)+"k characters so far"; };
     const textOnlyMeal = ()=>{ $("#scanStatus").textContent = "Photos can't be sent from this app, so estimating from your description…";
       return sample.json(mealPrompt(amount, desc, true), {modelTier:"complex", signal:scanCtl.signal, onText}); };
-    let report, fromText = false;
-    if(kind==="meal" && (!shots.length || !imgLimits)){
-      if(!desc){ throw {code:"need_desc"}; }
+    let report, fromText = false, imageError = "";
+    if(!shots.length){
+      if(!(kind==="meal" && desc)) throw {code:"need_desc"};
       report = await textOnlyMeal(); fromText = true;
     } else {
+      // Always try the photos first; only a refusal from the viewer switches to the description.
       try{
         report = await sample.json(kind==="meal" ? mealPrompt(amount, desc) : scanPrompt(amount), {
           images: shots.map(x=>x.file), modelTier: "complex", signal: scanCtl.signal, onText });
       }catch(err){
-        if(err && err.code==="images_unavailable" && kind==="meal" && desc){ imgLimits = null; report = await textOnlyMeal(); fromText = true; }
-        else throw err;
+        const code = err && err.code;
+        if(code==="images_unavailable" || code==="image_rejected"){
+          imageError = code; photosBlocked = code==="images_unavailable";
+          if(kind==="meal" && desc){ report = await textOnlyMeal(); fromText = true; }
+          else throw err;
+        } else throw err;
       }
     }
     if(report && typeof report==="object" && fromText) report.fromText = true;
     if(!report || typeof report!=="object" || Array.isArray(report)) throw {code:"invalid_json"};
     let personal = null;
     if(report.personal && typeof report.personal==="object"){ personal = report.personal; delete report.personal; }
-    const scan = {id:uid(), person:who, t:Date.now(), kind, amount, price, report};
+    const scan = {id:uid(), person:who, t:Date.now(), kind, amount, price, report,
+      photos: fromText ? 0 : shots.length,
+      diag: {limitsImages: !!imgLimits, imageError, ua: String(navigator.userAgent||"").slice(0,160)}};
     saveScan(scan);
     if(personal) saveScanNote(scan.id, {personal});
     for(const x of shots) URL.revokeObjectURL(x.url);
@@ -1462,7 +1470,7 @@ $("#scanGo").addEventListener("click", async ()=>{
     else if(c==="not_granted" || c==="sampling_disabled") toast("Claude wasn't allowed for this page, so the label can't be analyzed.");
     else if(c==="rate_limited") toast("Claude is busy or your usage limit is reached. Try again in a little while.");
     else if(c==="image_rejected") toast("One of the photos couldn't be read. Retake it as a JPEG or PNG.");
-    else if(c==="images_unavailable"){ imgLimits = null; renderScanForm(); toast(kind==="meal" ? "This app can't send photos to Claude. Type what you ordered in \u201cWhat did you order?\u201d and tap again to estimate from the description, or open the link in Chrome." : "This app can't send photos to Claude. Open the link in Chrome or Safari on your phone to scan labels."); $("#phoneHelp").open = true; }
+    else if(c==="images_unavailable"){ photosBlocked = true; renderScanForm(); toast(kind==="meal" ? "This app can't send photos to Claude. Type what you ordered in \u201cWhat did you order?\u201d and tap again to estimate from the description, or open the link in Chrome." : "This app can't send photos to Claude. Open the link in Chrome or Safari on your phone to scan labels."); $("#phoneHelp").open = true; }
     else if(c==="need_desc") toast("Photos can't be sent from this app. Type what you ordered, e.g. \u201cChicken loaded fries, large\u201d, then tap again.");
     else if(c==="refused") toast("Claude couldn't analyze these photos. Try clearer photos of just the label.");
     else if(c==="invalid_json") toast("The report came back incomplete. Tap Analyze label to try again.");
@@ -1520,6 +1528,7 @@ function renderReport(scan){
       arr(r.flags).length ? el("div",{class:"flags"}, arr(r.flags).slice(0,10).map(f=>el("span",{class:"flag"},str(f)))) : null),
     el("div",{class:"score"}, el("span",{class:"label"},"Health score"), el("b",{class:"num",style:"color:"+scoreColor(score)}, score),
       el("span",{class:"hint"},"out of 10"), el("div",{class:"track"}, el("span",{style:`width:${score*10}%;background:${scoreColor(score)}`})))));
+  if(scan.photos) wrap.append(el("p",{class:"privacy",style:"margin:0"},"Read from your "+(scan.photos===1?"photo":scan.photos+" photos")+"."));
   if(str(read.issues)) wrap.append(el("p",{class:"hint",style:"margin:0"},"Note on the photos: "+str(read.issues)));
 
   const note = health.scanNotes[scan.id], pers = note && note.personal;
@@ -1940,6 +1949,7 @@ function sampleError(e, tail){
   if(c==="not_granted" || c==="sampling_disabled") toast("Claude wasn't allowed for this page.");
   else if(c==="rate_limited") toast("Claude is busy or your usage limit is reached. Try again later.");
   else if(c==="image_rejected") toast("A photo couldn't be read. Use JPEG or PNG.");
+  else if(c==="images_unavailable") toast("This viewer can't send photos to Claude. Open the link in Chrome, Edge or Safari instead of the Claude app, or type the values in.");
   else toast("Something went wrong. "+(tail||"Try again."));
 }
 
@@ -2455,7 +2465,8 @@ function personalSection(scan){
 function renderMeal(scan){
   const r = scan.report || {}, meal = r.meal || {}, ver = r.verdict || {}, read = r.readability || {};
   const wrap = el("article",{class:"report","aria-label":"Meal estimate"});
-  if(r.fromText) wrap.append(el("p",{class:"privacy",style:"margin:0"},"Estimated from your description only, without the photo. A photo in Chrome or Safari gives a closer estimate."));
+  if(r.fromText) wrap.append(el("p",{class:"privacy",style:"margin:0"},"Estimated from your description only. "+(scan.diag && scan.diag.imageError ? "This viewer refused to send the photo to Claude. Open the link in Chrome, Edge or Safari (not the Claude app) for a photo-based estimate." : "No photo was added.")));
+  else if(scan.photos) wrap.append(el("p",{class:"privacy",style:"margin:0"},"Analyzed from your "+(scan.photos===1?"photo":scan.photos+" photos")+(scan.report && scan.amount ? " and your notes" : "")+"."));
   if(read.ok===false){
     wrap.append(el("div",{class:"card"}, el("h3",{},"Couldn't see the food"), el("p",{}, str(read.issues) || "Take the photo from above with the whole plate or box in frame.")));
     return wrap;
