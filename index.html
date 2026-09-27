@@ -210,11 +210,52 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
 .favs .f{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
 .ref{font-size:13px;color:var(--muted);margin:0;padding-left:18px}
 
+.scan-card{display:flex;flex-direction:column;gap:14px}
+.scan-card h3{font-size:22px;font-weight:900;font-variation-settings:"wdth" 90}
+.shots{display:flex;gap:8px;flex-wrap:wrap}
+.shot{position:relative;width:84px;height:84px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--chip)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+.shot button{position:absolute;top:4px;right:4px;border:0;border-radius:999px;width:24px;height:24px;background:var(--ink);color:var(--surface);font-weight:800;line-height:1;padding:0}
+.shot-tips{margin:0;padding-left:18px;font-size:13px;color:var(--muted)}
+.progress{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--chip);border-radius:10px;padding:12px 14px}
+.progress .bar{flex:1 1 160px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.progress .bar span{display:block;height:100%;width:30%;background:var(--ink);border-radius:3px;animation:slide 1.4s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(340%)}}
+@media (prefers-reduced-motion:reduce){.progress .bar span{animation:none;width:100%;opacity:.4}}
+#reportBox{scroll-margin-top:calc(56px + env(safe-area-inset-top,0px))}
+.report{display:flex;flex-direction:column;gap:22px}
+.rep-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;border:2px solid var(--ink);background:var(--surface);padding:14px}
+.rep-head h3{font-size:28px;font-weight:900;font-variation-settings:"wdth" 80;line-height:1.1}
+.score{text-align:center;min-width:92px}
+.score b{display:block;font-size:44px;font-weight:900;line-height:1}
+.score .track{height:8px;border-radius:4px;background:var(--chip);margin-top:6px;overflow:hidden}
+.score .track span{display:block;height:100%;border-radius:4px}
+.flags{display:flex;flex-wrap:wrap;gap:6px}
+.flag{font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--chip)}
+.rep-sec{display:flex;flex-direction:column;gap:10px}
+.rep-sec>h4{font-size:19px;font-weight:800;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.rep-sec p{margin:0;max-width:72ch}
+.organs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.organ{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.organ .t{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.organ .t b{font-size:16px}
+.organ .pill{margin-left:0}
+.organ dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:14px}
+.organ dt{font-weight:700;color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+.organ dd{margin:0}
+.risk{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.risk b{font-size:15px}
+.risk .meta{font-size:12px;color:var(--muted);text-align:right}
+.risk p{grid-column:1/-1;font-size:14px}
+.rep-note{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin:0}
+.scan-list .s{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.scan-list .s .sc{font-weight:900;font-size:20px;width:2.2em;text-align:center}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 12px 10px 16px;border-radius:8px;font-weight:700;font-size:14px;width:max-content;max-width:min(460px,calc(100% - 32px));display:flex;gap:12px;align-items:center;z-index:10}
 .toast button{border:1px solid var(--surface);background:transparent;color:var(--surface);border-radius:6px;padding:3px 10px;font-weight:800}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 @media (max-width:480px){
   .brand h1{font-size:32px}.panel h2{font-size:28px}
+  nav.tabs button{padding-inline:6px;font-size:13px}
   .vs{grid-template-columns:1fr 1fr}.vs .mid{grid-column:1/-1;grid-row:2;max-width:none}
 }
 </style>
@@ -237,6 +278,7 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
 
   <nav class="tabs" id="tabs" role="tablist" aria-label="Sections">
     <button type="button" role="tab" data-tab="today">Today</button>
+    <button type="button" role="tab" data-tab="scan">Scan</button>
     <button type="button" role="tab" data-tab="trends">Trends</button>
     <button type="button" role="tab" data-tab="patterns">Patterns</button>
     <button type="button" role="tab" data-tab="history">History</button>
@@ -253,6 +295,7 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
         <h3>Log something</h3>
         <span class="hint" id="logHint"></span>
       </div>
+      <button type="button" class="btn ghost" id="goScan" style="align-self:flex-start">Scan a packet label for a full health report</button>
       <div class="quick" id="quick"></div>
       <form class="sheet" id="sheet" hidden>
         <h4 id="sheetTitle">Log</h4>
@@ -286,6 +329,46 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
     <section>
       <div class="sec-head"><h3>Logged today</h3><span class="hint" id="todayTotals"></span></div>
       <div class="hist" id="todayList"></div>
+    </section>
+  </div>
+
+  <!-- SCAN -->
+  <div class="tab" id="tab-scan" role="tabpanel" hidden>
+    <div class="card scan-card" id="scanCard">
+      <h3>Scan a packet label</h3>
+      <p class="hint" style="margin:0" id="scanIntro">Photograph the ingredients list and the nutrition information on the pack. Claude reads them and explains what's in it and how it affects each part of your body. It also covers the diseases it's linked to and any cancer risk.</p>
+      <div id="scanUnavailable" class="empty" hidden></div>
+      <div id="scanForm" class="scan-card" hidden>
+        <div class="actions">
+          <label class="btn" for="camInput">Take photo</label>
+          <label class="btn ghost" for="galInput">Choose from gallery</label>
+          <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
+          <input type="file" id="galInput" accept="image/*" multiple hidden>
+        </div>
+        <ul class="shot-tips">
+          <li>Take separate photos of the <b>ingredients</b> and the <b>nutrition table</b>. Add the front of the pack if you like.</li>
+          <li>Hold the phone flat, fill the frame with the text, and avoid glare.</li>
+        </ul>
+        <div class="shots" id="shots"></div>
+        <div class="grid2">
+          <label class="field"><span class="label">How much did you eat?</span><input id="scanAmount" maxlength="80" placeholder="e.g. the whole 52 g packet"></label>
+          <label class="field"><span class="label" id="scanPriceLabel">Price paid (optional)</span><input id="scanPrice" type="number" min="0" step="any" inputmode="decimal"></label>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="scanGo" disabled>Analyze label</button>
+          <span class="hint" id="scanWho"></span>
+        </div>
+      </div>
+      <div class="progress" id="scanProgress" hidden>
+        <span id="scanStatus">Reading the label…</span>
+        <span class="bar"><span></span></span>
+        <button type="button" class="btn ghost small" id="scanStop">Stop</button>
+      </div>
+    </div>
+    <div id="reportBox"></div>
+    <section>
+      <div class="sec-head"><h3>Past scans</h3><span class="hint">Tap one to read its report again</span></div>
+      <div class="scan-list" id="scanList"></div>
     </section>
   </div>
 
@@ -442,6 +525,7 @@ const BLOCKS = [
   {n:"Late night",s:0,  e:5,  r:"12–5am"}
 ];
 const PIDS = ["p1","p2"];
+const TABS = ["today","scan","trends","patterns","history","settings"];
 const WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const WD_MON = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 
@@ -471,7 +555,7 @@ function normSettings(s){
   return out;
 }
 
-let state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}};
+let state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}, scans:[]};
 let mode = "local", db = null;
 let me = lsGet(ME_KEY) === "p2" ? "p2" : "p1";
 let tab = "today";
@@ -484,7 +568,7 @@ function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 function loadLocal(){
   try{
     const raw = JSON.parse(lsGet(LS_KEY) || "null");
-    if(raw) state = {settings:normSettings(raw.settings), days:raw.days && typeof raw.days==="object" ? raw.days : {}, weights:normWeights(raw.weights)};
+    if(raw) state = {settings:normSettings(raw.settings), days:raw.days && typeof raw.days==="object" ? raw.days : {}, weights:normWeights(raw.weights), scans:Array.isArray(raw.scans) ? raw.scans : []};
   }catch(e){}
 }
 function normWeights(w){
@@ -633,7 +717,7 @@ function renderWho(){
 function setTab(t, scroll){
   tab = t; lsSet(TAB_KEY,t);
   for(const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", String(b.dataset.tab===t));
-  for(const id of ["today","trends","patterns","history","settings"]) $("#tab-"+id).hidden = id!==t;
+  for(const id of TABS) $("#tab-"+id).hidden = id!==t;
   if(scroll) $("#tabs").scrollIntoView({block:"start"});
 }
 for(const b of document.querySelectorAll("#tabs button")) b.addEventListener("click", ()=>setTab(b.dataset.tab, false));
@@ -1076,11 +1160,263 @@ $("#setForm").addEventListener("submit", ev=>{
   renderSettingsForm(true); toast("Settings saved.");
 });
 
+/* ---------- SCAN: packet label → health report ---------- */
+const ORGANS = ["Blood","Heart and blood vessels","Brain","Liver","Kidneys","Pancreas","Stomach","Intestines and gut bacteria","Teeth","Body fat and weight"];
+const LEVEL_TEXT = {low:"Low concern", moderate:"Moderate concern", high:"High concern"};
+let sample = null, sampleReady = false, imgLimits = null;
+let shots = [], scanCtl = null, openScanId = null, pendingScanDel = null;
+
+async function connectSample(){
+  if(!window.claude || typeof window.claude.use!=="function"){ sampleReady = true; renderScanForm(); return; }
+  try{ sample = await window.claude.use("sample"); }catch(e){ sample = null; }
+  if(sample){ try{ imgLimits = (await sample.limits()).images || null; }catch(e){ imgLimits = null; } }
+  sampleReady = true; renderScanForm();
+}
+function scanUnavailableMsg(){
+  if(!window.claude) return "Label scanning needs Claude, so it only works in the shared Junk Facts page on claude.ai. This copy can't reach Claude.";
+  if(!sample) return "Claude isn't available to this page right now. Reload the page, or check that your account can use Claude.";
+  if(!imgLimits) return "This view can't send photos to Claude. Open the page in the Claude app or on claude.ai in a browser.";
+  return "";
+}
+function renderScanForm(){
+  const msg = sampleReady ? scanUnavailableMsg() : "";
+  $("#scanUnavailable").hidden = !msg; $("#scanUnavailable").textContent = msg;
+  $("#scanForm").hidden = !sampleReady || !!msg;
+  if(!sampleReady){ $("#scanUnavailable").hidden = false; $("#scanUnavailable").textContent = "Connecting to Claude…"; }
+  if(imgLimits){
+    const acc = imgLimits.mediaTypes.join(",");
+    $("#camInput").accept = acc; $("#galInput").accept = acc;
+  }
+  $("#scanPriceLabel").textContent = "Price paid ("+state.settings.currency+", optional)";
+  $("#scanWho").textContent = "The report and log go to "+person(me).name+".";
+  const box = $("#shots"); box.replaceChildren();
+  shots.forEach((f,i)=>box.append(el("div",{class:"shot"}, el("img",{src:f.url,alt:"Label photo "+(i+1)}),
+    el("button",{type:"button","aria-label":"Remove photo "+(i+1),onclick:()=>{ URL.revokeObjectURL(f.url); shots.splice(i,1); renderScanForm(); }},"×"))));
+  $("#scanGo").disabled = !shots.length || !!scanCtl;
+}
+function addShots(files){
+  const max = imgLimits ? imgLimits.maxCount : 4, maxBytes = imgLimits ? imgLimits.maxInputBytes : 20e6;
+  for(const f of files){
+    if(shots.length>=max){ toast("You can send up to "+max+" photos per scan."); break; }
+    if(imgLimits && !imgLimits.mediaTypes.includes(f.type)){ toast("That file type isn't supported. Use a JPEG or PNG photo."); continue; }
+    if(f.size>maxBytes){ toast("That photo is too large. Try a smaller one."); continue; }
+    shots.push({file:f, url:URL.createObjectURL(f)});
+  }
+  renderScanForm();
+}
+$("#camInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
+$("#galInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
+$("#goScan").addEventListener("click", ()=>setTab("scan", true));
+$("#scanStop").addEventListener("click", ()=>{ if(scanCtl) scanCtl.abort(); });
+
+function scanPrompt(amount){
+  const p = person(me), today = countOf(me, todayKey());
+  return `You are a careful nutrition and toxicology explainer. The attached photo(s) show a packaged food, most likely bought in India: its ingredients list, its nutrition information table, and possibly the front of the pack. Read every photo carefully.
+
+Who is eating it: ${p.name}, who is tracking junk food together with ${person(me==="p1"?"p2":"p1").name} (they are siblings) because their junk eating has started to affect their health. They have already logged ${today} junk item(s) today against a daily limit of ${p.limit}.
+How much they ate: ${amount ? JSON.stringify(amount) : "not stated, so assume one serving as printed on the pack"}.
+
+Write a detailed, evidence-based report about THIS product. Refer to its actual ingredients, additives (with INS/E numbers) and label values, not generic junk-food advice. Be honest and calibrated:
+- For every effect, separate eating it once from eating it often (for example most days for years).
+- Do not exaggerate. Say plainly when evidence is limited, when a risk depends on dose, or when the amount in one pack is far below a level of concern.
+- For cancer risk, name each substance, where it comes from in this product (a listed additive, processed meat, refined oil, acrylamide from frying or baking starchy food at high heat, and so on), its IARC group (1, 2A, 2B or 3, or "Not classified"), and whether the label actually confirms it is present. If nothing on the label points to a meaningful carcinogen, say so.
+- If part of the label is unreadable or cut off, say what is missing and do not invent numbers. Use null for any number you cannot read.
+- Use Indian context where it helps (FSSAI rules, INS numbers, Indian daily habits) and suggest Indian alternatives that are easy to find.
+- If the photos are not a food label, set readability.ok to false, explain in readability.issues, and leave the other lists empty.
+
+Reply with only one JSON object in exactly this shape. Keep every text field to 1-3 plain sentences with no markdown. "level" is always "low", "moderate" or "high".
+{
+  "readability": {"ok": true, "issues": "what was hard to read, or an empty string"},
+  "product": {"name": "", "brand": "", "type": "one of: Fried, Sugary, Fast food, Packaged snack, Sugary drink, Street food", "mrp": null},
+  "verdict": {"score": 3, "label": "a 2-4 word verdict, e.g. Occasional treat only", "summary": "what this food is, in plain words, and the main problem with it"},
+  "flags": ["short label warnings, e.g. High sodium, Palm oil, Added MSG, Refined flour"],
+  "nutrition": {"servingSize": "e.g. 30 g", "servingsPerPack": null, "perServing": {"kcal": null, "fat_g": null, "satFat_g": null, "transFat_g": null, "carbs_g": null, "sugar_g": null, "addedSugar_g": null, "fiber_g": null, "protein_g": null, "sodium_mg": null}},
+  "portion": {"description": "what they ate", "kcal": null, "fat_g": null, "sugar_g": null, "sodium_mg": null, "share": "how much of a day's maximum this portion uses (2000 kcal, 70 g fat, 50 g sugar, 2000 mg sodium), in one sentence"},
+  "ingredients": [{"name": "", "plain": "what it is, in plain words", "level": "low", "note": "why it matters, or an empty string"}],
+  "additives": [{"code": "INS 621", "name": "", "purpose": "", "level": "low", "note": ""}],
+  "organs": [{"organ": "Blood", "once": "effect of this portion", "often": "effect of eating it often", "level": "low"}],
+  "diseases": [{"name": "", "how": "how this product's ingredients contribute", "evidence": "strong, moderate or limited", "level": "moderate"}],
+  "carcinogens": [{"substance": "", "source": "where it comes from in this product", "iarc": "Group 1, 2A, 2B, 3 or Not classified", "onLabel": false, "note": "", "level": "low"}],
+  "cancerSummary": "overall cancer-risk picture for this product, eaten once and eaten often",
+  "swaps": [{"name": "", "why": ""}],
+  "bottomLine": "what ${p.name} should actually do about this food"
+}
+Rules for the lists: "organs" must have exactly these ${ORGANS.length} entries in this order: ${ORGANS.join(", ")}. "ingredients" covers up to 20 ingredients in label order. "additives" lists every additive you can see (up to 12). "diseases" has 4-8 entries, most relevant first. "carcinogens" has 0-6 entries. "swaps" has 3-5 entries. "verdict.score" is 1-10, where 10 is very healthy and 1 is the worst kind of junk.`;
+}
+
+$("#scanGo").addEventListener("click", async ()=>{
+  if(!sample || !shots.length || scanCtl) return;
+  const amount = $("#scanAmount").value.trim(), price = +$("#scanPrice").value || 0, who = me;
+  scanCtl = new AbortController();
+  $("#scanProgress").hidden = false; $("#scanStatus").textContent = "Reading the label. A full report takes about a minute…";
+  renderScanForm();
+  try{
+    const report = await sample.json(scanPrompt(amount), {
+      images: shots.map(x=>x.file), modelTier: "complex", signal: scanCtl.signal,
+      onText: ({text})=>{ $("#scanStatus").textContent = "Writing the report… "+(text.length/1000).toFixed(1)+"k characters so far"; }
+    });
+    if(!report || typeof report!=="object" || Array.isArray(report)) throw {code:"invalid_json"};
+    const scan = {id:uid(), person:who, t:Date.now(), amount, price, report};
+    saveScan(scan);
+    for(const x of shots) URL.revokeObjectURL(x.url);
+    shots = []; $("#scanAmount").value = ""; $("#scanPrice").value = "";
+    showScan(scan);
+  }catch(e){
+    const c = e && e.code;
+    if(c==="cancelled") toast("Scan stopped.");
+    else if(c==="not_granted" || c==="sampling_disabled") toast("Claude wasn't allowed for this page, so the label can't be analyzed.");
+    else if(c==="rate_limited") toast("Claude is busy or your usage limit is reached. Try again in a little while.");
+    else if(c==="image_rejected") toast("One of the photos couldn't be read. Retake it as a JPEG or PNG.");
+    else if(c==="refused") toast("Claude couldn't analyze these photos. Try clearer photos of just the label.");
+    else if(c==="invalid_json") toast("The report came back incomplete. Tap Analyze label to try again.");
+    else if(c==="session_expired") toast("You've been signed out. Sign in again, then retry.");
+    else toast("Something went wrong while analyzing. Tap Analyze label to try again.");
+  }finally{
+    scanCtl = null; $("#scanProgress").hidden = true; renderScanForm();
+  }
+});
+
+function saveScan(scan){
+  if(mode==="local"){
+    state.scans = [scan, ...state.scans.filter(x=>x.id!==scan.id)].slice(0,30); saveLocal(); renderScanList(); return;
+  }
+  state.scans = [scan, ...state.scans.filter(x=>x.id!==scan.id)]; renderScanList();
+  const body = Object.assign({}, scan); delete body.id;
+  queue("scans/"+scan.id, ()=>db.doc("scans/"+scan.id).set(body));
+}
+function deleteScan(id){
+  state.scans = state.scans.filter(x=>x.id!==id);
+  if(openScanId===id){ openScanId = null; $("#reportBox").replaceChildren(); }
+  if(mode==="local"){ saveLocal(); renderScanList(); return; }
+  renderScanList();
+  queue("scans/"+id, ()=>db.doc("scans/"+id).delete());
+}
+
+const str = v => typeof v==="string" ? v : v==null ? "" : String(v);
+const arr = v => Array.isArray(v) ? v : [];
+const numOrNull = v => typeof v==="number" && isFinite(v) ? v : null;
+function lvl(v){ v = str(v).toLowerCase(); return v==="high" ? "high" : v==="moderate" ? "moderate" : "low"; }
+function lvlPill(v){ const l = lvl(v); return el("span",{class:"pill "+(l==="high"?"bad":l==="moderate"?"warn":"ok")}, LEVEL_TEXT[l]); }
+function scoreColor(n){ return n<=3 ? "var(--bad)" : n<=6 ? "var(--warn)" : "var(--ok)"; }
+
+function showScan(scan){
+  openScanId = scan.id;
+  const box = $("#reportBox"); box.replaceChildren(renderReport(scan));
+  box.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+}
+function renderReport(scan){
+  const r = scan.report || {}, prod = r.product || {}, ver = r.verdict || {}, read = r.readability || {};
+  const wrap = el("article",{class:"report","aria-label":"Label report"});
+  const name = str(prod.name) || "This product";
+  if(read.ok===false){
+    wrap.append(el("div",{class:"card"}, el("h3",{},"Couldn't read the label"), el("p",{}, str(read.issues) || "The photos don't show a readable food label. Retake them closer, flat and without glare.")));
+    return wrap;
+  }
+  const score = Math.max(1, Math.min(10, Math.round(+ver.score || 1)));
+  wrap.append(el("div",{class:"rep-head"},
+    el("div",{style:"display:flex;flex-direction:column;gap:8px"},
+      el("span",{class:"label"}, (str(prod.brand) ? str(prod.brand)+" · " : "")+(str(prod.type)||"Packaged food")+" · scanned by "+(person(scan.person)||{name:"?"}).name+", "+dayLabel(dkey(new Date(scan.t)))+" "+timeLabel(scan.t)),
+      el("h3",{}, name),
+      el("b",{style:"font-size:17px"}, str(ver.label)),
+      el("p",{style:"margin:0"}, str(ver.summary)),
+      arr(r.flags).length ? el("div",{class:"flags"}, arr(r.flags).slice(0,10).map(f=>el("span",{class:"flag"},str(f)))) : null),
+    el("div",{class:"score"}, el("span",{class:"label"},"Health score"), el("b",{class:"num",style:"color:"+scoreColor(score)}, score),
+      el("span",{class:"hint"},"out of 10"), el("div",{class:"track"}, el("span",{style:`width:${score*10}%;background:${scoreColor(score)}`})))));
+  if(str(read.issues)) wrap.append(el("p",{class:"hint",style:"margin:0"},"Note on the photos: "+str(read.issues)));
+
+  // nutrition + portion
+  const ns = (r.nutrition||{}).perServing || {}, po = r.portion || {};
+  const nrow = (label,key,unit,ind)=>{ const v = numOrNull(ns[key]); return el("tr",{}, el("td",{style:ind?"padding-left:24px":""},label), el("td",{}, v==null ? "–" : fmt(v,unit))); };
+  const acts = el("div",{class:"actions"},
+    el("button",{type:"button",class:"btn",onclick:()=>logFromScan(scan)},"Log this for "+person(me).name),
+    el("button",{type:"button",class:"btn ghost",onclick:()=>{ $("#reportBox").replaceChildren(); openScanId = null; }},"Close report"));
+  wrap.append(el("div",{class:"cards"},
+    el("div",{class:"card rep-sec"}, el("h4",{},"Nutrition per serving"+(str((r.nutrition||{}).servingSize)?" ("+str(r.nutrition.servingSize)+")":"")),
+      el("div",{class:"table-wrap"}, el("table",{}, el("tbody",{},
+        nrow("Energy","kcal"," kcal"), nrow("Total fat","fat_g"," g"), nrow("Saturated fat","satFat_g"," g",1), nrow("Trans fat","transFat_g"," g",1),
+        nrow("Carbohydrate","carbs_g"," g"), nrow("Sugar","sugar_g"," g",1), nrow("Added sugar","addedSugar_g"," g",1), nrow("Fibre","fiber_g"," g",1),
+        nrow("Protein","protein_g"," g"), nrow("Sodium","sodium_mg"," mg"))))),
+    el("div",{class:"card rep-sec"}, el("h4",{},"What you ate"),
+      el("p",{}, str(po.description) || str(scan.amount) || "One serving"),
+      el("div",{class:"table-wrap"}, el("table",{}, el("tbody",{},
+        [["Energy","kcal"," kcal","kcal"],["Fat","fat_g"," g","fat"],["Sugar","sugar_g"," g","sugar"],["Sodium","sodium_mg"," mg","sodium"]].map(([l,k,u,d])=>{
+          const v = numOrNull(po[k]); return el("tr",{}, el("td",{},l), el("td",{}, v==null?"–":fmt(v,u)), el("td",{class:v!=null&&pct(v,DAILY[d])>=50?"bad":""}, v==null?"":pct(v,DAILY[d])+"% of daily max"));
+        })))),
+      str(po.share) ? el("p",{class:"hint"}, str(po.share)) : null,
+      acts)));
+
+  // organs
+  const organs = arr(r.organs);
+  if(organs.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"How it affects your body"),
+    el("p",{class:"hint"},"\"Once\" is this portion. \"Often\" means eating it most days over months or years."),
+    el("div",{class:"organs"}, organs.map(o=>el("div",{class:"organ"},
+      el("div",{class:"t"}, el("b",{}, str(o.organ)), lvlPill(o.level)),
+      el("dl",{}, el("dt",{},"Once"), el("dd",{}, str(o.once)), el("dt",{},"Often"), el("dd",{}, str(o.often))))))));
+
+  // diseases
+  const dis = arr(r.diseases);
+  if(dis.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Diseases it can lead to"),
+    el("div",{}, dis.map(d=>el("div",{class:"risk"},
+      el("b",{}, str(d.name)), el("span",{class:"meta"}, lvlPill(d.level), el("br"), "Evidence: "+(str(d.evidence)||"not stated")),
+      el("p",{style:"margin:0"}, str(d.how)))))));
+
+  // carcinogens
+  const car = arr(r.carcinogens);
+  wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Cancer risk"),
+    el("p",{}, str(r.cancerSummary) || "No cancer-risk summary was returned."),
+    car.length ? el("div",{}, car.map(c=>el("div",{class:"risk"},
+      el("b",{}, str(c.substance)), el("span",{class:"meta"}, lvlPill(c.level), el("br"), "IARC: "+(str(c.iarc)||"not stated")),
+      el("p",{style:"margin:0"}, str(c.source)+(c.onLabel===true?" Listed on the label.":c.onLabel===false?" Not confirmed by the label.":"")+(str(c.note)?" "+str(c.note):""))))) : null,
+    el("p",{class:"rep-note"},"IARC groups describe how certain it is that something can cause cancer, not how strong the effect is. Group 1: known to cause cancer in humans. 2A: probably. 2B: possibly. 3: not classifiable. The dose and how often you eat it matter a lot.")));
+
+  // ingredients + additives
+  const ing = arr(r.ingredients), add = arr(r.additives);
+  if(ing.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Ingredients, one by one"),
+    el("div",{}, ing.map(i=>el("div",{class:"risk"}, el("b",{}, str(i.name)), el("span",{class:"meta"}, lvlPill(i.level)),
+      el("p",{style:"margin:0"}, str(i.plain)+(str(i.note)?" "+str(i.note):"")))))));
+  if(add.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Additives"),
+    el("div",{}, add.map(a=>el("div",{class:"risk"}, el("b",{}, [str(a.code),str(a.name)].filter(Boolean).join(" · ")), el("span",{class:"meta"}, lvlPill(a.level)),
+      el("p",{style:"margin:0"}, (str(a.purpose)?"Used as: "+str(a.purpose)+". ":"")+str(a.note)))))));
+
+  // swaps + bottom line
+  const sw = arr(r.swaps);
+  if(sw.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Better swaps"),
+    el("div",{}, sw.map(x=>el("div",{class:"risk"}, el("b",{}, str(x.name)), el("span",{}), el("p",{style:"margin:0"}, str(x.why)))))));
+  if(str(r.bottomLine)) wrap.append(el("div",{class:"panel"}, el("span",{class:"label"},"Bottom line"), el("p",{style:"margin:6px 0 0;font-size:17px;font-weight:600"}, str(r.bottomLine))));
+  wrap.append(el("p",{class:"rep-note"},"Written by Claude from your photos. It can misread a label or get things wrong, so check anything important on the pack itself. It's general information, not medical advice. If you have symptoms or an existing condition, talk to a doctor."));
+  return wrap;
+}
+
+function logFromScan(scan){
+  const r = scan.report || {}, prod = r.product || {}, po = r.portion || {}, ns = (r.nutrition||{}).perServing || {};
+  const pick = (a,b)=> numOrNull(a)!=null ? a : numOrNull(b)!=null ? b : 0;
+  openSheet({item:(str(prod.name)||"Packaged snack").slice(0,40), cat:CATS.includes(prod.type)?prod.type:"Packaged snack", qty:1,
+    kcal:Math.round(pick(po.kcal,ns.kcal)), fat:pick(po.fat_g,ns.fat_g), sugar:pick(po.sugar_g,ns.sugar_g), sodium:Math.round(pick(po.sodium_mg,ns.sodium_mg)),
+    cost:scan.price || numOrNull(prod.mrp) || 0, note:"From label scan"+(scan.amount?": "+scan.amount:"")});
+}
+
+function renderScanList(){
+  const box = $("#scanList"); if(!box) return; box.replaceChildren();
+  if(!state.scans.length){ box.append(el("div",{class:"empty"},"No scans yet. Your reports are saved here so you can read them again.")); return; }
+  for(const sc of state.scans){
+    const r = sc.report || {}, score = Math.max(1,Math.min(10,Math.round(+((r.verdict||{}).score)||1))), ok = (r.readability||{}).ok!==false;
+    box.append(el("div",{class:"s"},
+      el("span",{class:"sc num",style:"color:"+(ok?scoreColor(score):"var(--muted)")}, ok?score:"?"),
+      el("button",{type:"button",style:"border:0;background:none;text-align:left;padding:0",onclick:()=>showScan(sc)},
+        el("b",{style:"display:block"}, str((r.product||{}).name) || (ok?"Packaged food":"Unreadable label")),
+        el("span",{class:"hint"}, (PIDS.includes(sc.person)?person(sc.person).name:"?")+" · "+dayLabel(dkey(new Date(sc.t)))+" "+timeLabel(sc.t)+(str((r.verdict||{}).label)?" · "+str(r.verdict.label):""))),
+      el("button",{type:"button",class:"btn ghost small"+(pendingScanDel===sc.id?" confirm":""),style:pendingScanDel===sc.id?"border-color:var(--bad);color:var(--bad)":"",onclick:()=>{
+        if(pendingScanDel===sc.id){ pendingScanDel = null; deleteScan(sc.id); toast("Scan deleted."); }
+        else { pendingScanDel = sc.id; renderScanList(); setTimeout(()=>{ if(pendingScanDel===sc.id){ pendingScanDel = null; renderScanList(); } },4000); }
+      }}, pendingScanDel===sc.id?"Confirm delete":"Delete")));
+  }
+}
+
 /* ---------- render ---------- */
 function render(){
   renderWho(); renderVs(); renderFacts(); renderQuick(); renderToday();
   renderChart(); renderCalendars(); renderWeekly(); renderWeights();
-  renderPatterns(); renderHistory(); renderSettingsForm(false);
+  renderPatterns(); renderHistory(); renderSettingsForm(false); renderScanForm(); renderScanList();
   $("#sync").classList.toggle("on", mode==="db");
   $("#syncText").textContent = mode==="db" ? "Synced between both of you" : "Saved on this device";
 }
@@ -1104,7 +1440,7 @@ $("#importFile").addEventListener("change", async ev=>{
   try{
     const raw = JSON.parse(await f.text());
     if(!raw || typeof raw.days!=="object") throw new Error();
-    state = {settings:normSettings(raw.settings), days:raw.days, weights:normWeights(raw.weights)};
+    state = {settings:normSettings(raw.settings), days:raw.days, weights:normWeights(raw.weights), scans:Array.isArray(raw.scans) ? raw.scans : []};
     saveLocal(); render(); toast("Backup imported.");
   }catch(e){ toast("That file isn't a Junk Facts backup."); }
   ev.target.value = "";
@@ -1116,7 +1452,7 @@ async function connect(){
   let d = null;
   try{ d = await window.claude.use("db"); }catch(e){ d = null; }
   if(!d) return true;
-  db = d; mode = "db"; state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}}; render();
+  db = d; mode = "db"; state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}, scans:[]}; render();
   const onErr = err=>{ if(err && err.code!=="revoked") toast("Lost the live connection. Reload the page to reconnect."); };
   db.doc("settings/main").onSnapshot(snap=>{ state.settings = normSettings(snap.exists ? snap.data() : null); render(); }, onErr);
   db.collection("days").where("date",">=",dkey(addDays(new Date(),-180))).limit(1000).onSnapshot(q=>{
@@ -1127,13 +1463,17 @@ async function connect(){
     const w = {p1:[],p2:[]}; for(const doc of q.docs) if(PIDS.includes(doc.id)) w[doc.id] = (doc.data().entries)||[];
     state.weights = normWeights(w); render();
   }, onErr);
+  db.collection("scans").orderBy("t","desc").limit(60).onSnapshot(q=>{
+    state.scans = q.docs.map(doc=>Object.assign({id:doc.id}, doc.data())); renderScanList();
+  }, onErr);
   return true;
 }
 loadLocal();
 const hashTab = (location.hash||"").slice(1), savedTab = lsGet(TAB_KEY);
-setTab(["today","trends","patterns","history","settings"].includes(hashTab) ? hashTab : ["today","trends","patterns","history","settings"].includes(savedTab) ? savedTab : "today", false);
+setTab(TABS.includes(hashTab) ? hashTab : TABS.includes(savedTab) ? savedTab : "today", false);
 render();
 connect().then(inArtifact=>{ if(!inArtifact) $("#backupCard").hidden = false; });
+connectSample();
 // Re-render when the day rolls over.
 let lastDay = todayKey();
 setInterval(()=>{ const k = todayKey(); if(k!==lastDay){ lastDay = k; selDay = null; calMonth = null; render(); } }, 60000);

@@ -14,6 +14,17 @@ Shevi and Rupesh's junk-food tracker. It's one self-contained page, `index.html`
 - **Logging:** tap an item (17 common Indian junk foods), your own saved quick items, or *Repeat* to log your last item again in one tap. You can change amount, time, nutrition and cost. You can also tag **where** you were and **why** you ate it. Every log has an **Undo**.
 - **Logged today:** both of your entries, with edit and delete.
 
+### Scan
+Photograph a packaged food's **ingredients list** and **nutrition table**, and optionally the front of the pack. Claude reads them and writes a detailed report on that exact product:
+- a health score out of 10, a plain-language verdict, and label warnings (high sodium, palm oil, MSG, ...)
+- the full nutrition table, plus what *your portion* adds up to against a day's maximum
+- effects on the **blood, heart and blood vessels, brain, liver, kidneys, pancreas, stomach, intestines and gut bacteria, teeth, and body fat**, for eating it once and for eating it often
+- **diseases** it's linked to, with how strong the evidence is
+- **cancer risk**: each substance, where it comes from in the product, its IARC group, and whether the label confirms it
+- every ingredient and additive (INS numbers) explained, better Indian swaps, and a bottom line
+
+One tap logs the item with the numbers from the scan, and reports are saved under *Past scans*. The scanner only works in the shared Claude version: it uses the viewer's own Claude account, which asks for permission the first time. The report can misread a label and isn't medical advice.
+
 ### Trends
 - **Items per day** for 14 or 30 days, with daily limits and over-limit days marked. Tap a day to see what each of you ate.
 - **Month calendar** for each of you, colored junk-free, within limit, or over limit. Earlier months are available.
