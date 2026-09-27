@@ -408,7 +408,7 @@ body.dropping::after{content:"Drop photos to add them";position:fixed;inset:12px
       <div class="seg" id="scanModeSeg" role="group" aria-label="What are you scanning" style="align-self:flex-start"></div>
       <h3 id="scanTitle">Estimate a meal from a photo</h3>
       <p class="hint" style="margin:0" id="scanIntro"></p>
-      <div id="scanUnavailable" class="empty" hidden></div>
+      <div id="scanUnavailable" class="privacy" hidden></div>
       <div id="scanForm" class="scan-card" hidden>
         <div class="actions">
           <label class="btn" for="camInput">Take photo</label>
@@ -1250,15 +1250,15 @@ async function connectSample(){
 function scanUnavailableMsg(){
   if(!window.claude) return "Label scanning needs Claude, so it only works in the shared Junk Facts page on claude.ai. This copy can't reach Claude.";
   if(!sample) return "Claude isn't available to this page right now. Reload the page, or check that your account can use Claude.";
-  if(!imgLimits) return "This view can't send photos to Claude. Open the page in the Claude app or on claude.ai in a browser.";
+  if(!imgLimits) return "";
   return "";
 }
 function renderScanForm(){
   renderScanMode();
   const msg = sampleReady ? scanUnavailableMsg() : "";
   $("#scanUnavailable").hidden = !msg; $("#scanUnavailable").textContent = msg;
-  $("#scanForm").hidden = !sampleReady || !!msg;
-  if(!sampleReady){ $("#scanUnavailable").hidden = false; $("#scanUnavailable").textContent = "Connecting to Claude…"; }
+  $("#scanForm").hidden = false;   // photo buttons and paste box are always available
+  if(!sampleReady){ $("#scanUnavailable").hidden = false; $("#scanUnavailable").textContent = "Connecting to Claude… You can add photos while you wait."; }
   if(imgLimits){
     const acc = imgLimits.mediaTypes.join(",");
     $("#camInput").accept = acc; $("#galInput").accept = acc;
@@ -1268,13 +1268,29 @@ function renderScanForm(){
   const box = $("#shots"); box.replaceChildren();
   shots.forEach((f,i)=>box.append(el("div",{class:"shot"}, el("img",{src:f.url,alt:"Label photo "+(i+1)}),
     el("button",{type:"button","aria-label":"Remove photo "+(i+1),onclick:()=>{ URL.revokeObjectURL(f.url); shots.splice(i,1); renderScanForm(); }},"×"))));
-  $("#scanGo").disabled = !shots.length || !!scanCtl;
+  $("#scanGo").disabled = !shots.length || !!scanCtl || !sample;
 }
-function addShots(files){
+async function toSupported(f){
+  // Convert HEIC or other formats the phone can display into JPEG that Claude accepts.
+  const ok = imgLimits ? imgLimits.mediaTypes : ["image/jpeg","image/png","image/webp","image/gif"];
+  if(ok.includes(f.type)) return f;
+  const url = URL.createObjectURL(f);
+  try{
+    const img = new Image(); img.src = url;
+    await img.decode();
+    const c = document.createElement("canvas"); const k = Math.min(1, 2400/Math.max(img.naturalWidth,img.naturalHeight));
+    c.width = Math.round(img.naturalWidth*k); c.height = Math.round(img.naturalHeight*k);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    const b = await new Promise(r=>c.toBlob(r,"image/jpeg",0.9));
+    return b ? new File([b],"photo.jpg",{type:"image/jpeg"}) : null;
+  }catch(e){ return null; } finally{ URL.revokeObjectURL(url); }
+}
+async function addShots(input){
+  const files = [];
+  for(const f of input){ const g = await toSupported(f); if(g) files.push(g); else toast("That photo format couldn't be opened. Take a screenshot of it and use that instead."); }
   const max = imgLimits ? imgLimits.maxCount : 4, maxBytes = imgLimits ? imgLimits.maxInputBytes : 20e6;
   for(const f of files){
     if(shots.length>=max){ toast("You can send up to "+max+" photos per scan."); break; }
-    if(imgLimits && !imgLimits.mediaTypes.includes(f.type)){ toast("That file type isn't supported. Use a JPEG or PNG photo."); continue; }
     if(f.size>maxBytes){ toast("That photo is too large. Try a smaller one."); continue; }
     shots.push({file:f, url:URL.createObjectURL(f)});
   }
@@ -1399,6 +1415,7 @@ $("#scanGo").addEventListener("click", async ()=>{
     else if(c==="not_granted" || c==="sampling_disabled") toast("Claude wasn't allowed for this page, so the label can't be analyzed.");
     else if(c==="rate_limited") toast("Claude is busy or your usage limit is reached. Try again in a little while.");
     else if(c==="image_rejected") toast("One of the photos couldn't be read. Retake it as a JPEG or PNG.");
+    else if(c==="images_unavailable") toast("This app view can't send photos to Claude. Open the link in Chrome or Safari on your phone and try again.");
     else if(c==="refused") toast("Claude couldn't analyze these photos. Try clearer photos of just the label.");
     else if(c==="invalid_json") toast("The report came back incomplete. Tap Analyze label to try again.");
     else if(c==="session_expired") toast("You've been signed out. Sign in again, then retry.");
@@ -1765,7 +1782,7 @@ function renderLabs(){
   const sec = el("section",{});
   sec.append(el("div",{class:"sec-head"}, el("h3",{},"Lab reports"), el("span",{class:"hint"},"Add a photo of each report, or type in the key values")));
   const card = el("div",{class:"card scan-card"});
-  const canPhoto = sample && imgLimits;
+  const canPhoto = !!sample;
   if(labDraft){ card.append(renderLabDraft()); }
   else {
     card.append(el("div",{class:"actions"},
