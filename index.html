@@ -11,128 +11,212 @@
 <style>
 :root{
   --bg:#F3F5F2; --surface:#FFFFFF; --ink:#15191A; --muted:#5C6663; --line:#D9DFDB; --chip:#E8ECE9;
-  --p1:#2F6FDB; --p2:#D9822B; --ok:#2E8B57; --bad:#C8372D; --warn:#B7791F;
+  --p1:#2F6FDB; --p2:#C7731F; --ok:#2E8B57; --bad:#C8372D; --warn:#B7791F;
   --font:"Archivo",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
     --bg:#101413; --surface:#191E1D; --ink:#ECF0EE; --muted:#9AA5A1; --line:#2C3432; --chip:#242B29;
-    --p1:#6C9BF0; --p2:#F0A456; --ok:#4FBF83; --bad:#EF6B5E; --warn:#E0B04F;
+    --p1:#5E8FEA; --p2:#C97A2A; --ok:#4FBF83; --bad:#EF6B5E; --warn:#E0B04F;
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
   --bg:#101413; --surface:#191E1D; --ink:#ECF0EE; --muted:#9AA5A1; --line:#2C3432; --chip:#242B29;
-  --p1:#6C9BF0; --p2:#F0A456; --ok:#4FBF83; --bad:#EF6B5E; --warn:#E0B04F;
+  --p1:#5E8FEA; --p2:#C97A2A; --ok:#4FBF83; --bad:#EF6B5E; --warn:#E0B04F;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font);font-variation-settings:"wdth" 100}
-.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:20px 64px;display:flex;flex-direction:column;gap:28px}
-h1,h2,h3{margin:0;text-wrap:balance}
+.wrap{max-width:1000px;margin:0 auto;padding-inline:16px;padding-block:20px 72px;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--p1);outline-offset:2px}
 .num{font-variant-numeric:tabular-nums}
 .label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;font-variation-settings:"wdth" 80;color:var(--muted)}
+.hint{color:var(--muted);font-size:13px}
+.empty{color:var(--muted);font-size:14px;padding:6px 0}
 
 /* header */
 header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
 .brand h1{font-size:40px;line-height:1;font-weight:900;font-variation-settings:"wdth" 112;letter-spacing:-.01em}
-.brand p{margin:6px 0 0;color:var(--muted);max-width:46ch}
+.brand p{margin:6px 0 4px;color:var(--muted);max-width:50ch}
 .sync{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .sync i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
 .sync.on i{background:var(--ok)}
 .who{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
-.seg{display:inline-flex;background:var(--chip);border-radius:999px;padding:3px}
-.seg button{border:0;background:transparent;padding:7px 16px;border-radius:999px;font-weight:700}
+.seg{display:inline-flex;flex-wrap:wrap;background:var(--chip);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;padding:6px 14px;border-radius:999px;font-weight:700;font-size:14px}
 .seg button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.15)}
 .seg button[data-p="p1"][aria-pressed="true"]{color:var(--p1)}
 .seg button[data-p="p2"][aria-pressed="true"]{color:var(--p2)}
+.who .seg button{padding:8px 18px;font-size:15px}
 
-/* nutrition-label panels */
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-.panel{background:var(--surface);border:2px solid var(--ink);padding:10px 14px 12px;display:flex;flex-direction:column}
-.panel h2{font-size:34px;line-height:1;font-weight:900;font-variation-settings:"wdth" 70;letter-spacing:-.01em}
-.panel .sub{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding-bottom:4px;border-bottom:10px solid var(--ink)}
-.panel .sub b{font-size:18px}
-.panel .sub .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
-.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:4px 0;border-bottom:1px solid var(--ink)}
-.row.big{border-bottom:5px solid var(--ink);padding:6px 0}
-.row.big .v{font-size:30px;font-weight:900;line-height:1}
-.row .k{font-weight:700}
-.row .k small{font-weight:400;color:var(--muted)}
-.row .v{font-weight:800}
-.row:last-child{border-bottom:0}
-.pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;vertical-align:middle;margin-left:8px}
-.pill.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
-.pill.warn{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}
-.pill.bad{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
-.foot{font-size:11px;color:var(--muted);padding-top:6px;line-height:1.35}
-.down{color:var(--ok)} .up{color:var(--bad)}
+/* tabs */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:2px solid var(--ink);margin-inline:-16px;padding-inline:16px}
+nav.tabs button{border:0;background:transparent;padding:10px 9px 8px;font-weight:800;font-size:14px;color:var(--muted);border-bottom:4px solid transparent;margin-bottom:-2px;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tab{display:flex;flex-direction:column;gap:26px}
 
 /* sections */
 section{display:flex;flex-direction:column;gap:12px}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
 .sec-head h3{font-size:20px;font-weight:800}
-.hint{color:var(--muted);font-size:13px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 
-.quick{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}
+/* versus strip */
+.vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.vs .side{display:flex;flex-direction:column}
+.vs .side.r{text-align:right}
+.vs .side b{font-size:28px;font-weight:900;line-height:1.1}
+.vs .mid{text-align:center;font-size:13px;color:var(--muted);max-width:26ch}
+.vs .mid strong{display:block;color:var(--ink);font-size:15px}
+
+/* nutrition-label panels */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px}
+.panel{background:var(--surface);border:2px solid var(--ink);padding:10px 14px 12px;display:flex;flex-direction:column}
+.panel h2{font-size:34px;line-height:1;font-weight:900;font-variation-settings:"wdth" 70;letter-spacing:-.01em}
+.panel .sub{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding-bottom:4px;border-bottom:10px solid var(--ink)}
+.panel .sub b{font-size:18px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:baseline}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:3px 0;border-bottom:1px solid var(--ink)}
+.row.big{padding:6px 0}
+.row.big .v{font-size:30px;font-weight:900;line-height:1}
+.row.thick{border-bottom:5px solid var(--ink)}
+.row.head{font-size:12px;font-weight:700;padding:2px 0}
+.row .k{font-weight:700}
+.row .k small,.row .k .amt{font-weight:400}
+.row .k.ind{padding-left:14px}
+.row .v{font-weight:800;text-align:right}
+.row .v.over{color:var(--bad)}
+.row:last-of-type{border-bottom:0}
+.pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;vertical-align:middle;margin-left:8px}
+.pill.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.pill.warn{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}
+.pill.bad{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
+.foot{font-size:11px;color:var(--muted);padding-top:6px;line-height:1.35;border-top:1px solid var(--ink)}
+.down{color:var(--ok);font-weight:700} .up{color:var(--bad);font-weight:700}
+
+/* quick log */
+.quick{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:8px}
 .q{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:2px;transition:border-color .12s,transform .12s}
 .q:hover{border-color:var(--ink)}
 .q:active{transform:scale(.98)}
-.q b{font-size:15px}
+.q b{font-size:15px;line-height:1.25}
 .q span{font-size:12px;color:var(--muted)}
 .q.custom{border-style:dashed}
+.q.fav b::after{content:" ★";color:var(--warn);font-size:12px}
+.q.repeat{border-color:var(--ink);background:var(--chip)}
 
 /* log sheet */
 .sheet{background:var(--surface);border:2px solid var(--ink);padding:16px;display:flex;flex-direction:column;gap:14px}
-.sheet h4{margin:0;font-size:22px;font-weight:900;font-variation-settings:"wdth" 90}
+.sheet h4{font-size:22px;font-weight:900;font-variation-settings:"wdth" 90}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.field{display:flex;flex-direction:column;gap:4px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
 .field input,.field select{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
+fieldset.nutr{border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;margin:0}
+fieldset.nutr legend{padding:0 6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 12px;font-size:13px}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:2px solid var(--ink);background:var(--ink);color:var(--surface);font-weight:800;border-radius:8px;padding:8px 18px}
+.check{display:flex;gap:8px;align-items:center;font-size:14px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--surface);font-weight:800;border-radius:8px;padding:8px 18px;display:inline-flex;align-items:center}
 .btn.ghost{background:transparent;color:var(--ink)}
 .btn.small{padding:4px 10px;font-size:13px;border-width:1px}
+.btn:disabled{opacity:.4;cursor:default}
 
-/* chart */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
-.chart-wrap{overflow-x:auto}
-.chart-wrap svg{display:block;width:100%;min-width:520px;height:auto}
-.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
-
-.insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.bars{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.bar-row{display:grid;grid-template-columns:minmax(90px,120px) 1fr auto;gap:10px;align-items:center;font-size:14px}
-.bar-row .track{height:10px;background:var(--chip);border-radius:3px;display:flex;overflow:hidden}
-.bar-row .track span{display:block;height:100%}
-.empty{color:var(--muted);font-size:14px;padding:6px 0}
-.money{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-.money .m{display:flex;justify-content:space-between;gap:8px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:6px}
-.money .m b{font-size:20px}
-
-/* history */
+/* entry rows */
 .hist{display:flex;flex-direction:column}
 .h{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
 .h .who-dot{width:10px;height:10px;border-radius:50%}
 .h .what b{display:block}
-.h .what span{font-size:13px;color:var(--muted)}
-.h .del{border:1px solid var(--line);background:transparent;border-radius:6px;padding:3px 10px;font-size:12px;color:var(--muted)}
-.h .del.confirm{border-color:var(--bad);color:var(--bad);font-weight:700}
-.day-sep{padding-top:14px;font-size:12px}
+.h .what span{font-size:13px;color:var(--muted);display:block}
+.h .ops{display:flex;gap:6px}
+.h .ops button{border:1px solid var(--line);background:transparent;border-radius:6px;padding:3px 10px;font-size:12px;color:var(--muted)}
+.h .ops button.confirm{border-color:var(--bad);color:var(--bad);font-weight:700}
+.day-sep{display:flex;justify-content:space-between;gap:10px;padding-top:16px;padding-bottom:2px;border-bottom:2px solid var(--ink);flex-wrap:wrap}
+.day-sep span:last-child{font-weight:600;letter-spacing:0;text-transform:none}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters input,.filters select{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;min-width:0}
 
-details.settings{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
-details.settings summary{font-weight:800;cursor:pointer}
-details.settings .body{display:flex;flex-direction:column;gap:14px;padding-top:12px}
+/* charts */
+.chart-wrap{overflow-x:auto}
+.chart-wrap svg{display:block;width:100%;min-width:560px;height:auto}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.day-detail{border-top:1px solid var(--line);margin-top:10px;padding-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;font-size:14px}
+.day-detail b{display:block}
+svg .hit{fill:transparent;cursor:pointer}
+svg .hl{fill:var(--ink);opacity:0}
+svg .hl.on{opacity:.06}
 
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-weight:700;font-size:14px;max-width:calc(100% - 32px)}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:480px){.brand h1{font-size:32px}.panel h2{font-size:28px}}
+.bars{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.bar-row{display:grid;grid-template-columns:minmax(92px,128px) 1fr 2.5em;gap:10px;align-items:center;font-size:14px}
+.bar-row .track{height:10px;background:var(--chip);border-radius:3px;display:flex;gap:2px;overflow:hidden}
+.bar-row .track span{display:block;height:100%;border-radius:2px}
+.bar-row .n{text-align:right;font-weight:700}
+
+/* calendar */
+.cal-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.cal-head h4{font-size:17px;font-weight:800}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
+.cal .wd{font-size:11px;text-align:center;color:var(--muted);font-weight:700}
+.cal .c{aspect-ratio:1;max-width:100%;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;line-height:1.1;background:var(--chip);color:var(--muted)}
+.cal .c b{font-size:13px;color:var(--ink)}
+.cal .c.clean{background:color-mix(in srgb,var(--ok) 22%,var(--surface))}
+.cal .c.under{background:color-mix(in srgb,var(--warn) 24%,var(--surface))}
+.cal .c.over{background:color-mix(in srgb,var(--bad) 30%,var(--surface))}
+.cal .c.none{background:transparent;border:1px dashed var(--line)}
+.cal .c.today{outline:2px solid var(--ink);outline-offset:-2px}
+.cal .c.blank{visibility:hidden}
+.status-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
+.status-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+
+/* tables */
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--ink)}
+thead tr.grp th{border-bottom:0;padding-bottom:0}
+td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700}
+
+/* heatmap */
+.heat{display:grid;grid-template-columns:auto repeat(5,1fr);gap:3px;margin-top:10px;font-size:12px}
+.heat .hdr{color:var(--muted);text-align:center;font-weight:700;line-height:1.2;padding-bottom:4px}
+.heat .rl{color:var(--muted);font-weight:700;padding-right:6px;display:flex;align-items:center}
+.heat .cell{border-radius:4px;min-height:30px;display:flex;align-items:center;justify-content:center;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* insights */
+.insight{display:flex;flex-direction:column;gap:6px}
+.insight h4{font-size:17px;font-weight:800}
+.insight ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+
+/* weight */
+.wt{display:flex;flex-direction:column;gap:10px}
+.wt .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.wt .top b{font-size:26px;font-weight:900}
+.wt form{display:flex;gap:8px;flex-wrap:wrap}
+.wt input{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:6px 10px;width:7.5em}
+.wt svg{width:100%;height:auto;display:block}
+
+/* settings */
+.set-body{display:flex;flex-direction:column;gap:18px}
+.favs{display:flex;flex-direction:column}
+.favs .f{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.ref{font-size:13px;color:var(--muted);margin:0;padding-left:18px}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 12px 10px 16px;border-radius:8px;font-weight:700;font-size:14px;width:max-content;max-width:min(460px,calc(100% - 32px));display:flex;gap:12px;align-items:center;z-index:10}
+.toast button{border:1px solid var(--surface);background:transparent;color:var(--surface);border-radius:6px;padding:3px 10px;font-weight:800}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (max-width:480px){
+  .brand h1{font-size:32px}.panel h2{font-size:28px}
+  .vs{grid-template-columns:1fr 1fr}.vs .mid{grid-column:1/-1;grid-row:2;max-width:none}
+}
 </style>
 <!-- APP:HEAD-END -->
 </head>
@@ -142,7 +226,7 @@ details.settings .body{display:flex;flex-direction:column;gap:14px;padding-top:1
   <header class="top">
     <div class="brand">
       <h1>Junk Facts</h1>
-      <p>A shared junk-food log for two brothers. Log it when you eat it, keep under your daily limit, and watch the streak grow.</p>
+      <p>Shevi and Rupesh's junk-food log. Log it when you eat it, stay under your daily limit, and find out what makes you reach for it.</p>
       <span class="sync" id="sync"><i></i><span id="syncText">Saved on this device</span></span>
     </div>
     <div class="who">
@@ -151,130 +235,248 @@ details.settings .body{display:flex;flex-direction:column;gap:14px;padding-top:1
     </div>
   </header>
 
-  <div class="facts" id="facts"></div>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Sections">
+    <button type="button" role="tab" data-tab="today">Today</button>
+    <button type="button" role="tab" data-tab="trends">Trends</button>
+    <button type="button" role="tab" data-tab="patterns">Patterns</button>
+    <button type="button" role="tab" data-tab="history">History</button>
+    <button type="button" role="tab" data-tab="settings">Settings</button>
+  </nav>
 
-  <section>
+  <!-- TODAY -->
+  <div class="tab" id="tab-today" role="tabpanel">
+    <div class="vs" id="vs"></div>
+    <div class="facts" id="facts"></div>
+
+    <section id="logSection">
+      <div class="sec-head">
+        <h3>Log something</h3>
+        <span class="hint" id="logHint"></span>
+      </div>
+      <div class="quick" id="quick"></div>
+      <form class="sheet" id="sheet" hidden>
+        <h4 id="sheetTitle">Log</h4>
+        <div class="grid2">
+          <label class="field"><span class="label">What</span><input id="fItem" required maxlength="40"></label>
+          <label class="field"><span class="label">Type</span><select id="fCat"></select></label>
+          <label class="field"><span class="label">How many</span><input id="fQty" type="number" min="1" max="20" step="1" value="1" inputmode="numeric"></label>
+          <label class="field"><span class="label">When</span><input id="fWhen" type="datetime-local"></label>
+        </div>
+        <fieldset class="nutr">
+          <legend class="label">Per item, approximate</legend>
+          <div class="grid2">
+            <label class="field"><span class="label">Calories</span><input id="fKcal" type="number" min="0" max="3000" step="1" inputmode="numeric"></label>
+            <label class="field"><span class="label">Fat (g)</span><input id="fFat" type="number" min="0" max="300" step="any" inputmode="decimal"></label>
+            <label class="field"><span class="label">Sugar (g)</span><input id="fSugar" type="number" min="0" max="300" step="any" inputmode="decimal"></label>
+            <label class="field"><span class="label">Sodium (mg)</span><input id="fSodium" type="number" min="0" max="10000" step="1" inputmode="numeric"></label>
+            <label class="field"><span class="label" id="fCostLabel">Cost</span><input id="fCost" type="number" min="0" step="any" inputmode="decimal"></label>
+          </div>
+        </fieldset>
+        <div class="field"><span class="label">Where</span><div class="chips" id="fWhere"></div></div>
+        <div class="field"><span class="label">Why did you eat it?</span><div class="chips" id="fTriggers"></div></div>
+        <label class="field"><span class="label">Note (optional)</span><input id="fNote" maxlength="120" placeholder="e.g. ordered with friends after cricket"></label>
+        <label class="check" id="fFavWrap"><input type="checkbox" id="fFav"> Add to quick items</label>
+        <div class="actions">
+          <button class="btn" type="submit" id="fSave">Log it</button>
+          <button class="btn ghost" type="button" id="fCancel">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <div class="sec-head"><h3>Logged today</h3><span class="hint" id="todayTotals"></span></div>
+      <div class="hist" id="todayList"></div>
+    </section>
+  </div>
+
+  <!-- TRENDS -->
+  <div class="tab" id="tab-trends" role="tabpanel" hidden>
+    <section>
+      <div class="sec-head">
+        <h3>Junk items per day</h3>
+        <div class="seg" id="rangeSeg" role="group" aria-label="Range"></div>
+      </div>
+      <div class="card">
+        <div class="legend" id="legend"></div>
+        <div class="chart-wrap" id="chart"></div>
+        <div class="day-detail" id="dayDetail"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h3>Month view</h3><span class="hint">Every day, colored by whether you stayed within your limit</span></div>
+      <div class="cards" id="cals"></div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h3>Week by week</h3><span class="hint">Weeks start on Monday</span></div>
+      <div class="card table-wrap" id="weekly"></div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h3>Weight check-in</h3><span class="hint">Weigh yourself once a week, same day, same time, before breakfast</span></div>
+      <div class="cards" id="weights"></div>
+    </section>
+  </div>
+
+  <!-- PATTERNS -->
+  <div class="tab" id="tab-patterns" role="tabpanel" hidden>
     <div class="sec-head">
-      <h3>Log something</h3>
-      <span class="hint" id="logHint"></span>
+      <h3>Last 30 days</h3>
+      <div class="seg" id="patSeg" role="group" aria-label="Whose patterns"></div>
     </div>
-    <div class="quick" id="quick"></div>
-    <form class="sheet" id="sheet" hidden>
-      <h4 id="sheetTitle">Log</h4>
-      <div class="grid2">
-        <label class="field"><span class="label">What</span><input id="fItem" required maxlength="40"></label>
-        <label class="field"><span class="label">Type</span>
-          <select id="fCat"><option>Fried</option><option>Sugary</option><option>Fast food</option><option>Packaged snack</option><option>Sugary drink</option></select>
-        </label>
-        <label class="field"><span class="label">How many</span><input id="fQty" type="number" min="1" max="20" step="1" value="1" inputmode="numeric"></label>
-        <label class="field"><span class="label">Calories each (approx)</span><input id="fKcal" type="number" min="0" max="3000" step="1" inputmode="numeric"></label>
-        <label class="field"><span class="label" id="fCostLabel">Cost each</span><input id="fCost" type="number" min="0" step="1" inputmode="decimal"></label>
-        <label class="field"><span class="label">When</span><input id="fWhen" type="datetime-local"></label>
-      </div>
-      <div class="field">
-        <span class="label">Why did you eat it?</span>
-        <div class="chips" id="fTriggers"></div>
-      </div>
-      <label class="field"><span class="label">Note (optional)</span><input id="fNote" maxlength="120" placeholder="e.g. ordered with friends after cricket"></label>
-      <div class="actions">
-        <button class="btn" type="submit" id="fSave">Log it</button>
-        <button class="btn ghost" type="button" id="fCancel">Cancel</button>
-      </div>
-    </form>
-  </section>
-
-  <section>
-    <div class="sec-head">
-      <h3>Last 14 days</h3>
-      <div class="legend" id="legend"></div>
+    <div class="cards" id="insights"></div>
+    <div class="cards">
+      <div class="card"><span class="label">When it happens</span><div id="heat"></div></div>
+      <div class="card"><span class="label">Why it happens</span><div class="bars" id="topTriggers"></div></div>
     </div>
-    <div class="card chart-wrap" id="chart"></div>
-  </section>
-
-  <section>
-    <div class="sec-head"><h3>Last 30 days</h3><span class="hint">What you eat, why you eat it, and what it costs</span></div>
-    <div class="insights">
+    <div class="cards">
       <div class="card"><span class="label">Most eaten</span><div class="bars" id="topItems"></div></div>
-      <div class="card"><span class="label">Why it happened</span><div class="bars" id="topTriggers"></div></div>
-      <div class="card"><span class="label">Cost</span><div class="money" id="money"></div></div>
+      <div class="card"><span class="label">By type</span><div class="bars" id="topCats"></div></div>
+      <div class="card"><span class="label">Where</span><div class="bars" id="topWhere"></div></div>
     </div>
-  </section>
+    <section>
+      <div class="sec-head"><h3>Nutrition from junk</h3><span class="hint">Daily average over the last 30 days, compared with daily maximums</span></div>
+      <div class="card table-wrap" id="nutrition"></div>
+    </section>
+  </div>
 
-  <section>
+  <!-- HISTORY -->
+  <div class="tab" id="tab-history" role="tabpanel" hidden>
     <div class="sec-head">
       <h3>History</h3>
-      <div class="seg" id="histSeg" role="group" aria-label="Filter history"></div>
+      <div class="filters">
+        <div class="seg" id="histSeg" role="group" aria-label="Whose history"></div>
+        <select id="histCat" aria-label="Filter by type"></select>
+        <input id="histSearch" type="search" placeholder="Search items or notes" aria-label="Search">
+      </div>
     </div>
     <div class="hist" id="hist"></div>
-  </section>
+    <div class="actions"><button type="button" class="btn ghost small" id="histMore" hidden>Show more</button></div>
+  </div>
 
-  <details class="settings" id="settings">
-    <summary>Settings</summary>
-    <form class="body" id="setForm">
+  <!-- SETTINGS -->
+  <div class="tab" id="tab-settings" role="tabpanel" hidden>
+    <form class="set-body card" id="setForm">
+      <h3>People and limits</h3>
       <div class="grid2">
         <label class="field"><span class="label">Person 1 name</span><input id="sN1" maxlength="20"></label>
-        <label class="field"><span class="label">Daily limit</span><input id="sL1" type="number" min="0" max="10" step="1"></label>
+        <label class="field"><span class="label">Daily item limit</span><input id="sL1" type="number" min="0" max="10" step="1"></label>
+        <label class="field"><span class="label">Weekly budget</span><input id="sB1" type="number" min="0" step="1" placeholder="0 = none"></label>
+      </div>
+      <div class="grid2">
         <label class="field"><span class="label">Person 2 name</span><input id="sN2" maxlength="20"></label>
-        <label class="field"><span class="label">Daily limit</span><input id="sL2" type="number" min="0" max="10" step="1"></label>
+        <label class="field"><span class="label">Daily item limit</span><input id="sL2" type="number" min="0" max="10" step="1"></label>
+        <label class="field"><span class="label">Weekly budget</span><input id="sB2" type="number" min="0" step="1" placeholder="0 = none"></label>
+      </div>
+      <div class="grid2">
         <label class="field"><span class="label">Currency symbol</span><input id="sCur" maxlength="3"></label>
       </div>
-      <p class="hint" style="margin:0">A daily limit of 0 means no junk at all. Start with something you can actually hit, like 1 a day, and lower it once the streak holds.</p>
-      <div class="actions">
-        <button class="btn" type="submit">Save settings</button>
-        <button class="btn ghost" type="button" id="exportBtn" hidden>Export backup</button>
-        <label class="btn ghost" id="importLbl" hidden>Import backup<input type="file" id="importFile" accept="application/json" hidden></label>
-      </div>
+      <p class="hint" style="margin:0">A daily limit of 0 means no junk at all. Start with a limit you can actually hit, like 1 a day, and lower it once you've held a two-week streak. The weekly budget is the most you want to spend on junk in a week.</p>
+      <div class="actions"><button class="btn" type="submit">Save settings</button></div>
     </form>
-  </details>
+
+    <div class="card set-body">
+      <h3>Your quick items</h3>
+      <p class="hint" style="margin:0">Items you saved with "Add to quick items" when logging. They appear first on the Today tab.</p>
+      <div class="favs" id="favs"></div>
+    </div>
+
+    <div class="card set-body">
+      <h3>How the numbers work</h3>
+      <ul class="ref">
+        <li>Nutrition values are rough per-serving estimates for common Indian portions. Edit them when you log if you know better.</li>
+        <li>Daily maximums on the label: 2,000 kcal energy, 70 g fat, 50 g sugar (WHO says under 25 g is better), 2,000 mg sodium (WHO). The % shows how much of that came from junk alone.</li>
+        <li>About 7,700 kcal equals 1 kg of body fat. The fat figure on the Patterns tab converts junk calories to that.</li>
+        <li>A day with nothing logged counts as junk-free. The streak counts days at or under the daily limit, today included.</li>
+      </ul>
+    </div>
+
+    <div class="card set-body" id="backupCard" hidden>
+      <h3>Backup</h3>
+      <p class="hint" style="margin:0">Data in this copy is saved only in this browser. Export a backup now and then, and import it on another device.</p>
+      <div class="actions">
+        <button class="btn ghost" type="button" id="exportBtn">Export backup</button>
+        <label class="btn ghost">Import backup<input type="file" id="importFile" accept="application/json" hidden></label>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="toast" id="toast" hidden></div>
+<div class="toast" id="toast" role="status" hidden></div>
 
 <script>
 (function(){
 "use strict";
 const $ = s => document.querySelector(s);
-const LS_KEY = "junkfacts.v1", ME_KEY = "junkfacts.me";
+const LS_KEY = "junkfacts.v1", ME_KEY = "junkfacts.me", TAB_KEY = "junkfacts.tab";
 const KCAL_PER_KG_FAT = 7700;
+const DAILY = {kcal:2000, fat:70, sugar:50, sodium:2000};
+const CATS = ["Fried","Sugary","Fast food","Packaged snack","Sugary drink","Street food"];
+// Approximate per serving: kcal, fat g, sugar g, sodium mg, typical cost.
 const ITEMS = [
-  {item:"Chips",          cat:"Packaged snack", kcal:160, cost:20},
-  {item:"Cold drink",     cat:"Sugary drink",   kcal:140, cost:40},
-  {item:"Pizza slice",    cat:"Fast food",      kcal:285, cost:120},
-  {item:"Burger",         cat:"Fast food",      kcal:350, cost:120},
-  {item:"French fries",   cat:"Fried",          kcal:320, cost:100},
-  {item:"Samosa",         cat:"Fried",          kcal:260, cost:20},
-  {item:"Instant noodles",cat:"Packaged snack", kcal:350, cost:20},
-  {item:"Momos (fried)",  cat:"Fried",          kcal:400, cost:80},
-  {item:"Chocolate bar",  cat:"Sugary",         kcal:230, cost:40},
-  {item:"Ice cream",      cat:"Sugary",         kcal:270, cost:60},
-  {item:"Sweets / mithai",cat:"Sugary",         kcal:300, cost:50},
-  {item:"Biscuits",       cat:"Packaged snack", kcal:150, cost:20},
-  {item:"Pastry / cake",  cat:"Sugary",         kcal:350, cost:80},
-  {item:"Energy drink",   cat:"Sugary drink",   kcal:110, cost:110}
+  {item:"Chips",           cat:"Packaged snack", kcal:160, fat:10, sugar:1,  sodium:170,  cost:20},
+  {item:"Cold drink",      cat:"Sugary drink",   kcal:130, fat:0,  sugar:33, sodium:15,   cost:40},
+  {item:"Pizza slice",     cat:"Fast food",      kcal:285, fat:10, sugar:4,  sodium:640,  cost:120},
+  {item:"Burger",          cat:"Fast food",      kcal:350, fat:15, sugar:8,  sodium:600,  cost:120},
+  {item:"French fries",    cat:"Fried",          kcal:320, fat:15, sugar:0,  sodium:260,  cost:100},
+  {item:"Samosa",          cat:"Fried",          kcal:260, fat:17, sugar:2,  sodium:420,  cost:20},
+  {item:"Vada pav",        cat:"Street food",    kcal:290, fat:12, sugar:4,  sodium:550,  cost:25},
+  {item:"Pani puri / chaat",cat:"Street food",   kcal:300, fat:12, sugar:8,  sodium:700,  cost:40},
+  {item:"Instant noodles", cat:"Packaged snack", kcal:350, fat:14, sugar:2,  sodium:1000, cost:20},
+  {item:"Momos (fried)",   cat:"Fried",          kcal:400, fat:20, sugar:3,  sodium:800,  cost:80},
+  {item:"Namkeen / bhujia",cat:"Packaged snack", kcal:270, fat:18, sugar:2,  sodium:400,  cost:20},
+  {item:"Chocolate bar",   cat:"Sugary",         kcal:230, fat:13, sugar:22, sodium:30,   cost:40},
+  {item:"Ice cream",       cat:"Sugary",         kcal:210, fat:11, sugar:21, sodium:80,   cost:60},
+  {item:"Sweets / mithai", cat:"Sugary",         kcal:300, fat:12, sugar:35, sodium:50,   cost:50},
+  {item:"Biscuits",        cat:"Packaged snack", kcal:150, fat:7,  sugar:10, sodium:90,   cost:20},
+  {item:"Pastry / cake",   cat:"Sugary",         kcal:350, fat:18, sugar:30, sodium:250,  cost:80},
+  {item:"Energy drink",    cat:"Sugary drink",   kcal:110, fat:0,  sugar:27, sodium:100,  cost:110}
 ];
-const TRIGGERS = ["Hungry","Craving","Bored","Stressed","With friends","Late night","Watching something","Skipped a meal"];
+const TRIGGERS = ["Hungry","Craving","Bored","Stressed","Tired","With friends","Late night","Watching something","Skipped a meal","Celebration"];
+const WHERES = ["Home","Outside","Ordered online","College / school","Work","Friend's place"];
+const BLOCKS = [
+  {n:"Morning",   s:5,  e:11, r:"5–11am"},
+  {n:"Afternoon", s:11, e:16, r:"11am–4pm"},
+  {n:"Evening",   s:16, e:20, r:"4–8pm"},
+  {n:"Night",     s:20, e:24, r:"8pm–12am"},
+  {n:"Late night",s:0,  e:5,  r:"12–5am"}
+];
 const PIDS = ["p1","p2"];
+const WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const WD_MON = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 
 function defaultSettings(){
-  return {people:{p1:{name:"Shevi",limit:1},p2:{name:"Rupesh",limit:1}},currency:"₹"};
+  return {people:{p1:{name:"Shevi",limit:1,budget:0},p2:{name:"Rupesh",limit:1,budget:0}},currency:"₹",custom:[]};
+}
+function clampNum(v,min,max,def){ v = +v; return Number.isFinite(v) ? Math.min(max,Math.max(min,v)) : def; }
+function normItem(x){
+  if(!x || typeof x.item!=="string" || !x.item.trim()) return null;
+  return {item:x.item.trim().slice(0,40), cat:CATS.includes(x.cat)?x.cat:"Fast food",
+    kcal:clampNum(x.kcal,0,3000,0), fat:clampNum(x.fat,0,300,0), sugar:clampNum(x.sugar,0,300,0),
+    sodium:clampNum(x.sodium,0,10000,0), cost:clampNum(x.cost,0,100000,0)};
 }
 function normSettings(s){
   const d = defaultSettings();
   if(!s || typeof s!=="object") return d;
-  const out = {people:{},currency: typeof s.currency==="string" && s.currency ? s.currency : d.currency};
+  const out = {people:{}, currency: typeof s.currency==="string" && s.currency.trim() ? s.currency.trim().slice(0,3) : d.currency,
+    custom: Array.isArray(s.custom) ? s.custom.map(normItem).filter(Boolean).slice(0,16) : []};
   for(const p of PIDS){
     const src = (s.people && s.people[p]) || {};
     out.people[p] = {
       name: typeof src.name==="string" && src.name.trim() ? src.name.trim().slice(0,20) : d.people[p].name,
-      limit: Number.isFinite(+src.limit) && +src.limit>=0 ? Math.min(10,Math.round(+src.limit)) : d.people[p].limit
+      limit: Math.round(clampNum(src.limit,0,10,d.people[p].limit)),
+      budget: Math.round(clampNum(src.budget,0,1e7,0))
     };
   }
   return out;
 }
 
-let state = {settings:defaultSettings(), days:{}};
+let state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}};
 let mode = "local", db = null;
 let me = lsGet(ME_KEY) === "p2" ? "p2" : "p1";
-let histFilter = "all";
+let tab = "today";
+let range = 14, selDay = null, calMonth = null;
+let patFilter = "all", histFilter = "all", histCat = "", histQuery = "", histLimit = 60;
 let draft = null, pendingDelete = null;
 
 function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
@@ -282,8 +484,13 @@ function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 function loadLocal(){
   try{
     const raw = JSON.parse(lsGet(LS_KEY) || "null");
-    if(raw){ state.settings = normSettings(raw.settings); state.days = raw.days && typeof raw.days==="object" ? raw.days : {}; }
+    if(raw) state = {settings:normSettings(raw.settings), days:raw.days && typeof raw.days==="object" ? raw.days : {}, weights:normWeights(raw.weights)};
   }catch(e){}
+}
+function normWeights(w){
+  const out = {p1:[],p2:[]};
+  if(w && typeof w==="object") for(const p of PIDS) if(Array.isArray(w[p])) out[p] = w[p].filter(x=>x && typeof x.date==="string" && +x.kg>0).map(x=>({date:x.date,kg:+x.kg}));
+  return out;
 }
 function saveLocal(){ lsSet(LS_KEY, JSON.stringify(state)); }
 
@@ -292,87 +499,110 @@ function pad(n){ return String(n).padStart(2,"0"); }
 function dkey(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
 function addDays(d,n){ const x = new Date(d); x.setDate(x.getDate()+n); return x; }
 function fromKey(k){ const [y,m,d] = k.split("-").map(Number); return new Date(y,m-1,d); }
+function todayKey(){ return dkey(new Date()); }
 function localInputValue(d){ return dkey(d)+"T"+pad(d.getHours())+":"+pad(d.getMinutes()); }
-const WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function monday(d){ const x = new Date(d.getFullYear(),d.getMonth(),d.getDate()); x.setDate(x.getDate()-((x.getDay()+6)%7)); return x; }
+function shortDate(k){ const d = fromKey(k); return d.getDate()+" "+d.toLocaleString(undefined,{month:"short"}); }
 function dayLabel(k){
-  const today = dkey(new Date()), yest = dkey(addDays(new Date(),-1));
-  if(k===today) return "Today"; if(k===yest) return "Yesterday";
-  const d = fromKey(k); return WD[d.getDay()]+" "+d.getDate()+" "+d.toLocaleString(undefined,{month:"short"});
+  if(k===todayKey()) return "Today"; if(k===dkey(addDays(new Date(),-1))) return "Yesterday";
+  return WD[fromKey(k).getDay()]+" "+shortDate(k);
 }
 function timeLabel(t){ const d = new Date(t); return pad(d.getHours())+":"+pad(d.getMinutes()); }
+function blockOf(h){ return BLOCKS.findIndex(b=>h>=b.s && h<b.e); }
 
 /* ---------- data helpers ---------- */
 function person(p){ return state.settings.people[p]; }
 function money(v){ return state.settings.currency + Math.round(v).toLocaleString(); }
+function allItems(){ return [...state.settings.custom, ...ITEMS]; }
+function lookup(name){ const n = String(name||"").toLowerCase(); return allItems().find(x=>x.item.toLowerCase()===n); }
+function val(e,k){ if(typeof e[k]==="number") return e[k]; const d = lookup(e.item); return d && typeof d[k]==="number" ? d[k] : 0; }
 function entriesOf(p,k){ const d = state.days[p+"_"+k]; return d && Array.isArray(d.entries) ? d.entries : []; }
 function countOf(p,k){ return entriesOf(p,k).reduce((s,e)=>s+(e.qty||1),0); }
+function sumOf(p,k,key){ return entriesOf(p,k).reduce((s,e)=>s+val(e,key)*(e.qty||1),0); }
 function allEntries(){
   const out = [];
   for(const [id,d] of Object.entries(state.days)){
-    if(!d || !Array.isArray(d.entries)) continue;
+    if(!d || !Array.isArray(d.entries) || !PIDS.includes(d.person)) continue;
     for(const e of d.entries) out.push(Object.assign({}, e, {person:d.person, date:d.date, docId:id}));
   }
   return out.sort((a,b)=>b.t-a.t);
 }
+function entriesSince(fromBack, toBack){
+  const hi = dkey(addDays(new Date(),-fromBack)), lo = dkey(addDays(new Date(),-(toBack-1)));
+  return allEntries().filter(e=>e.date<=hi && e.date>=lo);
+}
 function startKey(){
   let min = null;
   for(const d of Object.values(state.days)) if(d && d.date && (!min || d.date<min)) min = d.date;
-  return min || dkey(new Date());
+  return min || todayKey();
+}
+function dayStatus(p,k){
+  const n = countOf(p,k), lim = person(p).limit;
+  return n===0 ? "clean" : n<=lim ? "under" : "over";
 }
 function streak(p){
   const lim = person(p).limit, start = startKey();
   let n = 0, d = new Date();
-  for(let i=0;i<400;i++){
-    const k = dkey(d);
-    if(k<start || countOf(p,k)>lim) break;
-    n++; d = addDays(d,-1);
-  }
+  for(let i=0;i<400;i++){ const k = dkey(d); if(k<start || countOf(p,k)>lim) break; n++; d = addDays(d,-1); }
   return n;
 }
-function rangeSum(p,fromBack,toBack,fn){
-  let s = 0;
-  for(let i=fromBack;i<toBack;i++){ const k = dkey(addDays(new Date(),-i)); s += fn(p,k); }
-  return s;
+function bestStreak(p){
+  const lim = person(p).limit; let best = 0, run = 0, d = fromKey(startKey()); const end = todayKey();
+  for(let i=0;i<400 && dkey(d)<=end;i++){ if(countOf(p,dkey(d))>lim) run = 0; else { run++; if(run>best) best = run; } d = addDays(d,1); }
+  return best;
 }
-const kcalOf = (p,k)=>entriesOf(p,k).reduce((s,e)=>s+(e.kcal||0)*(e.qty||1),0);
-const costOf = (p,k)=>entriesOf(p,k).reduce((s,e)=>s+(e.cost||0)*(e.qty||1),0);
+function rangeSum(p,fromBack,toBack,fn){ let s = 0; for(let i=fromBack;i<toBack;i++) s += fn(p,dkey(addDays(new Date(),-i))); return s; }
+function weekSum(p,key){ let s = 0, d = monday(new Date()); const end = todayKey(); while(dkey(d)<=end){ s += key==="count" ? countOf(p,dkey(d)) : sumOf(p,dkey(d),key); d = addDays(d,1); } return s; }
+function trackedDays(n){ const start = startKey(); let c = 0; for(let i=0;i<n;i++) if(dkey(addDays(new Date(),-i))>=start) c++; return Math.max(1,c); }
 
 /* ---------- writes ---------- */
 const chains = {};
+function queue(key, fn){ chains[key] = (chains[key]||Promise.resolve()).then(fn).catch(err=>toast(dbMessage(err))); }
 function writeDay(id, body){
   if(body.entries.length) state.days[id] = body; else delete state.days[id];
   if(mode==="local"){ saveLocal(); render(); return; }
   render();
   const ref = db.doc("days/"+id);
-  chains[id] = (chains[id]||Promise.resolve())
-    .then(()=> body.entries.length ? ref.set(body) : ref.delete())
-    .catch(err=>toast(dbMessage(err)));
+  queue("days/"+id, ()=> body.entries.length ? ref.set(body) : ref.delete());
 }
-function addEntry(p, e){
+function putEntry(p, e){
   const date = dkey(new Date(e.t)), id = p+"_"+date;
-  const entries = entriesOf(p,date).slice(); entries.push(e);
+  const entries = entriesOf(p,date).filter(x=>x.id!==e.id); entries.push(e); entries.sort((a,b)=>a.t-b.t);
   writeDay(id, {person:p, date, entries});
 }
 function removeEntry(docId, eid){
-  const d = state.days[docId]; if(!d) return;
+  const d = state.days[docId]; if(!d) return null;
+  const gone = d.entries.find(e=>e.id===eid);
   writeDay(docId, {person:d.person, date:d.date, entries:d.entries.filter(e=>e.id!==eid)});
+  return gone;
 }
 function saveSettings(s){
   state.settings = normSettings(s);
   if(mode==="local"){ saveLocal(); render(); return; }
   render();
-  db.doc("settings/main").set(state.settings).catch(err=>toast(dbMessage(err)));
+  const body = state.settings;
+  queue("settings/main", ()=>db.doc("settings/main").set(body));
+}
+function saveWeight(p, date, kg){
+  const list = state.weights[p].filter(w=>w.date!==date);
+  if(kg>0) list.push({date,kg});
+  list.sort((a,b)=>a.date<b.date?-1:1);
+  state.weights[p] = list.slice(-200);
+  if(mode==="local"){ saveLocal(); render(); return; }
+  render();
+  const body = {entries:state.weights[p]};
+  queue("weights/"+p, ()=>db.doc("weights/"+p).set(body));
 }
 function dbMessage(err){
   const c = err && err.code;
-  if(c==="invalid_argument") return "You can view this tracker but not change it. Ask the owner for Contributor access.";
+  if(c==="invalid_argument") return "You can view this tracker but not change it. Ask the owner to share it with you as a Contributor.";
   if(c==="quota_exceeded") return "Storage is full. Delete some old entries and try again.";
   if(c==="resource_exhausted") return "Too many changes at once. Wait a moment and try again.";
   return "Couldn't save that change. Check your connection and try again.";
 }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
-/* ---------- rendering ---------- */
+/* ---------- DOM helpers ---------- */
 function el(tag, attrs, ...kids){
   const n = document.createElement(tag);
   for(const [k,v] of Object.entries(attrs||{})){
@@ -383,221 +613,490 @@ function el(tag, attrs, ...kids){
   for(const c of kids.flat()) if(c!=null && c!==false) n.append(c.nodeType ? c : String(c));
   return n;
 }
+const NS = "http://www.w3.org/2000/svg";
+function s(tag,a,txt){ const n = document.createElementNS(NS,tag); for(const k in a) n.setAttribute(k,a[k]); if(txt!=null) n.textContent = txt; return n; }
 function color(p){ return "var(--"+p+")"; }
+function nameDot(p){ return el("span",{}, el("span",{class:"dot",style:"background:"+color(p)}), person(p).name); }
+function seg(box, options, current, onPick){
+  box.replaceChildren();
+  for(const [id,label] of options) box.append(el("button",{type:"button","data-p":id,"aria-pressed":String(current===id),onclick:()=>onPick(id)},label));
+}
+function fmt1(n){ return (Math.round(n*10)/10).toLocaleString(); }
+function fmt(n,unit){ const r = !unit || unit.trim()==="mg" || Math.abs(n)>=100 ? Math.round(n) : Math.round(n*10)/10; return r.toLocaleString()+(unit||""); }
+function pct(n,of){ return Math.round(n/of*100); }
 
+/* ---------- header, tabs ---------- */
 function renderWho(){
-  const seg = $("#whoSeg"); seg.replaceChildren();
-  for(const p of PIDS) seg.append(el("button",{type:"button","data-p":p,"aria-pressed":String(me===p),onclick:()=>{me=p;lsSet(ME_KEY,p);render();}}, person(p).name));
+  seg($("#whoSeg"), PIDS.map(p=>[p,person(p).name]), me, p=>{ me = p; lsSet(ME_KEY,p); render(); });
   $("#logHint").textContent = "Tap an item to log it for "+person(me).name+".";
+}
+function setTab(t, scroll){
+  tab = t; lsSet(TAB_KEY,t);
+  for(const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", String(b.dataset.tab===t));
+  for(const id of ["today","trends","patterns","history","settings"]) $("#tab-"+id).hidden = id!==t;
+  if(scroll) $("#tabs").scrollIntoView({block:"start"});
+}
+for(const b of document.querySelectorAll("#tabs button")) b.addEventListener("click", ()=>setTab(b.dataset.tab, false));
+
+/* ---------- TODAY ---------- */
+function renderVs(){
+  const box = $("#vs"); box.replaceChildren();
+  const a = weekSum("p1","count"), b = weekSum("p2","count");
+  let msg;
+  if(a===0 && b===0) msg = el("span",{}, el("strong",{},"Both clean this week"),"Keep the week at zero.");
+  else if(a===b) msg = el("span",{}, el("strong",{},"Tied this week"),"Fewer items wins the week.");
+  else { const lead = a<b ? "p1" : "p2"; msg = el("span",{}, el("strong",{},person(lead).name+" is ahead"), "by "+Math.abs(a-b)+" item"+(Math.abs(a-b)===1?"":"s")+". Fewer items wins the week."); }
+  box.append(
+    el("div",{class:"side"}, el("span",{class:"label"}, nameDot("p1")), el("b",{class:"num"},a), el("span",{class:"hint"},"items this week")),
+    el("div",{class:"mid"}, msg),
+    el("div",{class:"side r"}, el("span",{class:"label"}, nameDot("p2")), el("b",{class:"num"},b), el("span",{class:"hint"},"items this week")));
 }
 
 function renderFacts(){
   const box = $("#facts"); box.replaceChildren();
-  const today = dkey(new Date());
+  const today = todayKey();
   for(const p of PIDS){
     const P = person(p), n = countOf(p,today), lim = P.limit;
     let pill;
     if(n===0) pill = el("span",{class:"pill ok"},"Clean");
-    else if(n<=lim) pill = el("span",{class:"pill warn"},"At limit");
+    else if(n<lim) pill = el("span",{class:"pill ok"},"Under limit");
+    else if(n===lim) pill = el("span",{class:"pill warn"},"At limit");
     else pill = el("span",{class:"pill bad"},"Over by "+(n-lim));
-    if(n>0 && n<lim) pill = el("span",{class:"pill ok"},"Under limit");
+    const nutRow = (label,key,unit,ind)=>{
+      const v = sumOf(p,today,key), pc = pct(v,DAILY[key]);
+      return el("div",{class:"row"}, el("span",{class:"k"+(ind?" ind":"")}, label+" ", el("span",{class:"amt num"}, fmt(v,unit))), el("span",{class:"v num"+(pc>=100?" over":"")}, pc+"%"));
+    };
     const wk = rangeSum(p,0,7,countOf), prev = rangeSum(p,7,14,countOf);
-    let trend = "";
-    if(prev>0){ const ch = Math.round((wk-prev)/prev*100); trend = el("small",{class:ch<=0?"down":"up"}," "+(ch<=0?"▼ ":"▲ ")+Math.abs(ch)+"% vs last week"); }
-    const clean7 = (()=>{ let c=0; const start=startKey(); for(let i=0;i<7;i++){ const k=dkey(addDays(new Date(),-i)); if(k>=start && countOf(p,k)===0) c++; } return c; })();
-    const s = streak(p);
+    let trend = null;
+    if(prev>0 && startKey()<=dkey(addDays(new Date(),-13))){ const ch = Math.round((wk-prev)/prev*100); trend = el("small",{class:ch<=0?"down":"up"}," "+(ch<=0?"▼":"▲")+Math.abs(ch)+"%"); }
+    let clean7 = 0; const start = startKey();
+    for(let i=0;i<7;i++){ const k = dkey(addDays(new Date(),-i)); if(k>=start && countOf(p,k)===0) clean7++; }
+    const cur = streak(p), best = bestStreak(p);
+    const spentWk = weekSum(p,"cost");
+    const budgetRow = P.budget>0
+      ? el("div",{class:"row"}, el("span",{class:"k"},"Spent this week ", el("small",{},"of "+money(P.budget))), el("span",{class:"v num"+(spentWk>P.budget?" over":"")}, money(spentWk)))
+      : el("div",{class:"row"}, el("span",{class:"k"},"Spent this week"), el("span",{class:"v num"}, money(spentWk)));
     box.append(el("article",{class:"panel","aria-label":P.name+" today"},
       el("h2",{},"Junk Facts"),
-      el("div",{class:"sub"}, el("b",{}, el("span",{class:"dot",style:"background:"+color(p)}), P.name), el("span",{class:"hint"},"Today")),
-      el("div",{class:"row big"}, el("span",{class:"k"},"Junk items", pill), el("span",{class:"v num"}, n, el("small",{class:"hint",style:"font-size:14px;font-weight:600"}," / "+lim))),
-      el("div",{class:"row"}, el("span",{class:"k"},"Calories"), el("span",{class:"v num"}, kcalOf(p,today).toLocaleString())),
-      el("div",{class:"row"}, el("span",{class:"k"},"Spent"), el("span",{class:"v num"}, money(costOf(p,today)))),
-      el("div",{class:"row",style:"border-bottom:5px solid var(--ink)"}, el("span",{class:"k"},"Within-limit streak"), el("span",{class:"v num"}, s+(s===1?" day":" days"))),
-      el("div",{class:"row"}, el("span",{class:"k"},"Last 7 days ", el("small",{},"items")), el("span",{class:"v num"}, wk, trend)),
+      el("div",{class:"sub"}, el("b",{}, nameDot(p)), el("span",{class:"hint"}, WD[new Date().getDay()]+" "+shortDate(today))),
+      el("div",{class:"row big thick"}, el("span",{class:"k"},"Junk items", pill), el("span",{class:"v num"}, n, el("small",{class:"hint",style:"font-size:14px;font-weight:600"}," / "+lim))),
+      el("div",{class:"row head"}, el("span",{},"Amount today"), el("span",{},"% Daily max*")),
+      nutRow("Calories","kcal",""),
+      nutRow("Total fat","fat","g"),
+      nutRow("Sugar","sugar","g"),
+      nutRow("Sodium","sodium","mg"),
+      el("div",{class:"row thick"}, el("span",{class:"k"},"Spent today"), el("span",{class:"v num"}, money(sumOf(p,today,"cost")))),
+      budgetRow,
+      el("div",{class:"row thick"}, el("span",{class:"k"},"Within-limit streak ", el("small",{},"best "+best)), el("span",{class:"v num"}, cur+(cur===1?" day":" days"))),
+      el("div",{class:"row"}, el("span",{class:"k"},"Last 7 days ", el("small",{},"items, vs week before")), el("span",{class:"v num"}, wk, trend)),
       el("div",{class:"row"}, el("span",{class:"k"},"Junk-free days ", el("small",{},"of last 7")), el("span",{class:"v num"}, clean7+" / 7")),
-      el("div",{class:"foot"},"Daily limit is "+lim+" item"+(lim===1?"":"s")+". Streak counts days at or under the limit, today included.")
+      el("div",{class:"foot"},"*From junk alone, against 2,000 kcal, 70 g fat, 50 g sugar and 2,000 mg sodium a day. Daily limit: "+lim+" item"+(lim===1?"":"s")+".")
     ));
   }
 }
 
 function renderQuick(){
   const q = $("#quick"); q.replaceChildren();
-  for(const it of ITEMS){
-    q.append(el("button",{type:"button",class:"q",onclick:()=>openSheet(it)}, el("b",{},it.item), el("span",{},"~"+it.kcal+" kcal · "+state.settings.currency+it.cost)));
-  }
-  q.append(el("button",{type:"button",class:"q custom",onclick:()=>openSheet({item:"",cat:"Fast food",kcal:300,cost:100})}, el("b",{},"Something else"), el("span",{},"Type your own")));
+  const last = allEntries().find(e=>e.person===me);
+  if(last) q.append(el("button",{type:"button",class:"q repeat",onclick:()=>quickLog(Object.assign({},last,{qty:1}))}, el("b",{},"Repeat: "+last.item), el("span",{},"Log it again now, one tap")));
+  for(const it of state.settings.custom) q.append(el("button",{type:"button",class:"q fav",onclick:()=>openSheet(it)}, el("b",{},it.item), el("span",{},"~"+it.kcal+" kcal · "+money(it.cost))));
+  for(const it of ITEMS) q.append(el("button",{type:"button",class:"q",onclick:()=>openSheet(it)}, el("b",{},it.item), el("span",{},"~"+it.kcal+" kcal · "+money(it.cost))));
+  q.append(el("button",{type:"button",class:"q custom",onclick:()=>openSheet({item:"",cat:"Fast food",kcal:300,fat:12,sugar:5,sodium:500,cost:100})}, el("b",{},"Something else"), el("span",{},"Type your own")));
+}
+function quickLog(src){
+  const e = {id:uid(), t:Date.now(), item:src.item, cat:src.cat, qty:src.qty||1, kcal:val(src,"kcal"), fat:val(src,"fat"), sugar:val(src,"sugar"),
+    sodium:val(src,"sodium"), cost:val(src,"cost"), triggers:(src.triggers||[]).slice(), where:src.where||"", note:""};
+  putEntry(me, e); afterLog(me, e);
+}
+function afterLog(p, e){
+  const k = dkey(new Date(e.t)), n = countOf(p,k), lim = person(p).limit;
+  const msg = k!==todayKey() ? "Logged for "+dayLabel(k)+"." : n>lim ? "Logged. "+n+" today, over the limit of "+lim+"." : "Logged. "+n+" of "+lim+" today.";
+  toast(msg, {label:"Undo", fn:()=>{ removeEntry(p+"_"+k, e.id); toast("Removed."); }});
 }
 
-function openSheet(it){
-  draft = {triggers:new Set()};
-  $("#sheetTitle").textContent = it.item ? "Log "+it.item.toLowerCase()+" for "+person(me).name : "Log something for "+person(me).name;
-  $("#fItem").value = it.item; $("#fCat").value = it.cat; $("#fQty").value = 1;
-  $("#fKcal").value = it.kcal; $("#fCost").value = it.cost; $("#fNote").value = "";
-  $("#fWhen").value = localInputValue(new Date());
-  $("#fCostLabel").textContent = "Cost each ("+state.settings.currency+")";
-  renderTriggerChips();
+function openSheet(it, editing){
+  draft = {triggers:new Set(it.triggers||[]), where:it.where||"", editing:editing||null};
+  $("#sheetTitle").textContent = editing ? "Edit entry for "+person(editing.person).name
+    : it.item ? "Log "+it.item.toLowerCase()+" for "+person(me).name : "Log something for "+person(me).name;
+  const cat = $("#fCat"); if(!cat.options.length) for(const c of CATS) cat.append(el("option",{},c));
+  $("#fItem").value = it.item||""; cat.value = CATS.includes(it.cat) ? it.cat : "Fast food"; $("#fQty").value = it.qty||1;
+  $("#fKcal").value = val(it,"kcal"); $("#fFat").value = val(it,"fat"); $("#fSugar").value = val(it,"sugar");
+  $("#fSodium").value = val(it,"sodium"); $("#fCost").value = val(it,"cost"); $("#fNote").value = it.note||"";
+  $("#fWhen").value = localInputValue(editing ? new Date(it.t) : new Date());
+  $("#fCostLabel").textContent = "Cost ("+state.settings.currency+")";
+  $("#fFav").checked = false; $("#fFavWrap").hidden = !!editing || !!lookup(it.item);
+  $("#fSave").textContent = editing ? "Save changes" : "Log it";
+  renderChips();
+  if(tab!=="today") setTab("today", false);
   $("#sheet").hidden = false;
   $("#sheet").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
   (it.item ? $("#fQty") : $("#fItem")).focus({preventScroll:true});
 }
-function renderTriggerChips(){
-  const box = $("#fTriggers"); box.replaceChildren();
-  for(const t of TRIGGERS){
-    box.append(el("button",{type:"button",class:"chip","aria-pressed":String(draft.triggers.has(t)),onclick:()=>{draft.triggers.has(t)?draft.triggers.delete(t):draft.triggers.add(t);renderTriggerChips();}}, t));
-  }
+function renderChips(){
+  const w = $("#fWhere"); w.replaceChildren();
+  for(const x of WHERES) w.append(el("button",{type:"button",class:"chip","aria-pressed":String(draft.where===x),onclick:()=>{ draft.where = draft.where===x ? "" : x; renderChips(); }}, x));
+  const t = $("#fTriggers"); t.replaceChildren();
+  for(const x of TRIGGERS) t.append(el("button",{type:"button",class:"chip","aria-pressed":String(draft.triggers.has(x)),onclick:()=>{ draft.triggers.has(x) ? draft.triggers.delete(x) : draft.triggers.add(x); renderChips(); }}, x));
 }
+$("#fItem").addEventListener("change", ()=>{
+  if(draft && draft.editing) return;
+  const d = lookup($("#fItem").value.trim());
+  $("#fFavWrap").hidden = !!d;
+  if(d){ $("#fCat").value = d.cat; $("#fKcal").value = d.kcal; $("#fFat").value = d.fat; $("#fSugar").value = d.sugar; $("#fSodium").value = d.sodium; $("#fCost").value = d.cost; }
+});
 $("#sheet").addEventListener("submit", ev=>{
   ev.preventDefault();
   const item = $("#fItem").value.trim(); if(!item){ $("#fItem").focus(); return; }
   const when = $("#fWhen").value ? new Date($("#fWhen").value) : new Date();
   const t = isNaN(when) ? Date.now() : when.getTime();
   if(t > Date.now()+60000){ toast("That time is in the future. Pick a time that has already happened."); return; }
-  const e = {id:uid(), t, item:item.slice(0,40), cat:$("#fCat").value,
-    qty:Math.max(1,Math.min(20,Math.round(+$("#fQty").value||1))),
-    kcal:Math.max(0,Math.round(+$("#fKcal").value||0)), cost:Math.max(0,+$("#fCost").value||0),
-    triggers:[...draft.triggers], note:$("#fNote").value.trim().slice(0,120)};
-  addEntry(me, e);
+  if(dkey(new Date(t)) < dkey(addDays(new Date(),-170))){ toast("Entries can go back up to 170 days."); return; }
+  const ed = draft.editing, p = ed ? ed.person : me;
+  const e = normItem({item, cat:$("#fCat").value, kcal:$("#fKcal").value, fat:$("#fFat").value, sugar:$("#fSugar").value, sodium:$("#fSodium").value, cost:$("#fCost").value});
+  Object.assign(e, {id: ed ? ed.id : uid(), t, qty:Math.round(clampNum($("#fQty").value,1,20,1)), triggers:[...draft.triggers], where:draft.where, note:$("#fNote").value.trim().slice(0,120)});
+  if($("#fFav").checked && !ed && !lookup(item)){
+    const s2 = JSON.parse(JSON.stringify(state.settings));
+    s2.custom.unshift(normItem(e)); saveSettings(s2);
+  }
+  if(ed){
+    if(ed.docId !== p+"_"+dkey(new Date(t))) removeEntry(ed.docId, ed.id);
+    putEntry(p, e); toast("Entry updated.");
+  } else { putEntry(p, e); afterLog(p, e); }
   $("#sheet").hidden = true; draft = null;
-  const n = countOf(me, dkey(new Date())), lim = person(me).limit;
-  toast(dkey(new Date(t))!==dkey(new Date()) ? "Logged for "+dayLabel(dkey(new Date(t))).toLowerCase()+"."
-    : n>lim ? "Logged. That's "+n+" today, over your limit of "+lim+"." : "Logged. "+n+" of "+lim+" today.");
 });
 $("#fCancel").addEventListener("click", ()=>{ $("#sheet").hidden = true; draft = null; });
 
+function entryRow(e){
+  const q = e.qty||1, key = e.docId+"/"+e.id, confirming = pendingDelete===key;
+  const meta = [person(e.person).name, timeLabel(e.t), e.cat, fmt(val(e,"kcal")*q)+" kcal", fmt(val(e,"sugar")*q,"g")+" sugar", money(val(e,"cost")*q)];
+  const why = [e.where, ...(e.triggers||[])].filter(Boolean);
+  return el("div",{class:"h"},
+    el("span",{class:"who-dot",style:"background:"+color(e.person)}),
+    el("div",{class:"what"}, el("b",{}, (q>1?q+" × ":"")+e.item), el("span",{}, meta.join(" · ")),
+      why.length ? el("span",{}, why.join(" · ")) : null, e.note ? el("span",{style:"font-style:italic"}, e.note) : null),
+    el("div",{class:"ops"},
+      el("button",{type:"button",onclick:()=>openSheet(e,{docId:e.docId,id:e.id,person:e.person})},"Edit"),
+      el("button",{type:"button",class:confirming?"confirm":"",onclick:()=>{
+        if(confirming){ pendingDelete = null; const gone = removeEntry(e.docId,e.id); toast("Entry deleted.", gone ? {label:"Undo", fn:()=>putEntry(e.person, gone)} : null); }
+        else { pendingDelete = key; render(); setTimeout(()=>{ if(pendingDelete===key){ pendingDelete = null; render(); } },4000); }
+      }}, confirming?"Confirm":"Delete")));
+}
+function renderToday(){
+  const k = todayKey(), list = allEntries().filter(e=>e.date===k);
+  const box = $("#todayList"); box.replaceChildren();
+  if(!list.length) box.append(el("div",{class:"empty"},"Nothing logged today. If it stays that way, today counts as junk-free for both of you."));
+  else for(const e of list) box.append(entryRow(e));
+  $("#todayTotals").textContent = PIDS.map(p=>person(p).name+" "+countOf(p,k)).join(" · ");
+}
+
+/* ---------- TRENDS ---------- */
 function renderChart(){
-  const days = []; for(let i=13;i>=0;i--) days.push(dkey(addDays(new Date(),-i)));
-  const W=680, H=240, L=34, R=10, T=14, B=40, pw=W-L-R, ph=H-T-B;
+  seg($("#rangeSeg"), [[14,"14 days"],[30,"30 days"]], range, r=>{ range = r; renderChart(); });
+  const days = []; for(let i=range-1;i>=0;i--) days.push(dkey(addDays(new Date(),-i)));
+  if(!selDay || !days.includes(selDay)) selDay = days[days.length-1];
+  const W = range===14 ? 680 : 900, H = 240, L = 34, R = 10, T = 14, B = 40, pw = W-L-R, ph = H-T-B;
   let max = Math.max(3, ...PIDS.map(p=>person(p).limit), ...days.flatMap(k=>PIDS.map(p=>countOf(p,k))));
-  const step = max<=6?1:max<=12?2:5; max = Math.ceil(max/step)*step;
+  const step = max<=6 ? 1 : max<=12 ? 2 : 5; max = Math.ceil(max/step)*step;
   const y = v => T + ph - v/max*ph;
   const gw = pw/days.length, bw = Math.min(16,(gw-8)/2);
-  const NS = "http://www.w3.org/2000/svg";
-  const s = (tag,a,txt)=>{ const n=document.createElementNS(NS,tag); for(const k in a) n.setAttribute(k,a[k]); if(txt!=null) n.textContent=txt; return n; };
-  const svg = s("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":"Junk items per day for the last 14 days"});
+  const svg = s("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":"Junk items per day for the last "+range+" days"});
   for(let v=0; v<=max; v+=step){
     svg.append(s("line",{x1:L,x2:W-R,y1:y(v),y2:y(v),stroke:"var(--line)","stroke-width":1}));
     svg.append(s("text",{x:L-8,y:y(v)+4,"text-anchor":"end","font-size":11,fill:"var(--muted)"},v));
   }
+  const hls = [];
   days.forEach((k,i)=>{
     const gx = L + i*gw + gw/2, d = fromKey(k), isToday = i===days.length-1;
+    const hl = s("rect",{class:"hl"+(k===selDay?" on":""),x:L+i*gw+1,y:T,width:gw-2,height:ph,rx:4}); svg.append(hl); hls.push([k,hl]);
     PIDS.forEach((p,j)=>{
       const v = countOf(p,k), x = gx + (j===0 ? -bw-1 : 1);
       if(v>0){
-        const over = v>person(p).limit;
-        const r = s("rect",{x, y:y(v), width:bw, height:y(0)-y(v), rx:2, fill:color(p), opacity: isToday?1:.85});
-        r.append(s("title",{},person(p).name+", "+dayLabel(k)+": "+v+" item"+(v===1?"":"s")+(over?" (over limit)":"")));
-        svg.append(r);
-        if(over) svg.append(s("circle",{cx:x+bw/2, cy:y(v)-6, r:2.5, fill:"var(--bad)"}));
-      } else {
-        svg.append(s("rect",{x, y:y(0)-2, width:bw, height:2, fill:color(p), opacity:.35}));
-      }
+        const h = y(0)-y(v), r = Math.min(4,bw/2,h);
+        svg.append(s("path",{d:`M${x},${y(0)}V${y(v)+r}Q${x},${y(v)} ${x+r},${y(v)}H${x+bw-r}Q${x+bw},${y(v)} ${x+bw},${y(v)+r}V${y(0)}Z`, fill:color(p)}));
+        if(v>person(p).limit) svg.append(s("circle",{cx:x+bw/2, cy:y(v)-7, r:3, fill:"var(--bad)"}));
+      } else svg.append(s("rect",{x, y:y(0)-2, width:bw, height:2, fill:color(p), opacity:.4}));
     });
-    svg.append(s("text",{x:gx,y:H-B+16,"text-anchor":"middle","font-size":11,fill:isToday?"var(--ink)":"var(--muted)","font-weight":isToday?700:400}, d.getDate()));
-    svg.append(s("text",{x:gx,y:H-B+30,"text-anchor":"middle","font-size":10,fill:"var(--muted)"}, WD[d.getDay()][0]));
+    const showLabel = range===14 || i%3===(days.length-1)%3;
+    if(showLabel){
+      svg.append(s("text",{x:gx,y:H-B+16,"text-anchor":"middle","font-size":11,fill:isToday?"var(--ink)":"var(--muted)","font-weight":isToday?700:400}, d.getDate()));
+      svg.append(s("text",{x:gx,y:H-B+30,"text-anchor":"middle","font-size":10,fill:"var(--muted)"}, WD[d.getDay()].slice(0,2)));
+    }
   });
-  const lims = [...new Set(PIDS.map(p=>person(p).limit))];
-  for(const lim of lims){
+  for(const lim of [...new Set(PIDS.map(p=>person(p).limit))]){
     const owners = PIDS.filter(p=>person(p).limit===lim);
-    const stroke = owners.length===2 ? "var(--ink)" : color(owners[0]);
-    svg.append(s("line",{x1:L,x2:W-R,y1:y(lim),y2:y(lim),stroke,"stroke-width":1.5,"stroke-dasharray":"5 4"}));
+    svg.append(s("line",{x1:L,x2:W-R,y1:y(lim),y2:y(lim),stroke:owners.length===2?"var(--ink)":color(owners[0]),"stroke-width":1.5,"stroke-dasharray":"5 4"}));
   }
   svg.append(s("line",{x1:L,x2:W-R,y1:y(0),y2:y(0),stroke:"var(--ink)","stroke-width":1}));
+  days.forEach((k,i)=>{
+    const hit = s("rect",{class:"hit",x:L+i*gw,y:0,width:gw,height:H});
+    const pick = ()=>{ if(selDay===k) return; selDay = k; for(const [kk,r] of hls) r.classList.toggle("on", kk===k); renderDayDetail(); };
+    hit.addEventListener("pointerenter", pick); hit.addEventListener("click", pick);
+    svg.append(hit);
+  });
   $("#chart").replaceChildren(svg);
   const lg = $("#legend"); lg.replaceChildren();
   for(const p of PIDS) lg.append(el("span",{}, el("i",{style:"background:"+color(p)}), person(p).name));
   lg.append(el("span",{}, el("i",{style:"background:none;border-top:2px dashed var(--ink);height:0;border-radius:0"}), "Daily limit"));
-  lg.append(el("span",{}, el("i",{style:"background:var(--bad);border-radius:50%;width:6px;height:6px"}), "Over limit"));
+  lg.append(el("span",{}, el("i",{style:"background:var(--bad);border-radius:50%"}), "Over limit"));
+  renderDayDetail();
+}
+function renderDayDetail(){
+  const box = $("#dayDetail"); box.replaceChildren();
+  for(const p of PIDS){
+    const list = entriesOf(p,selDay), n = countOf(p,selDay);
+    const names = list.map(e=>((e.qty||1)>1?(e.qty+"× "):"")+e.item).join(", ");
+    box.append(el("div",{},
+      el("b",{}, nameDot(p), " · "+dayLabel(selDay)+": "+n+" item"+(n===1?"":"s")),
+      el("span",{class:"hint"}, n ? names+" · "+fmt(sumOf(p,selDay,"kcal"))+" kcal · "+money(sumOf(p,selDay,"cost")) : (selDay>=startKey() ? "Junk-free" : "Before tracking started"))));
+  }
 }
 
+function renderCalendars(){
+  const box = $("#cals"); box.replaceChildren();
+  const now = new Date();
+  if(!calMonth) calMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const y = calMonth.getFullYear(), m = calMonth.getMonth();
+  const first = new Date(y,m,1), daysIn = new Date(y,m+1,0).getDate(), lead = (first.getDay()+6)%7;
+  const title = first.toLocaleString(undefined,{month:"long",year:"numeric"});
+  const isCur = y===now.getFullYear() && m===now.getMonth();
+  const start = startKey(), today = todayKey();
+  for(const p of PIDS){
+    const grid = el("div",{class:"cal"}, WD_MON.map(d=>el("span",{class:"wd"},d[0])));
+    for(let i=0;i<lead;i++) grid.append(el("span",{class:"c blank"}));
+    let clean = 0, under = 0, over = 0;
+    for(let d=1; d<=daysIn; d++){
+      const k = dkey(new Date(y,m,d));
+      let cls = "none", n = "";
+      if(k<=today && k>=start){ cls = dayStatus(p,k); n = countOf(p,k); if(cls==="clean") clean++; else if(cls==="under") under++; else over++; }
+      grid.append(el("span",{class:"c "+cls+(k===today?" today":""),title:dayLabel(k)+(n!==""?": "+n+" item"+(n===1?"":"s"):"")}, el("b",{},d), n!=="" ? el("span",{},n===0?"✓":n) : null));
+    }
+    box.append(el("div",{class:"card"},
+      el("div",{class:"cal-head"},
+        el("h4",{}, nameDot(p), " · "+title),
+        el("div",{class:"actions"},
+          el("button",{type:"button",class:"btn ghost small","aria-label":"Previous month",onclick:()=>{ calMonth = new Date(y,m-1,1); renderCalendars(); }},"‹"),
+          el("button",{type:"button",class:"btn ghost small","aria-label":"Next month",disabled:isCur,onclick:()=>{ calMonth = new Date(y,m+1,1); renderCalendars(); }},"›"))),
+      grid,
+      el("div",{class:"status-legend"},
+        el("span",{}, el("i",{style:"background:color-mix(in srgb,var(--ok) 22%,var(--surface))"}), clean+" junk-free"),
+        el("span",{}, el("i",{style:"background:color-mix(in srgb,var(--warn) 24%,var(--surface))"}), under+" within limit"),
+        el("span",{}, el("i",{style:"background:color-mix(in srgb,var(--bad) 30%,var(--surface))"}), over+" over limit"))));
+  }
+}
+
+function renderWeekly(){
+  const box = $("#weekly"); box.replaceChildren();
+  const start = startKey(), today = todayKey();
+  const rows = [];
+  let wk = monday(new Date());
+  for(let i=0;i<8;i++){
+    const days = []; for(let d=0; d<7; d++){ const k = dkey(addDays(wk,d)); if(k<=today && k>=start) days.push(k); }
+    if(!days.length && i>0) break;
+    rows.push({label: (i===0?"This week":i===1?"Last week":shortDate(dkey(wk))), days});
+    wk = addDays(wk,-7);
+  }
+  const cols = ["Items","Junk-free","Over","kcal","Sugar","Spent"];
+  const table = el("table",{},
+    el("thead",{},
+      el("tr",{class:"grp"}, el("th",{}), ...PIDS.map(p=>el("th",{colspan:cols.length,style:"text-align:center;color:"+color(p)}, person(p).name))),
+      el("tr",{}, el("th",{},"Week"), ...PIDS.flatMap(()=>cols.map(c=>el("th",{},c))))),
+    el("tbody",{}, rows.map(r=>el("tr",{}, el("td",{}, r.label), ...PIDS.flatMap(p=>{
+      const items = r.days.reduce((s,k)=>s+countOf(p,k),0);
+      const clean = r.days.filter(k=>countOf(p,k)===0).length;
+      const over = r.days.filter(k=>countOf(p,k)>person(p).limit).length;
+      return [el("td",{},items), el("td",{class:clean===r.days.length&&r.days.length?"good":""},clean+"/"+r.days.length), el("td",{class:over?"bad":""},over),
+        el("td",{},fmt(r.days.reduce((s,k)=>s+sumOf(p,k,"kcal"),0))), el("td",{},fmt(r.days.reduce((s,k)=>s+sumOf(p,k,"sugar"),0),"g")),
+        el("td",{},money(r.days.reduce((s,k)=>s+sumOf(p,k,"cost"),0)))];
+    })))));
+  box.append(table);
+}
+
+function renderWeights(){
+  const box = $("#weights"); box.replaceChildren();
+  for(const p of PIDS){
+    const list = state.weights[p], last = list[list.length-1], firstW = list[0];
+    const inputId = "w_"+p;
+    const form = el("form",{onsubmit:ev=>{
+      ev.preventDefault(); const kg = +document.getElementById(inputId).value;
+      if(!(kg>=20 && kg<=300)){ toast("Enter a weight between 20 and 300 kg."); return; }
+      saveWeight(p, todayKey(), Math.round(kg*10)/10); toast("Weight saved for "+person(p).name+".");
+    }}, el("input",{id:inputId,type:"number",step:"0.1",min:"20",max:"300",inputmode:"decimal",placeholder:"kg","aria-label":person(p).name+" weight in kg"}), el("button",{class:"btn small",type:"submit"},"Save today"));
+    const card = el("div",{class:"card wt"},
+      el("div",{class:"top"}, el("span",{class:"label"}, nameDot(p)),
+        last ? el("span",{class:"hint"},"Last check-in "+dayLabel(last.date)) : null),
+      last ? el("div",{class:"top"}, el("b",{class:"num"}, fmt(last.kg," kg")),
+        list.length>1 ? el("span",{class:last.kg<=firstW.kg?"down":"up"}, (last.kg<=firstW.kg?"▼ ":"▲ ")+fmt(Math.abs(last.kg-firstW.kg)," kg")+" since "+shortDate(firstW.date)) : el("span",{class:"hint"},"First check-in. Add another next week to see the trend."))
+        : el("div",{class:"empty"},"No check-ins yet."),
+      list.length>1 ? sparkline(list.slice(-16), p) : null,
+      form);
+    box.append(card);
+  }
+}
+function sparkline(list, p){
+  const W = 300, H = 70, P = 8;
+  const vals = list.map(x=>x.kg), lo = Math.min(...vals)-0.5, hi = Math.max(...vals)+0.5;
+  const x = i => P + i*(W-2*P)/(list.length-1), y = v => P + (hi-v)/(hi-lo)*(H-2*P);
+  const pts = list.map((w,i)=>x(i)+","+y(w.kg)).join(" ");
+  const svg = s("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":person(p).name+" weight trend"});
+  svg.append(s("line",{x1:P,x2:W-P,y1:H-P,y2:H-P,stroke:"var(--line)"}));
+  svg.append(s("polygon",{points:`${x(0)},${H-P} ${pts} ${x(list.length-1)},${H-P}`,fill:color(p),opacity:.12}));
+  svg.append(s("polyline",{points:pts,fill:"none",stroke:color(p),"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  list.forEach((w,i)=>{ const c = s("circle",{cx:x(i),cy:y(w.kg),r:i===list.length-1?4.5:2.5,fill:color(p),stroke:"var(--surface)","stroke-width":2}); c.append(s("title",{},shortDate(w.date)+": "+w.kg+" kg")); svg.append(c); });
+  return svg;
+}
+
+/* ---------- PATTERNS ---------- */
 function stackedBars(boxSel, counts, emptyMsg){
   const box = $(boxSel); box.replaceChildren();
-  const rows = Object.entries(counts).map(([k,v])=>[k,v,v.p1+v.p2]).sort((a,b)=>b[2]-a[2]).slice(0,6);
+  const rows = Object.entries(counts).map(([k,v])=>[k,v,v.p1+v.p2]).filter(r=>r[2]>0).sort((a,b)=>b[2]-a[2]).slice(0,7);
   if(!rows.length){ box.append(el("div",{class:"empty"},emptyMsg)); return; }
   const max = rows[0][2];
   for(const [k,v,tot] of rows){
-    box.append(el("div",{class:"bar-row"},
+    box.append(el("div",{class:"bar-row",title:PIDS.map(p=>person(p).name+" "+v[p]).join(", ")},
       el("span",{},k),
-      el("span",{class:"track",title:person("p1").name+" "+v.p1+", "+person("p2").name+" "+v.p2},
-        el("span",{style:`width:${v.p1/max*100}%;background:var(--p1)`}),
-        el("span",{style:`width:${v.p2/max*100}%;background:var(--p2)`})),
-      el("span",{class:"num",style:"font-weight:700"},tot)));
+      el("span",{class:"track"}, ...PIDS.filter(p=>v[p]>0).map(p=>el("span",{style:`width:${v[p]/max*100}%;background:${color(p)}`}))),
+      el("span",{class:"n num"},tot)));
   }
 }
-function renderInsights(){
-  const cutoff = dkey(addDays(new Date(),-29));
-  const items = {}, trig = {};
-  const kcal = {p1:0,p2:0}, cost = {p1:0,p2:0};
-  for(const e of allEntries()){
-    if(e.date<cutoff || !PIDS.includes(e.person)) continue;
-    const q = e.qty||1;
-    (items[e.item] ||= {p1:0,p2:0})[e.person] += q;
-    for(const t of (e.triggers||[])) (trig[t] ||= {p1:0,p2:0})[e.person] += q;
-    kcal[e.person] += (e.kcal||0)*q; cost[e.person] += (e.cost||0)*q;
+function tally(entries, keyFn){
+  const out = {};
+  for(const e of entries){ const q = e.qty||1; for(const k of [].concat(keyFn(e)).filter(Boolean)) (out[k] ||= {p1:0,p2:0})[e.person] += q; }
+  return out;
+}
+function top(obj, p){ let best = null, bv = 0; for(const [k,v] of Object.entries(obj)){ const n = p ? v[p] : v.p1+v.p2; if(n>bv){ bv = n; best = k; } } return best ? [best,bv] : null; }
+
+function renderPatterns(){
+  seg($("#patSeg"), [["all","Both"],["p1",person("p1").name],["p2",person("p2").name]], patFilter, f=>{ patFilter = f; renderPatterns(); });
+  const cur = entriesSince(0,30), prev = entriesSince(30,60);
+  const E = cur.filter(e=>patFilter==="all" || e.person===patFilter);
+
+  // per-person summaries
+  const ins = $("#insights"); ins.replaceChildren();
+  for(const p of (patFilter==="all" ? PIDS : [patFilter])){
+    const mine = cur.filter(e=>e.person===p), n = mine.reduce((s,e)=>s+(e.qty||1),0);
+    const before = prev.filter(e=>e.person===p).reduce((s,e)=>s+(e.qty||1),0);
+    const lines = [];
+    if(!n) lines.push("No junk logged in the last 30 days.");
+    else {
+      const days = trackedDays(30);
+      let ln = n+" junk items in "+(days<30?days+" tracked days":"30 days")+", about "+fmt1(n/days)+" a day";
+      if(before>0 && startKey()<=dkey(addDays(new Date(),-59))){ const ch = Math.round((n-before)/before*100); ln += ch<=0 ? ", down "+Math.abs(ch)+"% from the 30 days before." : ", up "+ch+"% from the 30 days before."; } else ln += ".";
+      lines.push(ln);
+      const it = top(tally(mine,e=>e.item),p); if(it) lines.push("Most eaten: "+it[0]+" ("+it[1]+"×).");
+      const bl = top(tally(mine,e=>BLOCKS[blockOf(new Date(e.t).getHours())].n),p);
+      const wd = top(tally(mine,e=>WD_MON[(new Date(e.t).getDay()+6)%7]),p);
+      if(bl) lines.push("Usually in the "+bl[0].toLowerCase()+" ("+BLOCKS.find(b=>b.n===bl[0]).r+")"+(wd?", and most often on "+wd[0]+"s.":"."));
+      const tr = top(tally(mine,e=>e.triggers||[]),p);
+      if(tr) lines.push("Top reason: "+tr[0].toLowerCase()+" ("+pct(tr[1],n)+"% of items).");
+      else lines.push("Tag a reason when you log. It shows what sets off your cravings.");
+      const wh = top(tally(mine,e=>e.where),p); if(wh) lines.push("Mostly "+({"Home":"eaten at home","Outside":"eaten outside","Ordered online":"ordered online"}[wh[0]] || "eaten at "+wh[0].toLowerCase())+" ("+pct(wh[1],n)+"%).");
+      const cost = mine.reduce((s,e)=>s+val(e,"cost")*(e.qty||1),0), kcal = mine.reduce((s,e)=>s+val(e,"kcal")*(e.qty||1),0);
+      lines.push("Spent "+money(cost)+" and ate "+fmt(kcal)+" kcal of junk, roughly "+fmt1(kcal/KCAL_PER_KG_FAT)+" kg of body fat in energy. At this pace that's "+money(cost/days*365)+" a year.");
+      let worst = null; for(let i=0;i<30;i++){ const k = dkey(addDays(new Date(),-i)); const c = countOf(p,k); if(!worst || c>worst[1]) worst = [k,c]; }
+      if(worst && worst[1]>1) lines.push("Biggest day: "+dayLabel(worst[0])+" with "+worst[1]+" items.");
+    }
+    ins.append(el("div",{class:"card insight"}, el("h4",{}, nameDot(p)), el("ul",{}, lines.map(l=>el("li",{},l)))));
   }
-  stackedBars("#topItems", items, "Nothing logged yet. Your most common junk will show up here.");
-  stackedBars("#topTriggers", trig, "Tag why you ate something when you log it. Patterns show up here.");
-  const m = $("#money"); m.replaceChildren();
-  for(const p of PIDS){
-    m.append(el("div",{class:"m"}, el("span",{}, el("span",{style:"color:"+color(p)+";font-weight:800"},person(p).name)), el("b",{class:"num"},money(cost[p]))));
-  }
-  const tk = kcal.p1+kcal.p2, tc = cost.p1+cost.p2;
-  m.append(el("div",{class:"hint"},
-    "Together: "+money(tc)+" and "+tk.toLocaleString()+" kcal from junk. That's roughly "+(tk/KCAL_PER_KG_FAT).toFixed(1)+" kg of body fat worth of energy, and "+money(tc*12)+" a year at this pace."));
+
+  stackedBars("#topItems", tally(E,e=>e.item), "Nothing logged in the last 30 days.");
+  stackedBars("#topTriggers", tally(E,e=>e.triggers||[]), "Tag why you ate something when you log it. Patterns show up here.");
+  stackedBars("#topCats", tally(E,e=>e.cat), "Nothing logged in the last 30 days.");
+  stackedBars("#topWhere", tally(E,e=>e.where), "Pick where you were when you log. It shows up here.");
+
+  // heatmap
+  const grid = Array.from({length:7},()=>Array(5).fill(0));
+  for(const e of E){ const d = new Date(e.t); grid[(d.getDay()+6)%7][blockOf(d.getHours())] += e.qty||1; }
+  const mx = Math.max(1,...grid.flat());
+  const heat = el("div",{class:"heat",role:"table","aria-label":"Junk items by weekday and time of day"},
+    el("span",{}), BLOCKS.map(b=>el("span",{class:"hdr"}, b.n, el("br"), el("span",{style:"font-weight:400"},b.r))));
+  grid.forEach((row,i)=>{
+    heat.append(el("span",{class:"rl"},WD_MON[i]));
+    row.forEach((v,j)=>{
+      const t = v/mx, bg = v ? `color-mix(in srgb,var(--ink) ${Math.round(12+t*70)}%,var(--surface))` : "var(--chip)";
+      heat.append(el("span",{class:"cell",title:WD_MON[i]+" "+BLOCKS[j].n.toLowerCase()+": "+v+" item"+(v===1?"":"s"),style:`background:${bg};color:${t>0.5?"var(--surface)":"var(--ink)"}`}, v||""));
+    });
+  });
+  const hb = $("#heat"); hb.replaceChildren(E.length ? heat : el("div",{class:"empty"},"Nothing logged in the last 30 days."));
+
+  // nutrition table
+  const nt = $("#nutrition"); nt.replaceChildren();
+  const days = trackedDays(30);
+  const rows = [["Calories","kcal",""],["Total fat","fat"," g"],["Sugar","sugar"," g"],["Sodium","sodium"," mg"]];
+  const avg = (p,key)=>cur.filter(e=>e.person===p).reduce((s,e)=>s+val(e,key)*(e.qty||1),0)/days;
+  nt.append(el("table",{},
+    el("thead",{}, el("tr",{}, el("th",{},"Per day, from junk"), ...PIDS.flatMap(p=>[el("th",{style:"color:"+color(p)},person(p).name), el("th",{},"% of max")]), el("th",{},"Daily max"))),
+    el("tbody",{}, rows.map(([label,key,unit])=>el("tr",{}, el("td",{},label),
+      ...PIDS.flatMap(p=>{ const v = avg(p,key), pc = pct(v,DAILY[key]); return [el("td",{},fmt(v,unit)), el("td",{class:pc>=50?"bad":""},pc+"%")]; }),
+      el("td",{},DAILY[key].toLocaleString()+unit))))));
+  nt.append(el("p",{class:"hint",style:"margin:10px 0 0"},"Averaged over "+days+" tracked day"+(days===1?"":"s")+". Red means junk alone supplies half or more of a full day's maximum."));
 }
 
+/* ---------- HISTORY ---------- */
 function renderHistory(){
-  const seg = $("#histSeg"); seg.replaceChildren();
-  for(const [id,label] of [["all","Both"],["p1",person("p1").name],["p2",person("p2").name]])
-    seg.append(el("button",{type:"button","data-p":id,"aria-pressed":String(histFilter===id),onclick:()=>{histFilter=id;renderHistory();}},label));
+  seg($("#histSeg"), [["all","Both"],["p1",person("p1").name],["p2",person("p2").name]], histFilter, f=>{ histFilter = f; histLimit = 60; renderHistory(); });
+  const cs = $("#histCat");
+  if(!cs.options.length){ cs.append(el("option",{value:""},"All types")); for(const c of CATS) cs.append(el("option",{value:c},c)); }
+  const q = histQuery.toLowerCase();
+  const list = allEntries().filter(e=>(histFilter==="all"||e.person===histFilter) && (!histCat||e.cat===histCat) &&
+    (!q || e.item.toLowerCase().includes(q) || (e.note||"").toLowerCase().includes(q) || (e.triggers||[]).some(t=>t.toLowerCase().includes(q))));
   const box = $("#hist"); box.replaceChildren();
-  const list = allEntries().filter(e=>histFilter==="all"||e.person===histFilter).slice(0,60);
-  if(!list.length){ box.append(el("div",{class:"empty"},"No entries yet. Every day without an entry counts as junk-free.")); return; }
+  if(!list.length){ box.append(el("div",{class:"empty"}, allEntries().length ? "No entries match these filters." : "No entries yet. Every day without an entry counts as junk-free.")); $("#histMore").hidden = true; return; }
   let last = null;
-  for(const e of list){
-    if(e.date!==last){ box.append(el("div",{class:"label day-sep"},dayLabel(e.date))); last = e.date; }
-    const q = e.qty||1, key = e.docId+"/"+e.id, confirming = pendingDelete===key;
-    const meta = [person(e.person)?person(e.person).name:"?", timeLabel(e.t), e.cat, (e.kcal*q)+" kcal", money(e.cost*q)];
-    if(e.triggers && e.triggers.length) meta.push(e.triggers.join(", "));
-    box.append(el("div",{class:"h"},
-      el("span",{class:"who-dot",style:"background:"+color(e.person)}),
-      el("div",{class:"what"}, el("b",{}, (q>1?q+" × ":"")+e.item), el("span",{}, meta.join(" · ")), e.note?el("span",{style:"display:block;font-style:italic"},e.note):null),
-      el("button",{type:"button",class:"del"+(confirming?" confirm":""),onclick:()=>{
-        if(confirming){ pendingDelete=null; removeEntry(e.docId,e.id); toast("Entry deleted."); }
-        else { pendingDelete=key; renderHistory(); setTimeout(()=>{ if(pendingDelete===key){ pendingDelete=null; renderHistory(); } },4000); }
-      }}, confirming?"Confirm delete":"Delete")));
+  for(const e of list.slice(0,histLimit)){
+    if(e.date!==last){
+      last = e.date;
+      const tot = PIDS.filter(p=>histFilter==="all"||histFilter===p).map(p=>person(p).name+" "+countOf(p,e.date)+" · "+fmt(sumOf(p,e.date,"kcal"))+" kcal").join("   ");
+      box.append(el("div",{class:"label day-sep"}, el("span",{},dayLabel(e.date)), el("span",{},tot)));
+    }
+    box.append(entryRow(e));
   }
+  $("#histMore").hidden = list.length<=histLimit;
 }
+$("#histCat").addEventListener("change", ev=>{ histCat = ev.target.value; histLimit = 60; renderHistory(); });
+$("#histSearch").addEventListener("input", ev=>{ histQuery = ev.target.value.trim(); histLimit = 60; renderHistory(); });
+$("#histMore").addEventListener("click", ()=>{ histLimit += 60; renderHistory(); });
 
+/* ---------- SETTINGS ---------- */
 function renderSettingsForm(force){
-  if(!force && $("#settings").contains(document.activeElement)) return;
-  $("#sN1").value = person("p1").name; $("#sL1").value = person("p1").limit;
-  $("#sN2").value = person("p2").name; $("#sL2").value = person("p2").limit;
+  if(!force && $("#setForm").contains(document.activeElement)) return;
+  $("#sN1").value = person("p1").name; $("#sL1").value = person("p1").limit; $("#sB1").value = person("p1").budget || "";
+  $("#sN2").value = person("p2").name; $("#sL2").value = person("p2").limit; $("#sB2").value = person("p2").budget || "";
   $("#sCur").value = state.settings.currency;
+  const f = $("#favs"); f.replaceChildren();
+  if(!state.settings.custom.length) f.append(el("div",{class:"empty"},"None yet. Log \"Something else\" and tick \"Add to quick items\"."));
+  state.settings.custom.forEach((it,i)=>f.append(el("div",{class:"f"},
+    el("span",{}, el("b",{},it.item), el("span",{class:"hint"}," · "+it.cat+" · "+it.kcal+" kcal · "+money(it.cost))),
+    el("button",{type:"button",class:"btn ghost small",onclick:()=>{ const s2 = JSON.parse(JSON.stringify(state.settings)); s2.custom.splice(i,1); saveSettings(s2); renderSettingsForm(true); toast("Removed "+it.item+" from quick items."); }},"Remove"))));
 }
 $("#setForm").addEventListener("submit", ev=>{
   ev.preventDefault();
-  saveSettings({currency:$("#sCur").value.trim()||"₹", people:{
-    p1:{name:$("#sN1").value, limit:$("#sL1").value}, p2:{name:$("#sN2").value, limit:$("#sL2").value}}});
+  saveSettings({currency:$("#sCur").value.trim()||"₹", custom:state.settings.custom, people:{
+    p1:{name:$("#sN1").value, limit:$("#sL1").value, budget:$("#sB1").value},
+    p2:{name:$("#sN2").value, limit:$("#sL2").value, budget:$("#sB2").value}}});
   renderSettingsForm(true); toast("Settings saved.");
 });
 
+/* ---------- render ---------- */
 function render(){
-  renderWho(); renderFacts(); renderQuick(); renderChart(); renderInsights(); renderHistory(); renderSettingsForm(false);
-  const sync = $("#sync");
-  sync.classList.toggle("on", mode==="db");
+  renderWho(); renderVs(); renderFacts(); renderQuick(); renderToday();
+  renderChart(); renderCalendars(); renderWeekly(); renderWeights();
+  renderPatterns(); renderHistory(); renderSettingsForm(false);
+  $("#sync").classList.toggle("on", mode==="db");
   $("#syncText").textContent = mode==="db" ? "Synced between both of you" : "Saved on this device";
 }
 
 let toastTimer;
-function toast(msg){
-  const t = $("#toast"); t.textContent = msg; t.hidden = false;
-  clearTimeout(toastTimer); toastTimer = setTimeout(()=>{ t.hidden = true; }, 3200);
+function toast(msg, action){
+  const t = $("#toast"); t.replaceChildren(el("span",{},msg));
+  if(action) t.append(el("button",{type:"button",onclick:()=>{ t.hidden = true; action.fn(); }}, action.label));
+  t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>{ t.hidden = true; }, action ? 6000 : 3200);
 }
 
 /* ---------- backup (standalone page only) ---------- */
 $("#exportBtn").addEventListener("click", ()=>{
   const blob = new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
-  const a = el("a",{href:URL.createObjectURL(blob),download:"junk-facts-"+dkey(new Date())+".json"});
+  const a = el("a",{href:URL.createObjectURL(blob),download:"junk-facts-"+todayKey()+".json"});
   document.body.append(a); a.click(); a.remove();
 });
 $("#importFile").addEventListener("change", async ev=>{
@@ -605,7 +1104,7 @@ $("#importFile").addEventListener("change", async ev=>{
   try{
     const raw = JSON.parse(await f.text());
     if(!raw || typeof raw.days!=="object") throw new Error();
-    state = {settings:normSettings(raw.settings), days:raw.days};
+    state = {settings:normSettings(raw.settings), days:raw.days, weights:normWeights(raw.weights)};
     saveLocal(); render(); toast("Backup imported.");
   }catch(e){ toast("That file isn't a Junk Facts backup."); }
   ev.target.value = "";
@@ -617,23 +1116,27 @@ async function connect(){
   let d = null;
   try{ d = await window.claude.use("db"); }catch(e){ d = null; }
   if(!d) return true;
-  db = d; mode = "db"; state = {settings:defaultSettings(), days:{}}; render();
+  db = d; mode = "db"; state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}}; render();
   const onErr = err=>{ if(err && err.code!=="revoked") toast("Lost the live connection. Reload the page to reconnect."); };
   db.doc("settings/main").onSnapshot(snap=>{ state.settings = normSettings(snap.exists ? snap.data() : null); render(); }, onErr);
-  const cutoff = dkey(addDays(new Date(),-180));
-  db.collection("days").where("date",">=",cutoff).limit(1000).onSnapshot(q=>{
+  db.collection("days").where("date",">=",dkey(addDays(new Date(),-180))).limit(1000).onSnapshot(q=>{
     const m = {}; for(const doc of q.docs) m[doc.id] = doc.data();
     state.days = m; render();
   }, onErr);
+  db.collection("weights").onSnapshot(q=>{
+    const w = {p1:[],p2:[]}; for(const doc of q.docs) if(PIDS.includes(doc.id)) w[doc.id] = (doc.data().entries)||[];
+    state.weights = normWeights(w); render();
+  }, onErr);
   return true;
 }
-loadLocal(); render();
-connect().then(inArtifact=>{
-  if(!inArtifact){ $("#exportBtn").hidden = false; $("#importLbl").hidden = false; }
-});
-// Re-render at midnight so "today" rolls over.
-setInterval(()=>{ const k = dkey(new Date()); if(k!==render.day){ render.day = k; render(); } }, 60000);
-render.day = dkey(new Date());
+loadLocal();
+const hashTab = (location.hash||"").slice(1), savedTab = lsGet(TAB_KEY);
+setTab(["today","trends","patterns","history","settings"].includes(hashTab) ? hashTab : ["today","trends","patterns","history","settings"].includes(savedTab) ? savedTab : "today", false);
+render();
+connect().then(inArtifact=>{ if(!inArtifact) $("#backupCard").hidden = false; });
+// Re-render when the day rolls over.
+let lastDay = todayKey();
+setInterval(()=>{ const k = todayKey(); if(k!==lastDay){ lastDay = k; selDay = null; calMonth = null; render(); } }, 60000);
 })();
 </script>
 <!-- APP:END -->
