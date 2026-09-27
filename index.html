@@ -435,6 +435,7 @@ body.dropping::after{content:"Drop photos to add them";position:fixed;inset:12px
         <div class="pastebox" id="pasteBox" contenteditable="true" role="textbox" aria-label="Paste a photo here" inputmode="none" spellcheck="false" data-ph="Or paste a photo here: tap this box, then long-press and choose Paste. On a computer, click here and press Ctrl+V (⌘V on Mac)."></div>
         <div class="shots" id="shots"></div>
         <div class="grid2">
+          <p class="privacy" id="noPhotoNote" hidden style="grid-column:1/-1;margin:0">This app can't send photos to Claude. For meals, type what you ordered and Claude will estimate from the description. For photo analysis, open the link in Chrome or Safari (see the help above).</p>
           <label class="field" id="scanDescWrap"><span class="label">What did you order? (optional)</span><input id="scanDesc" maxlength="160" placeholder="e.g. 1 butter chicken, 2 butter naan, 1 coke"></label>
           <label class="field"><span class="label">How much did you eat?</span><input id="scanAmount" maxlength="80" placeholder="e.g. the whole 52 g packet"></label>
           <label class="field"><span class="label" id="scanPriceLabel">Price paid (optional)</span><input id="scanPrice" type="number" min="0" step="any" inputmode="decimal"></label>
@@ -1282,7 +1283,10 @@ function renderScanForm(){
   const box = $("#shots"); box.replaceChildren();
   shots.forEach((f,i)=>box.append(el("div",{class:"shot"}, el("img",{src:f.url,alt:"Label photo "+(i+1)}),
     el("button",{type:"button","aria-label":"Remove photo "+(i+1),onclick:()=>{ URL.revokeObjectURL(f.url); shots.splice(i,1); renderScanForm(); }},"×"))));
-  $("#scanGo").disabled = !shots.length || !!scanCtl || !sample;
+  const descOk = scanMode==="meal" && $("#scanDesc").value.trim().length>2;
+  $("#scanGo").disabled = !!scanCtl || !sample || !(shots.length || descOk);
+  $("#scanGo").textContent = scanMode==="meal" && (!imgLimits && sampleReady && sample || (!shots.length && descOk)) ? "Estimate from description" : SCAN_MODES[scanMode].go;
+  const nh = $("#noPhotoNote"); if(nh) nh.hidden = !(sampleReady && sample && !imgLimits);
 }
 async function toSupported(f){
   // Convert HEIC or other formats the phone can display into JPEG that Claude accepts.
@@ -1366,6 +1370,7 @@ $("#copyLink").addEventListener("click", async ()=>{
   try{ await navigator.clipboard.writeText(url); toast("Link copied. Paste it into Chrome or Safari."); }
   catch(e){ const r = document.createRange(); r.selectNodeContents($("#linkText")); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); toast("Link selected. Copy it, then open it in Chrome or Safari."); }
 });
+$("#scanDesc").addEventListener("input", ()=>renderScanForm());
 $("#camInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
 $("#galInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
 $("#goScan").addEventListener("click", ()=>{ scanMode = "meal"; lsSet("junkfacts.scanmode","meal"); renderScanForm(); setTab("scan", true); });
@@ -1417,16 +1422,31 @@ ${personalBlock()}Rules for the lists: "organs" must have exactly these ${ORGANS
 }
 
 $("#scanGo").addEventListener("click", async ()=>{
-  if(!sample || !shots.length || scanCtl) return;
   const amount = $("#scanAmount").value.trim(), price = +$("#scanPrice").value || 0, who = me, kind = scanMode, desc = $("#scanDesc").value.trim();
+  if(!sample || scanCtl) return;
+  if(!shots.length && !(kind==="meal" && desc)) return;
+  if(kind==="label" && !imgLimits){ toast("This app view can't send photos to Claude. Open the link in Chrome or Safari on your phone to scan labels."); $("#phoneHelp").open = true; return; }
   scanCtl = new AbortController();
   $("#scanProgress").hidden = false; $("#scanStatus").textContent = SCAN_MODES[kind].status;
   renderScanForm();
   try{
-    const report = await sample.json(kind==="meal" ? mealPrompt(amount, desc) : scanPrompt(amount), {
-      images: shots.map(x=>x.file), modelTier: "complex", signal: scanCtl.signal,
-      onText: ({text})=>{ $("#scanStatus").textContent = "Writing the report… "+(text.length/1000).toFixed(1)+"k characters so far"; }
-    });
+    const onText = ({text})=>{ $("#scanStatus").textContent = "Writing the report… "+(text.length/1000).toFixed(1)+"k characters so far"; };
+    const textOnlyMeal = ()=>{ $("#scanStatus").textContent = "Photos can't be sent from this app, so estimating from your description…";
+      return sample.json(mealPrompt(amount, desc, true), {modelTier:"complex", signal:scanCtl.signal, onText}); };
+    let report, fromText = false;
+    if(kind==="meal" && (!shots.length || !imgLimits)){
+      if(!desc){ throw {code:"need_desc"}; }
+      report = await textOnlyMeal(); fromText = true;
+    } else {
+      try{
+        report = await sample.json(kind==="meal" ? mealPrompt(amount, desc) : scanPrompt(amount), {
+          images: shots.map(x=>x.file), modelTier: "complex", signal: scanCtl.signal, onText });
+      }catch(err){
+        if(err && err.code==="images_unavailable" && kind==="meal" && desc){ imgLimits = null; report = await textOnlyMeal(); fromText = true; }
+        else throw err;
+      }
+    }
+    if(report && typeof report==="object" && fromText) report.fromText = true;
     if(!report || typeof report!=="object" || Array.isArray(report)) throw {code:"invalid_json"};
     let personal = null;
     if(report.personal && typeof report.personal==="object"){ personal = report.personal; delete report.personal; }
@@ -1442,7 +1462,8 @@ $("#scanGo").addEventListener("click", async ()=>{
     else if(c==="not_granted" || c==="sampling_disabled") toast("Claude wasn't allowed for this page, so the label can't be analyzed.");
     else if(c==="rate_limited") toast("Claude is busy or your usage limit is reached. Try again in a little while.");
     else if(c==="image_rejected") toast("One of the photos couldn't be read. Retake it as a JPEG or PNG.");
-    else if(c==="images_unavailable") toast("This app view can't send photos to Claude. Open the link in Chrome or Safari on your phone and try again.");
+    else if(c==="images_unavailable"){ imgLimits = null; renderScanForm(); toast(kind==="meal" ? "This app can't send photos to Claude. Type what you ordered in \u201cWhat did you order?\u201d and tap again to estimate from the description, or open the link in Chrome." : "This app can't send photos to Claude. Open the link in Chrome or Safari on your phone to scan labels."); $("#phoneHelp").open = true; }
+    else if(c==="need_desc") toast("Photos can't be sent from this app. Type what you ordered, e.g. \u201cChicken loaded fries, large\u201d, then tap again.");
     else if(c==="refused") toast("Claude couldn't analyze these photos. Try clearer photos of just the label.");
     else if(c==="invalid_json") toast("The report came back incomplete. Tap Analyze label to try again.");
     else if(c==="session_expired") toast("You've been signed out. Sign in again, then retry.");
@@ -2383,9 +2404,12 @@ function renderScanMode(){
   $("#scanDescWrap").hidden = scanMode!=="meal";
 }
 
-function mealPrompt(amount, desc){
+function mealPrompt(amount, desc, textOnly){
   const p = person(me);
-  return `You are a careful Indian nutrition estimator. The attached photo(s) show food ${p.name} is about to eat or just ate, often a delivery order from Zomato or Swiggy or a restaurant meal. A photo may also be a screenshot of the order from the app: use it to identify dishes, portion sizes and quantities.
+  const intro = textOnly
+    ? `You are a careful Indian nutrition estimator. There is no photo: ${p.name} described a meal they ordered or ate, usually from Zomato, Swiggy or a restaurant in India. Estimate from the description using typical Indian restaurant and delivery portion sizes (a standard single serving unless they say otherwise). Set readability.ok to true, and set confidence to "low" or "medium" and explain in confidenceWhy that it is based on the description only. If the description is too vague to identify any food, set readability.ok to false and say what to add.`
+    : `You are a careful Indian nutrition estimator. The attached photo(s) show food ${p.name} is about to eat or just ate, often a delivery order from Zomato or Swiggy or a restaurant meal. A photo may also be a screenshot of the order from the app: use it to identify dishes, portion sizes and quantities.`;
+  return `${intro}
 ${desc ? "What they say they ordered: "+JSON.stringify(desc)+"\n" : ""}How much they ate: ${amount ? JSON.stringify(amount) : "not stated, so assume they ate everything shown"}.
 
 Estimate the nutrition as accurately as you can:
@@ -2431,6 +2455,7 @@ function personalSection(scan){
 function renderMeal(scan){
   const r = scan.report || {}, meal = r.meal || {}, ver = r.verdict || {}, read = r.readability || {};
   const wrap = el("article",{class:"report","aria-label":"Meal estimate"});
+  if(r.fromText) wrap.append(el("p",{class:"privacy",style:"margin:0"},"Estimated from your description only, without the photo. A photo in Chrome or Safari gives a closer estimate."));
   if(read.ok===false){
     wrap.append(el("div",{class:"card"}, el("h3",{},"Couldn't see the food"), el("p",{}, str(read.issues) || "Take the photo from above with the whole plate or box in frame.")));
     return wrap;
