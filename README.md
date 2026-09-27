@@ -30,7 +30,17 @@ The app is built around what behavior-change research says actually works:
 - **Logged today:** both of your entries, with edit and delete.
 
 ### Scan
-Photograph a packaged food's **ingredients list** and **nutrition table**, and optionally the front of the pack. Claude reads them and writes a detailed report on that exact product:
+Two modes:
+
+**Meal photo.** For Zomato or Swiggy orders, restaurant food or anything without a label. Photograph the plate or delivery box from above, and optionally add a screenshot of the order and a line about what you ordered. Claude estimates:
+- calories for what *you* ate, as a best guess and likely range, with a confidence level, plus the whole order
+- protein, carbs, sugar, fibre, fat, saturated fat and sodium, and each as a % of a day's maximum
+- a dish-by-dish breakdown and where the hidden oil, butter, cream, sugar and salt are
+- how to order it healthier next time, what to eat for the rest of the day, and how much walking burns it off
+
+Estimates from a photo can be off by 20–30% or more.
+
+**Packet label.** Photograph a packaged food's **ingredients list** and **nutrition table**, and optionally the front of the pack. Claude reads them and writes a detailed report on that exact product:
 - a health score out of 10, a plain-language verdict, and label warnings (high sodium, palm oil, MSG, ...)
 - the full nutrition table, plus what *your portion* adds up to against a day's maximum
 - effects on the **blood, heart and blood vessels, brain, liver, kidneys, pancreas, stomach, intestines and gut bacteria, teeth, and body fat**, for eating it once and for eating it often

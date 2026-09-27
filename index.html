@@ -269,6 +269,9 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
 .plan input{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 10px;min-width:0;width:100%;font-weight:400}
 @media (max-width:480px){.hero-card{grid-template-columns:1fr;justify-items:start}.hero-ring{flex-direction:row;gap:12px}}
 @media (prefers-reduced-motion:reduce){.breath,.breath.in,.breath.out{transition:none;transform:none}}
+.meal-kcal{display:flex;flex-direction:column;gap:6px}
+.big-kcal{font-size:44px;font-weight:900;line-height:1}
+.conf{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;font-size:13px}
 .privacy{background:var(--chip);border-radius:10px;padding:10px 14px;font-size:14px}
 .scan-card{display:flex;flex-direction:column;gap:14px}
 .scan-card h3{font-size:22px;font-weight:900;font-variation-settings:"wdth" 90}
@@ -358,7 +361,7 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
         <h3>Log something</h3>
         <span class="hint" id="logHint"></span>
       </div>
-      <button type="button" class="btn ghost" id="goScan" style="align-self:flex-start">Scan a packet label for a full health report</button>
+      <button type="button" class="btn ghost" id="goScan" style="align-self:flex-start">Ordered food? Snap a photo to estimate calories</button>
       <div class="quick" id="quick"></div>
       <form class="sheet" id="sheet" hidden>
         <h4 id="sheetTitle">Log</h4>
@@ -398,8 +401,9 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
   <!-- SCAN -->
   <div class="tab" id="tab-scan" role="tabpanel" hidden>
     <div class="card scan-card" id="scanCard">
-      <h3>Scan a packet label</h3>
-      <p class="hint" style="margin:0" id="scanIntro">Photograph the ingredients list and the nutrition information on the pack. Claude reads them and explains what's in it and how it affects each part of your body. It also covers the diseases it's linked to and any cancer risk.</p>
+      <div class="seg" id="scanModeSeg" role="group" aria-label="What are you scanning" style="align-self:flex-start"></div>
+      <h3 id="scanTitle">Estimate a meal from a photo</h3>
+      <p class="hint" style="margin:0" id="scanIntro"></p>
       <div id="scanUnavailable" class="empty" hidden></div>
       <div id="scanForm" class="scan-card" hidden>
         <div class="actions">
@@ -408,12 +412,10 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
           <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
           <input type="file" id="galInput" accept="image/*" multiple hidden>
         </div>
-        <ul class="shot-tips">
-          <li>Take separate photos of the <b>ingredients</b> and the <b>nutrition table</b>. Add the front of the pack if you like.</li>
-          <li>Hold the phone flat, fill the frame with the text, and avoid glare.</li>
-        </ul>
+        <ul class="shot-tips" id="scanTips"></ul>
         <div class="shots" id="shots"></div>
         <div class="grid2">
+          <label class="field" id="scanDescWrap"><span class="label">What did you order? (optional)</span><input id="scanDesc" maxlength="160" placeholder="e.g. 1 butter chicken, 2 butter naan, 1 coke"></label>
           <label class="field"><span class="label">How much did you eat?</span><input id="scanAmount" maxlength="80" placeholder="e.g. the whole 52 g packet"></label>
           <label class="field"><span class="label" id="scanPriceLabel">Price paid (optional)</span><input id="scanPrice" type="number" min="0" step="any" inputmode="decimal"></label>
         </div>
@@ -1260,6 +1262,7 @@ function scanUnavailableMsg(){
   return "";
 }
 function renderScanForm(){
+  renderScanMode();
   const msg = sampleReady ? scanUnavailableMsg() : "";
   $("#scanUnavailable").hidden = !msg; $("#scanUnavailable").textContent = msg;
   $("#scanForm").hidden = !sampleReady || !!msg;
@@ -1287,7 +1290,7 @@ function addShots(files){
 }
 $("#camInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
 $("#galInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
-$("#goScan").addEventListener("click", ()=>setTab("scan", true));
+$("#goScan").addEventListener("click", ()=>{ scanMode = "meal"; lsSet("junkfacts.scanmode","meal"); renderScanForm(); setTab("scan", true); });
 $("#scanStop").addEventListener("click", ()=>{ if(scanCtl) scanCtl.abort(); });
 
 function personalBlock(){
@@ -1337,23 +1340,23 @@ ${personalBlock()}Rules for the lists: "organs" must have exactly these ${ORGANS
 
 $("#scanGo").addEventListener("click", async ()=>{
   if(!sample || !shots.length || scanCtl) return;
-  const amount = $("#scanAmount").value.trim(), price = +$("#scanPrice").value || 0, who = me;
+  const amount = $("#scanAmount").value.trim(), price = +$("#scanPrice").value || 0, who = me, kind = scanMode, desc = $("#scanDesc").value.trim();
   scanCtl = new AbortController();
-  $("#scanProgress").hidden = false; $("#scanStatus").textContent = "Reading the label. A full report takes about a minute…";
+  $("#scanProgress").hidden = false; $("#scanStatus").textContent = SCAN_MODES[kind].status;
   renderScanForm();
   try{
-    const report = await sample.json(scanPrompt(amount), {
+    const report = await sample.json(kind==="meal" ? mealPrompt(amount, desc) : scanPrompt(amount), {
       images: shots.map(x=>x.file), modelTier: "complex", signal: scanCtl.signal,
       onText: ({text})=>{ $("#scanStatus").textContent = "Writing the report… "+(text.length/1000).toFixed(1)+"k characters so far"; }
     });
     if(!report || typeof report!=="object" || Array.isArray(report)) throw {code:"invalid_json"};
     let personal = null;
     if(report.personal && typeof report.personal==="object"){ personal = report.personal; delete report.personal; }
-    const scan = {id:uid(), person:who, t:Date.now(), amount, price, report};
+    const scan = {id:uid(), person:who, t:Date.now(), kind, amount, price, report};
     saveScan(scan);
     if(personal) saveScanNote(scan.id, {personal});
     for(const x of shots) URL.revokeObjectURL(x.url);
-    shots = []; $("#scanAmount").value = ""; $("#scanPrice").value = "";
+    shots = []; $("#scanAmount").value = ""; $("#scanPrice").value = ""; $("#scanDesc").value = "";
     showScan(scan);
   }catch(e){
     const c = e && e.code;
@@ -1396,7 +1399,7 @@ function scoreColor(n){ return n<=3 ? "var(--bad)" : n<=6 ? "var(--warn)" : "var
 
 function showScan(scan){
   openScanId = scan.id;
-  const box = $("#reportBox"); box.replaceChildren(renderReport(scan));
+  const box = $("#reportBox"); box.replaceChildren(scan.kind==="meal" ? renderMeal(scan) : renderReport(scan));
   box.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
 }
 function renderReport(scan){
@@ -1490,6 +1493,7 @@ function renderReport(scan){
 }
 
 function logFromScan(scan){
+  if(scan.kind==="meal") return logMealFromScan(scan);
   const r = scan.report || {}, prod = r.product || {}, po = r.portion || {}, ns = (r.nutrition||{}).perServing || {};
   const pick = (a,b)=> numOrNull(a)!=null ? a : numOrNull(b)!=null ? b : 0;
   openSheet({item:(str(prod.name)||"Packaged snack").slice(0,40), cat:CATS.includes(prod.type)?prod.type:"Packaged snack", qty:1,
@@ -1505,7 +1509,7 @@ function renderScanList(){
     box.append(el("div",{class:"s"},
       el("span",{class:"sc num",style:"color:"+(ok?scoreColor(score):"var(--muted)")}, ok?score:"?"),
       el("button",{type:"button",style:"border:0;background:none;text-align:left;padding:0",onclick:()=>showScan(sc)},
-        el("b",{style:"display:block"}, str((r.product||{}).name) || (ok?"Packaged food":"Unreadable label")),
+        el("b",{style:"display:block"}, sc.kind==="meal" ? (str((r.meal||{}).name) || (ok?"Meal":"Unclear photo"))+(ok && kcalRange((r.eaten||{}).kcal).best!=null ? " · "+Math.round(kcalRange(r.eaten.kcal).best)+" kcal" : "") : (str((r.product||{}).name) || (ok?"Packaged food":"Unreadable label"))),
         el("span",{class:"hint"}, (PIDS.includes(sc.person)?person(sc.person).name:"?")+" · "+dayLabel(dkey(new Date(sc.t)))+" "+timeLabel(sc.t)+(str((r.verdict||{}).label)?" · "+str(r.verdict.label):""))),
       el("button",{type:"button",class:"btn ghost small"+(pendingScanDel===sc.id?" confirm":""),style:pendingScanDel===sc.id?"border-color:var(--bad);color:var(--bad)":"",onclick:()=>{
         if(pendingScanDel===sc.id){ pendingScanDel = null; deleteScan(sc.id); toast("Scan deleted."); }
@@ -2276,6 +2280,143 @@ function renderProgress(){
   box.append(
     el("div",{class:"sec-head"}, el("h3",{}, P.name+"'s progress"), P.identity ? el("span",{class:"identity"}, "Becoming "+P.identity) : null),
     el("div",{class:"cards"}, sav, teamCard), badges, tl, form);
+}
+
+/* ---------- MEAL PHOTO: estimate nutrition of a plate or delivery order ---------- */
+let scanMode = lsGet("junkfacts.scanmode")==="label" ? "label" : "meal";
+const SCAN_MODES = {
+  meal: {title:"Estimate a meal from a photo",
+    intro:"Ordered from Zomato or Swiggy, or eating out? Take a photo of the food and Claude estimates the calories, fat, sugar, salt and protein, dish by dish.",
+    tips:["Shoot from above with the whole plate or box in frame. Put a spoon, hand or phone next to it for scale.","Add a screenshot of the order from the app. Dish names and quantities make the estimate much more accurate.","Take the photo before you start eating, or say how much is left."],
+    amount:"e.g. I ate all of it / half, shared with Rupesh", go:"Estimate nutrition", status:"Looking at your food. This takes about a minute…"},
+  label: {title:"Scan a packet label",
+    intro:"Photograph the ingredients list and the nutrition information on the pack. Claude reads them and explains what's in it and how it affects each part of your body. It also covers the diseases it's linked to and any cancer risk.",
+    tips:["Take separate photos of the ingredients and the nutrition table. Add the front of the pack if you like.","Hold the phone flat, fill the frame with the text, and avoid glare."],
+    amount:"e.g. the whole 52 g packet", go:"Analyze label", status:"Reading the label. A full report takes about a minute…"}
+};
+function renderScanMode(){
+  const m = SCAN_MODES[scanMode];
+  seg($("#scanModeSeg"), [["meal","Meal photo"],["label","Packet label"]], scanMode, v=>{ scanMode = v; lsSet("junkfacts.scanmode",v); renderScanForm(); });
+  $("#scanTitle").textContent = m.title; $("#scanIntro").textContent = m.intro;
+  $("#scanTips").replaceChildren(...m.tips.map(t=>el("li",{},t)));
+  $("#scanAmount").placeholder = m.amount; $("#scanGo").textContent = m.go;
+  $("#scanDescWrap").hidden = scanMode!=="meal";
+}
+
+function mealPrompt(amount, desc){
+  const p = person(me);
+  return `You are a careful Indian nutrition estimator. The attached photo(s) show food ${p.name} is about to eat or just ate, often a delivery order from Zomato or Swiggy or a restaurant meal. A photo may also be a screenshot of the order from the app: use it to identify dishes, portion sizes and quantities.
+${desc ? "What they say they ordered: "+JSON.stringify(desc)+"\n" : ""}How much they ate: ${amount ? JSON.stringify(amount) : "not stated, so assume they ate everything shown"}.
+
+Estimate the nutrition as accurately as you can:
+- Identify each dish and estimate its portion in grams or pieces, using plates, boxes, cutlery or hands for scale. Standard Indian restaurant containers are about 300-500 ml.
+- Restaurant and delivery food usually has much more oil, butter, ghee, cream and salt than home cooking. Account for that, and say where the hidden calories are.
+- Give calories as a low, best and high estimate. Be honest about uncertainty: a photo can't show oil soaked into a gravy.
+- "total" is everything in the photo; "eaten" is only what ${p.name} ate, scaled by the amount above.
+- If the photos don't show food, set readability.ok to false and explain in readability.issues.
+${personalBlock()}
+Reply with only one JSON object in exactly this shape. Numbers are plain numbers (no units, no ranges except where shown). Text fields are 1-2 plain sentences, no markdown.
+{
+  "readability": {"ok": true, "issues": ""},
+  "meal": {"name": "short name, e.g. Butter chicken with 2 butter naan", "type": "one of: Fried, Sugary, Fast food, Packaged snack, Sugary drink, Street food", "source": "restaurant or app if visible, else empty"},
+  "items": [{"name": "", "portion": "e.g. about 300 g bowl, or 2 pieces", "kcal": 0, "protein_g": 0, "carbs_g": 0, "fat_g": 0, "sugar_g": 0, "sodium_mg": 0, "note": "how it's likely cooked, hidden fat or sugar"}],
+  "total": {"kcal": {"low": 0, "best": 0, "high": 0}, "protein_g": 0, "carbs_g": 0, "fat_g": 0, "satFat_g": 0, "sugar_g": 0, "fiber_g": 0, "sodium_mg": 0},
+  "eaten": {"description": "what they ate", "kcal": {"low": 0, "best": 0, "high": 0}, "protein_g": 0, "carbs_g": 0, "fat_g": 0, "satFat_g": 0, "sugar_g": 0, "fiber_g": 0, "sodium_mg": 0},
+  "confidence": "low, medium or high",
+  "confidenceWhy": "what limits the estimate",
+  "verdict": {"score": 4, "label": "2-4 words, e.g. Heavy but fine occasionally", "summary": ""},
+  "flags": ["short warnings, e.g. Very high sodium, Deep fried, Low fibre"],
+  "hidden": ["where the hidden calories, fat, sugar or salt are"],
+  "body": "how this meal affects blood sugar, heart and digestion over the next few hours, and if eaten often",
+  "healthierOrder": [{"change": "e.g. tandoori roti instead of butter naan", "saves": "e.g. about 150 kcal"}],
+  "restOfDay": "what to eat for the rest of today to balance this meal",
+  "burnOff": "e.g. about 90 minutes of brisk walking"
+}
+"items" covers every dish and drink you can see (up to 12). "healthierOrder" has 3-5 entries, using dishes commonly available on Indian delivery apps. "verdict.score" is 1-10, where 10 is very healthy.`;
+}
+
+function kcalRange(k){
+  if(k && typeof k==="object"){ const b = numOrNull(k.best), lo = numOrNull(k.low), hi = numOrNull(k.high); return {best:b, lo, hi}; }
+  return {best:numOrNull(k), lo:null, hi:null};
+}
+function personalSection(scan){
+  const note = health.scanNotes[scan.id], pers = note && note.personal;
+  if(!pers) return null;
+  return el("section",{class:"rep-sec"}, el("h4",{},"For you, based on your health profile"),
+    el("p",{}, str(pers.summary)),
+    arr(pers.cautions).length ? el("ul",{style:"margin:0;padding-left:18px"}, arr(pers.cautions).map(c=>el("li",{style:"color:var(--bad);font-weight:600"}, str(c)))) : null,
+    str(pers.numbers) ? el("p",{class:"hint"}, str(pers.numbers)) : null,
+    el("p",{class:"rep-note"},"This section is private: it's saved in your own health space, not with the shared scan."));
+}
+function renderMeal(scan){
+  const r = scan.report || {}, meal = r.meal || {}, ver = r.verdict || {}, read = r.readability || {};
+  const wrap = el("article",{class:"report","aria-label":"Meal estimate"});
+  if(read.ok===false){
+    wrap.append(el("div",{class:"card"}, el("h3",{},"Couldn't see the food"), el("p",{}, str(read.issues) || "Take the photo from above with the whole plate or box in frame.")));
+    return wrap;
+  }
+  const score = Math.max(1, Math.min(10, Math.round(+ver.score || 1)));
+  const eaten = r.eaten || {}, tot = r.total || {}, ek = kcalRange(eaten.kcal), tk = kcalRange(tot.kcal);
+  const conf = str(r.confidence).toLowerCase();
+  wrap.append(el("div",{class:"rep-head"},
+    el("div",{style:"display:flex;flex-direction:column;gap:8px"},
+      el("span",{class:"label"}, "Meal"+(str(meal.source)?" · "+str(meal.source):"")+" · "+(person(scan.person)||{name:"?"}).name+", "+dayLabel(dkey(new Date(scan.t)))+" "+timeLabel(scan.t)),
+      el("h3",{}, str(meal.name) || "Your meal"),
+      el("b",{style:"font-size:17px"}, str(ver.label)),
+      el("p",{style:"margin:0"}, str(ver.summary)),
+      arr(r.flags).length ? el("div",{class:"flags"}, arr(r.flags).slice(0,8).map(f=>el("span",{class:"flag"},str(f)))) : null),
+    el("div",{class:"score"}, el("span",{class:"label"},"Health score"), el("b",{class:"num",style:"color:"+scoreColor(score)}, score),
+      el("span",{class:"hint"},"out of 10"), el("div",{class:"track"}, el("span",{style:`width:${score*10}%;background:${scoreColor(score)}`})))));
+
+  // headline calories
+  const pctDay = ek.best!=null ? pct(ek.best, DAILY.kcal) : null;
+  wrap.append(el("div",{class:"card meal-kcal"},
+    el("span",{class:"label"},"You ate about"),
+    el("div",{class:"big-kcal num"}, ek.best!=null ? Math.round(ek.best).toLocaleString()+" kcal" : "–"),
+    el("span",{class:"hint"}, [ek.lo!=null&&ek.hi!=null ? "Likely range "+Math.round(ek.lo)+"–"+Math.round(ek.hi)+" kcal" : "", pctDay!=null ? pctDay+"% of a 2,000 kcal day" : "", str(eaten.description)].filter(Boolean).join(" · ")),
+    el("div",{class:"conf"}, el("span",{class:"pill "+(conf==="high"?"ok":conf==="medium"?"warn":"bad"),style:"margin-left:0"}, (conf||"unknown")+" confidence"), el("span",{class:"hint"}, " "+str(r.confidenceWhy)))));
+
+  // macros table: eaten vs whole order
+  const rows = [["Protein","protein_g"," g",null],["Carbohydrate","carbs_g"," g",null],["Sugar","sugar_g"," g","sugar"],["Fibre","fiber_g"," g",null],["Total fat","fat_g"," g","fat"],["Saturated fat","satFat_g"," g",null],["Sodium","sodium_mg"," mg","sodium"]];
+  wrap.append(el("div",{class:"card table-wrap"}, el("table",{},
+    el("thead",{}, el("tr",{}, el("th",{},"Nutrient"), el("th",{},"You ate"), el("th",{},"% daily max"), el("th",{},"Whole order"))),
+    el("tbody",{},
+      el("tr",{}, el("td",{},"Energy"), el("td",{}, ek.best!=null?Math.round(ek.best)+" kcal":"–"), el("td",{}, pctDay!=null?pctDay+"%":""), el("td",{}, tk.best!=null?Math.round(tk.best)+" kcal":"–")),
+      rows.map(([l,k,u,d])=>{ const v = numOrNull(eaten[k]), w = numOrNull(tot[k]), pc = d && v!=null ? pct(v,DAILY[d]) : null;
+        return el("tr",{}, el("td",{},l), el("td",{}, v==null?"–":fmt(v,u)), el("td",{class:pc!=null&&pc>=50?"bad":""}, pc!=null?pc+"%":""), el("td",{}, w==null?"–":fmt(w,u))); })))));
+
+  const acts = el("div",{class:"actions"},
+    el("button",{type:"button",class:"btn",onclick:()=>logFromScan(scan)},"Log this for "+person(me).name),
+    el("button",{type:"button",class:"btn ghost",onclick:()=>{ $("#reportBox").replaceChildren(); openScanId = null; }},"Close"));
+  wrap.append(acts);
+
+  const ps = personalSection(scan); if(ps) wrap.append(ps);
+
+  // per dish
+  const items = arr(r.items);
+  if(items.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Dish by dish"),
+    el("div",{}, items.map(i=>el("div",{class:"risk"},
+      el("b",{}, str(i.name)), el("span",{class:"meta num",style:"font-size:14px;color:var(--ink);font-weight:800"}, numOrNull(i.kcal)!=null?Math.round(i.kcal)+" kcal":""),
+      el("p",{style:"margin:0"}, [str(i.portion), numOrNull(i.protein_g)!=null?"protein "+fmt(i.protein_g,"g"):"", numOrNull(i.fat_g)!=null?"fat "+fmt(i.fat_g,"g"):"", numOrNull(i.carbs_g)!=null?"carbs "+fmt(i.carbs_g,"g"):"", numOrNull(i.sodium_mg)!=null?"sodium "+fmt(i.sodium_mg,"mg"):""].filter(Boolean).join(" · ")),
+      str(i.note) ? el("p",{class:"hint",style:"margin:0"}, str(i.note)) : null)))));
+
+  const hid = arr(r.hidden);
+  if(hid.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Hidden calories"), el("ul",{style:"margin:0;padding-left:18px"}, hid.map(x=>el("li",{}, str(x))))));
+  if(str(r.body)) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"What it does in your body"), el("p",{}, str(r.body))));
+  const ho = arr(r.healthierOrder);
+  if(ho.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Order it healthier next time"),
+    el("div",{}, ho.map(x=>el("div",{class:"risk"}, el("b",{}, str(x.change)), el("span",{class:"meta",style:"color:var(--ok);font-weight:800"}, str(x.saves)))))));
+  const tail = [["Balance the rest of today", r.restOfDay], ["To burn it off", r.burnOff]].filter(x=>str(x[1]));
+  if(tail.length) wrap.append(el("div",{class:"cards"}, tail.map(([h,t])=>el("div",{class:"card"}, el("span",{class:"label"},h), el("p",{style:"margin:6px 0 0"}, str(t))))));
+  wrap.append(el("p",{class:"rep-note"},"Estimated by Claude from a photo. Restaurant portions and oil vary a lot, so treat these numbers as a guide that can be off by 20-30% or more. It's general information, not medical advice."));
+  return wrap;
+}
+function logMealFromScan(scan){
+  const r = scan.report || {}, meal = r.meal || {}, e = r.eaten || r.total || {};
+  const k = kcalRange(e.kcal);
+  openSheet({item:(str(meal.name)||"Delivery meal").slice(0,40), cat:CATS.includes(meal.type)?meal.type:"Fast food", qty:1,
+    kcal:Math.round(k.best||0), fat:numOrNull(e.fat_g)||0, sugar:numOrNull(e.sugar_g)||0, sodium:Math.round(numOrNull(e.sodium_mg)||0),
+    cost:scan.price||0, where:"Ordered online", note:"From meal photo"+(scan.amount?": "+scan.amount:"")});
 }
 
 /* ---------- render ---------- */
