@@ -41,6 +41,22 @@ One tap logs the item with the numbers from the scan, and reports are saved unde
 - **Why**, **what**, **what type** and **where**, split by person.
 - **Nutrition from junk:** daily averages against daily maximums.
 
+### Health (private to each person)
+Everything on this tab is stored in **your own private space** on your Claude account. Your brother can't see it, even though you share the tracker, and each of you fills in your own.
+- **About you:** age, sex, height, diet, exercise, sleep, smoking and alcohol, family history, past and current medical issues, medicines, allergies and your goals.
+- **Lab reports:** photograph each page (or screenshot a PDF) and Claude reads every value for you to check before saving, or type the key values in yourself.
+- **Checkups:** when CBC, lipid profile, LFT, KFT, HbA1c, fasting sugar, thyroid, vitamin D, B12, uric acid and urine were last done, and which are due.
+- **Key numbers over time:** HbA1c, fasting glucose, cholesterol (total, LDL, HDL), triglycerides, ALT/AST, haemoglobin, creatinine, uric acid, TSH, vitamin D and B12 across your reports, with out-of-range values marked.
+- **Health analysis:** Claude reads your profile, reports, weight and junk-food log and writes:
+  - where you stand, with your actual values
+  - your tendencies, and what to take care of
+  - concrete lifestyle changes, each with a first step for this week
+  - **what's likely ahead if nothing changes**: the time frame, how likely it is and why, and how to prevent or delay it
+  - which tests to get and when, warning signs that need a doctor, and questions to ask your doctor
+- **Personal scans:** once your profile is filled in, label scans add a private "For you" section. It flags your allergens and ingredients that push your own lab values the wrong way.
+
+The analysis is not a diagnosis. Take it and your reports to a doctor.
+
 ### History
 All entries grouped by day with daily totals. Filter by person or type, or search items, notes and reasons. Every entry can be edited or deleted.
 

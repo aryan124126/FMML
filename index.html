@@ -210,6 +210,7 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
 .favs .f{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
 .ref{font-size:13px;color:var(--muted);margin:0;padding-left:18px}
 
+.privacy{background:var(--chip);border-radius:10px;padding:10px 14px;font-size:14px}
 .scan-card{display:flex;flex-direction:column;gap:14px}
 .scan-card h3{font-size:22px;font-weight:900;font-variation-settings:"wdth" 90}
 .shots{display:flex;gap:8px;flex-wrap:wrap}
@@ -281,6 +282,7 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
     <button type="button" role="tab" data-tab="scan">Scan</button>
     <button type="button" role="tab" data-tab="trends">Trends</button>
     <button type="button" role="tab" data-tab="patterns">Patterns</button>
+    <button type="button" role="tab" data-tab="health">Health</button>
     <button type="button" role="tab" data-tab="history">History</button>
     <button type="button" role="tab" data-tab="settings">Settings</button>
   </nav>
@@ -424,6 +426,11 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
     </section>
   </div>
 
+  <!-- HEALTH (private) -->
+  <div class="tab" id="tab-health" role="tabpanel" hidden></div>
+  <input type="file" id="labCam" accept="image/*" capture="environment" hidden>
+  <input type="file" id="labGal" accept="image/*" multiple hidden>
+
   <!-- HISTORY -->
   <div class="tab" id="tab-history" role="tabpanel" hidden>
     <div class="sec-head">
@@ -525,7 +532,7 @@ const BLOCKS = [
   {n:"Late night",s:0,  e:5,  r:"12–5am"}
 ];
 const PIDS = ["p1","p2"];
-const TABS = ["today","scan","trends","patterns","history","settings"];
+const TABS = ["today","scan","trends","patterns","health","history","settings"];
 const WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const WD_MON = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 
@@ -1209,6 +1216,16 @@ $("#galInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); 
 $("#goScan").addEventListener("click", ()=>setTab("scan", true));
 $("#scanStop").addEventListener("click", ()=>{ if(scanCtl) scanCtl.abort(); });
 
+function personalBlock(){
+  if(!(healthMode==="local"||healthMode==="db") || profPid()!==me || !hasProfile()) return "";
+  return `
+This person has shared their health profile. Add one more top-level field to the JSON, "personal", written for them specifically:
+"personal": {"summary": "how this product affects THEM given their conditions, lab values and family history", "cautions": ["specific warnings, e.g. an allergen from their list found in the ingredients, or an ingredient that worsens a condition or lab value they have"], "numbers": "which of their lab values this food pushes in the wrong direction, with the values"}
+Their profile:
+${healthContext(true)}
+
+`;
+}
 function scanPrompt(amount){
   const p = person(me), today = countOf(me, todayKey());
   return `You are a careful nutrition and toxicology explainer. The attached photo(s) show a packaged food, most likely bought in India: its ingredients list, its nutrition information table, and possibly the front of the pack. Read every photo carefully.
@@ -1241,7 +1258,7 @@ Reply with only one JSON object in exactly this shape. Keep every text field to 
   "swaps": [{"name": "", "why": ""}],
   "bottomLine": "what ${p.name} should actually do about this food"
 }
-Rules for the lists: "organs" must have exactly these ${ORGANS.length} entries in this order: ${ORGANS.join(", ")}. "ingredients" covers up to 20 ingredients in label order. "additives" lists every additive you can see (up to 12). "diseases" has 4-8 entries, most relevant first. "carcinogens" has 0-6 entries. "swaps" has 3-5 entries. "verdict.score" is 1-10, where 10 is very healthy and 1 is the worst kind of junk.`;
+${personalBlock()}Rules for the lists: "organs" must have exactly these ${ORGANS.length} entries in this order: ${ORGANS.join(", ")}. "ingredients" covers up to 20 ingredients in label order. "additives" lists every additive you can see (up to 12). "diseases" has 4-8 entries, most relevant first. "carcinogens" has 0-6 entries. "swaps" has 3-5 entries. "verdict.score" is 1-10, where 10 is very healthy and 1 is the worst kind of junk.`;
 }
 
 $("#scanGo").addEventListener("click", async ()=>{
@@ -1256,8 +1273,11 @@ $("#scanGo").addEventListener("click", async ()=>{
       onText: ({text})=>{ $("#scanStatus").textContent = "Writing the report… "+(text.length/1000).toFixed(1)+"k characters so far"; }
     });
     if(!report || typeof report!=="object" || Array.isArray(report)) throw {code:"invalid_json"};
+    let personal = null;
+    if(report.personal && typeof report.personal==="object"){ personal = report.personal; delete report.personal; }
     const scan = {id:uid(), person:who, t:Date.now(), amount, price, report};
     saveScan(scan);
+    if(personal) saveScanNote(scan.id, {personal});
     for(const x of shots) URL.revokeObjectURL(x.url);
     shots = []; $("#scanAmount").value = ""; $("#scanPrice").value = "";
     showScan(scan);
@@ -1285,6 +1305,7 @@ function saveScan(scan){
   queue("scans/"+scan.id, ()=>db.doc("scans/"+scan.id).set(body));
 }
 function deleteScan(id){
+  deleteScanNote(id);
   state.scans = state.scans.filter(x=>x.id!==id);
   if(openScanId===id){ openScanId = null; $("#reportBox").replaceChildren(); }
   if(mode==="local"){ saveLocal(); renderScanList(); return; }
@@ -1323,6 +1344,13 @@ function renderReport(scan){
     el("div",{class:"score"}, el("span",{class:"label"},"Health score"), el("b",{class:"num",style:"color:"+scoreColor(score)}, score),
       el("span",{class:"hint"},"out of 10"), el("div",{class:"track"}, el("span",{style:`width:${score*10}%;background:${scoreColor(score)}`})))));
   if(str(read.issues)) wrap.append(el("p",{class:"hint",style:"margin:0"},"Note on the photos: "+str(read.issues)));
+
+  const note = health.scanNotes[scan.id], pers = note && note.personal;
+  if(pers) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"For you, based on your health profile"),
+    el("p",{}, str(pers.summary)),
+    arr(pers.cautions).length ? el("ul",{style:"margin:0;padding-left:18px"}, arr(pers.cautions).map(c=>el("li",{style:"color:var(--bad);font-weight:600"}, str(c)))) : null,
+    str(pers.numbers) ? el("p",{class:"hint"}, str(pers.numbers)) : null,
+    el("p",{class:"rep-note"},"This section is private: it's saved in your own health space, not with the shared scan.")));
 
   // nutrition + portion
   const ns = (r.nutrition||{}).perServing || {}, po = r.portion || {};
@@ -1412,11 +1440,443 @@ function renderScanList(){
   }
 }
 
+/* ---------- HEALTH: private profile, lab reports, analysis ---------- */
+const HEALTH_KEY = "junkfacts.health.v1";
+const PANELS = ["CBC","Lipid profile","LFT","KFT","HbA1c","Fasting sugar","Thyroid","Vitamin D","Vitamin B12","Uric acid","Urine routine","Other"];
+// General adult reference ranges; the lab's own printed range always wins.
+const MARKERS = [
+  {key:"hba1c", label:"HbA1c",              unit:"%",     panel:"HbA1c",         flag:v=>v>=6.5?"high":v>=5.7?"borderline":"normal"},
+  {key:"fbs",   label:"Fasting glucose",    unit:"mg/dL", panel:"Fasting sugar", flag:v=>v<70?"low":v>=126?"high":v>=100?"borderline":"normal"},
+  {key:"tc",    label:"Total cholesterol",  unit:"mg/dL", panel:"Lipid profile", flag:v=>v>=240?"high":v>=200?"borderline":"normal"},
+  {key:"ldl",   label:"LDL cholesterol",    unit:"mg/dL", panel:"Lipid profile", flag:v=>v>=160?"high":v>=100?"borderline":"normal"},
+  {key:"hdl",   label:"HDL cholesterol",    unit:"mg/dL", panel:"Lipid profile", flag:v=>v<40?"low":"normal"},
+  {key:"tg",    label:"Triglycerides",      unit:"mg/dL", panel:"Lipid profile", flag:v=>v>=200?"high":v>=150?"borderline":"normal"},
+  {key:"alt",   label:"ALT (SGPT)",         unit:"U/L",   panel:"LFT",           flag:v=>v>40?"high":"normal"},
+  {key:"ast",   label:"AST (SGOT)",         unit:"U/L",   panel:"LFT",           flag:v=>v>40?"high":"normal"},
+  {key:"hb",    label:"Haemoglobin",        unit:"g/dL",  panel:"CBC",           flag:(v,sex)=>v<(sex==="Male"?13:12)?"low":"normal"},
+  {key:"creat", label:"Creatinine",         unit:"mg/dL", panel:"KFT",           flag:v=>v>1.3?"high":v<0.5?"low":"normal"},
+  {key:"uric",  label:"Uric acid",          unit:"mg/dL", panel:"Uric acid",     flag:(v,sex)=>v>(sex==="Male"?7:6)?"high":"normal"},
+  {key:"tsh",   label:"TSH",                unit:"µIU/mL",panel:"Thyroid",       flag:v=>v>4.5?"high":v<0.4?"low":"normal"},
+  {key:"vitd",  label:"Vitamin D",          unit:"ng/mL", panel:"Vitamin D",     flag:v=>v<20?"low":v<30?"borderline":"normal"},
+  {key:"b12",   label:"Vitamin B12",        unit:"pg/mL", panel:"Vitamin B12",   flag:v=>v<200?"low":v<300?"borderline":"normal"}
+];
+const FAMILY = ["Diabetes","Heart disease","High blood pressure","High cholesterol","Stroke","Fatty liver","Kidney disease","Thyroid disease","Cancer","Obesity"];
+const FLAG_TEXT = {normal:"Normal", borderline:"Borderline", high:"High", low:"Low"};
+
+let health = {profile:null, labs:[], analysis:null, scanNotes:{}};
+let healthMode = "pending";   // pending | local | db | none
+let hdb = null, hbase = null; // private paths under data/users/<id>
+let labDraft = null, labCtl = null, anaCtl = null, labShots = [], pendingLabDel = null, openLab = null;
+
+function healthLoadLocal(){
+  try{ const raw = JSON.parse(lsGet(HEALTH_KEY)||"null"); if(raw) health = {profile:raw.profile||null, labs:Array.isArray(raw.labs)?raw.labs:[], analysis:raw.analysis||null, scanNotes:raw.scanNotes||{}}; }catch(e){}
+}
+function healthSaveLocal(){ lsSet(HEALTH_KEY, JSON.stringify(health)); }
+
+async function connectHealth(){
+  if(!window.claude || typeof window.claude.use!=="function"){ healthMode = "local"; healthLoadLocal(); renderHealth(); return; }
+  let d = null, u = null, uid = null;
+  try{ d = await window.claude.use("db"); }catch(e){}
+  try{ u = await window.claude.use("user"); uid = u ? await u.id() : null; }catch(e){}
+  if(!d || !uid){ healthMode = "none"; renderHealth(); return; }
+  hdb = d; hbase = "data/users/"+uid; healthMode = "db"; renderHealth();
+  const onErr = ()=>{};
+  hdb.doc(hbase+"/health").onSnapshot(s=>{ health.profile = s.exists ? s.data() : null; renderHealth(); }, onErr);
+  hdb.doc(hbase+"/analysis").onSnapshot(s=>{ health.analysis = s.exists ? s.data() : null; renderHealth(); }, onErr);
+  hdb.doc(hbase+"/health").collection("labs").limit(200).onSnapshot(q=>{
+    health.labs = q.docs.map(x=>Object.assign({id:x.id}, x.data())); renderHealth();
+  }, onErr);
+  hdb.doc(hbase+"/health").collection("scanNotes").limit(200).onSnapshot(q=>{
+    const m = {}; for(const x of q.docs) m[x.id] = x.data(); health.scanNotes = m;
+  }, onErr);
+}
+function hWrite(path, body){
+  if(healthMode==="local"){ healthSaveLocal(); renderHealth(true); return; }
+  if(healthMode!=="db") return;
+  renderHealth(true);
+  queue(path, ()=> body ? hdb.doc(path).set(body) : hdb.doc(path).delete());
+}
+function saveProfile(p){ health.profile = p; hWrite(hbase+"/health", p); }
+function saveLab(lab){
+  health.labs = [lab, ...health.labs.filter(x=>x.id!==lab.id)];
+  const body = Object.assign({}, lab); delete body.id;
+  hWrite(hbase+"/health/labs/"+lab.id, body);
+}
+function deleteLab(id){ health.labs = health.labs.filter(x=>x.id!==id); hWrite(hbase+"/health/labs/"+id, null); }
+function saveAnalysis(a){ health.analysis = a; hWrite(hbase+"/analysis", a); }
+function saveScanNote(id, note){ health.scanNotes[id] = note; hWrite(hbase+"/health/scanNotes/"+id, note); }
+function deleteScanNote(id){ if(!health.scanNotes[id]) return; delete health.scanNotes[id]; hWrite(hbase+"/health/scanNotes/"+id, null); }
+
+/* ----- derived ----- */
+function prof(){ return health.profile || {}; }
+function profPid(){ return PIDS.includes(prof().pid) ? prof().pid : null; }
+function hasProfile(){ const p = prof(); return !!(p.age || p.conditions || (p.family||[]).length || health.labs.length); }
+function labsSorted(){ return health.labs.slice().sort((a,b)=>str(b.date)<str(a.date)?-1:1); }
+function latestMarker(key){
+  for(const lab of labsSorted()) for(const r of arr(lab.results)) if(r.key===key && numOrNull(r.value)!=null) return {value:r.value, unit:str(r.unit), flag:resultFlag(r), date:str(lab.date)};
+  return null;
+}
+function resultFlag(r){
+  const f = str(r.flag).toLowerCase();
+  if(["normal","borderline","high","low"].includes(f)) return f;
+  const m = MARKERS.find(x=>x.key===r.key);
+  return m && numOrNull(r.value)!=null ? m.flag(r.value, prof().sex) : "";
+}
+function panelLastDone(panel){
+  let best = null;
+  for(const lab of health.labs){
+    const d = str(lab.date); if(!d) continue;
+    const has = arr(lab.results).some(r=>str(r.panel)===panel || (MARKERS.find(m=>m.key===r.key)||{}).panel===panel) || arr(lab.panels).includes(panel);
+    if(has && (!best || d>best)) best = d;
+  }
+  return best;
+}
+function monthsSince(k){ const a = fromKey(k), b = new Date(); return (b.getFullYear()-a.getFullYear())*12 + (b.getMonth()-a.getMonth()) - (b.getDate()<a.getDate()?1:0); }
+function bmiOf(){
+  const p = prof(), pid = profPid(), h = +p.heightCm;
+  const w = pid && state.weights[pid].length ? state.weights[pid][state.weights[pid].length-1].kg : null;
+  return h>0 && w ? {bmi: w/((h/100)**2), kg:w} : {bmi:null, kg:w};
+}
+
+function healthContext(forScan){
+  const p = prof(), lines = [];
+  const pid = profPid(), who = pid ? person(pid).name : "the user";
+  const b = bmiOf();
+  lines.push(`Health profile of ${who}: age ${p.age||"not given"}, sex ${p.sex||"not given"}, height ${p.heightCm?p.heightCm+" cm":"not given"}, latest weight ${b.kg?b.kg+" kg":"not given"}${b.bmi?`, BMI ${b.bmi.toFixed(1)} (Asian cut-offs: 23+ overweight, 25+ obese)`:""}.`);
+  if(p.diet) lines.push("Diet: "+p.diet+".");
+  lines.push("Activity: "+(p.activity||"not given")+". Sleep: "+(p.sleep?p.sleep+" hours a night":"not given")+". Smoking: "+(p.smoking||"not given")+". Alcohol: "+(p.alcohol||"not given")+".");
+  lines.push("Family history: "+((p.family||[]).length ? p.family.join(", ") : "none recorded")+(p.familyNotes?" ("+p.familyNotes+")":"")+".");
+  lines.push("Past and current medical issues: "+(p.conditions||"none recorded")+".");
+  lines.push("Medicines and supplements: "+(p.meds||"none recorded")+". Allergies and intolerances: "+(p.allergies||"none recorded")+".");
+  if(p.goals) lines.push("Their own goals: "+p.goals+".");
+  const labs = labsSorted();
+  if(!labs.length) lines.push("No lab reports recorded.");
+  else {
+    lines.push("Lab reports, newest first:");
+    for(const lab of labs.slice(0, forScan?2:8)){
+      const rs = arr(lab.results).slice(0, forScan?25:60).map(r=>`${str(r.test)} ${numOrNull(r.value)!=null?r.value:str(r.text)} ${str(r.unit)}${str(r.range)?" (ref "+str(r.range)+")":""}${resultFlag(r)&&resultFlag(r)!=="normal"?" ["+resultFlag(r)+"]":""}`);
+      lines.push(`- ${lab.date||"undated"}${lab.lab?" at "+lab.lab:""}: ${rs.join("; ")}`);
+    }
+  }
+  if(!forScan){
+    lines.push("Tests last done: "+PANELS.filter(x=>x!=="Other").map(x=>{ const d = panelLastDone(x); return x+" "+(d||"never recorded"); }).join("; ")+". Today is "+todayKey()+".");
+    if(pid){
+      const E = entriesSince(0,30).filter(e=>e.person===pid), n = E.reduce((s,e)=>s+(e.qty||1),0), days = trackedDays(30);
+      const kc = E.reduce((s,e)=>s+val(e,"kcal")*(e.qty||1),0), su = E.reduce((s,e)=>s+val(e,"sugar")*(e.qty||1),0), na = E.reduce((s,e)=>s+val(e,"sodium")*(e.qty||1),0);
+      const items = Object.entries(tally(E,e=>e.item)).map(([k,v])=>[k,v[pid]]).sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>x[0]+" ×"+x[1]).join(", ");
+      const trig = Object.entries(tally(E,e=>e.triggers||[])).map(([k,v])=>[k,v[pid]]).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]).join(", ");
+      lines.push(`Junk food in the last ${days} tracked day(s): ${n} items (${fmt1(n/days)} a day), about ${Math.round(kc/days)} kcal, ${Math.round(su/days)} g sugar and ${Math.round(na/days)} mg sodium a day from junk alone. Most eaten: ${items||"none"}. Main reasons: ${trig||"not tagged"}. Daily limit they set: ${person(pid).limit}. Current within-limit streak: ${streak(pid)} days.`);
+      const w = state.weights[pid]; if(w.length>1) lines.push(`Weight trend: ${w[0].kg} kg on ${w[0].date} to ${w[w.length-1].kg} kg on ${w[w.length-1].date}.`);
+    }
+  }
+  return lines.join("\n");
+}
+
+/* ----- rendering ----- */
+function hpill(status){
+  const m = {good:["ok","Good"], watch:["warn","Watch"], concern:["bad","Concern"], normal:["ok","Normal"], borderline:["warn","Borderline"], high:["bad","High"], low:["bad","Low"], moderate:["warn","Moderate"]};
+  const x = m[str(status).toLowerCase()]; return x ? el("span",{class:"pill "+x[0]}, x[1]) : null;
+}
+let hDirty = {};
+$("#tab-health").addEventListener("input", ev=>{ if(ev.target.id) hDirty[ev.target.id] = ev.target.value; });
+$("#tab-health").addEventListener("change", ev=>{ if(ev.target.id) hDirty[ev.target.id] = ev.target.value; });
+function renderHealth(force){
+  const box = $("#tab-health"); if(!box) return;
+  const ae = document.activeElement;
+  if(!force && ae && box.contains(ae) && /^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName)) return;
+  const fam = box.querySelector("#hpFam") ? [...box.querySelectorAll("#hpFam button[aria-pressed=true]")].map(b=>b.dataset.v) : null;
+  _renderHealth(box);
+  for(const [id,v] of Object.entries(hDirty)){ const n = document.getElementById(id); if(n && box.contains(n)) n.value = v; }
+  if(fam && hDirty.__fam) for(const b of box.querySelectorAll("#hpFam button")) b.setAttribute("aria-pressed", String(fam.includes(b.dataset.v)));
+}
+function _renderHealth(box){
+  box.replaceChildren();
+  if(healthMode==="pending"){ box.append(el("div",{class:"empty"},"Loading your private health space…")); return; }
+  if(healthMode==="none"){ box.append(el("div",{class:"card"}, el("h3",{},"Sign in to use Health"), el("p",{class:"hint"},"Your health profile is stored privately under your own Claude account. Open this page signed in, with Contributor access, to use it."))); return; }
+  box.append(el("div",{class:"privacy"},
+    el("b",{},"Private to you. "),
+    healthMode==="db" ? "Everything on this tab is saved in your own private space on your Claude account. "+person(PIDS.find(x=>x!==(profPid()||me))).name+" can't see it, even though you share the tracker. Each of you fills in your own." : "Everything on this tab is saved only in this browser on this device."));
+  box.append(renderProfileForm(), renderCheckups(), renderLabs(), renderTrends(), renderAnalysisSection());
+}
+
+function renderProfileForm(){
+  const p = prof();
+  const fam = new Set(p.family||[]);
+  const opt = (id,label,list,cur)=>el("label",{class:"field"}, el("span",{class:"label"},label), el("select",{id}, el("option",{value:""},"Choose"), list.map(o=>el("option",{value:o,selected:cur===o},o))));
+  const inp = (id,label,attrs,cur)=>el("label",{class:"field"}, el("span",{class:"label"},label), el("input",Object.assign({id, value:cur==null?"":cur}, attrs)));
+  const form = el("form",{class:"card set-body",id:"profForm",onsubmit:ev=>{
+    ev.preventDefault();
+    const g = id=>document.getElementById(id).value.trim();
+    saveProfile({pid:g("hpPid")||me, age:+g("hpAge")||null, sex:g("hpSex"), heightCm:+g("hpHeight")||null, diet:g("hpDiet"), activity:g("hpAct"),
+      sleep:+g("hpSleep")||null, smoking:g("hpSmoke"), alcohol:g("hpAlc"),
+      family:[...document.querySelectorAll("#hpFam button[aria-pressed=true]")].map(b=>b.dataset.v), familyNotes:g("hpFamNotes"),
+      conditions:g("hpCond"), meds:g("hpMeds"), allergies:g("hpAll"), goals:g("hpGoals"), updated:Date.now()});
+    hDirty = {}; toast("Health profile saved.");
+  }},
+    el("div",{class:"sec-head"}, el("h3",{},"About you"), el("span",{class:"hint"}, p.updated ? "Updated "+dayLabel(dkey(new Date(p.updated))) : "Fill in what you know. Everything is optional.")),
+    el("div",{class:"grid2"},
+      el("label",{class:"field"}, el("span",{class:"label"},"This profile is for"), el("select",{id:"hpPid"}, PIDS.map(x=>el("option",{value:x,selected:(p.pid||me)===x},person(x).name)))),
+      inp("hpAge","Age",{type:"number",min:"5",max:"110",inputmode:"numeric"},p.age),
+      opt("hpSex","Sex",["Male","Female","Other"],p.sex),
+      inp("hpHeight","Height (cm)",{type:"number",min:"90",max:"230",inputmode:"numeric"},p.heightCm),
+      opt("hpDiet","Diet",["Vegetarian","Eggetarian","Non-vegetarian","Vegan"],p.diet),
+      opt("hpAct","Exercise",["Almost none","Light (walks)","Moderate (3-4 days a week)","Active (5+ days a week)"],p.activity),
+      inp("hpSleep","Sleep (hours a night)",{type:"number",min:"2",max:"14",step:"0.5",inputmode:"decimal"},p.sleep),
+      opt("hpSmoke","Smoking / tobacco",["Never","Used to","Occasionally","Daily"],p.smoking),
+      opt("hpAlc","Alcohol",["Never","Rarely","Weekly","Most days"],p.alcohol)),
+    el("div",{class:"field"}, el("span",{class:"label"},"Family history (parents, siblings, grandparents)"),
+      el("div",{class:"chips",id:"hpFam"}, FAMILY.map(f=>el("button",{type:"button",class:"chip","data-v":f,"aria-pressed":String(fam.has(f)),onclick:ev=>{ const b = ev.currentTarget; b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed")!=="true")); hDirty.__fam = true; }},f)))),
+    inp("hpFamNotes","Family history details (optional)",{maxlength:"200",placeholder:"e.g. father: diabetes at 45; grandmother: heart attack"},p.familyNotes),
+    inp("hpCond","Past and current medical issues",{maxlength:"400",placeholder:"e.g. fatty liver grade 1 (2024), acidity, migraine, knee surgery 2021"},p.conditions),
+    inp("hpMeds","Medicines and supplements",{maxlength:"300",placeholder:"e.g. vitamin D 60k weekly, pantoprazole when needed"},p.meds),
+    inp("hpAll","Allergies and intolerances",{maxlength:"200",placeholder:"e.g. peanuts, lactose"},p.allergies),
+    inp("hpGoals","Your goals (optional)",{maxlength:"200",placeholder:"e.g. lose 8 kg, bring HbA1c under 5.7"},p.goals),
+    el("div",{class:"actions"}, el("button",{class:"btn",type:"submit"},"Save profile")));
+  return form;
+}
+
+function renderCheckups(){
+  const rows = PANELS.filter(x=>x!=="Other").map(panel=>{
+    const d = panelLastDone(panel);
+    let status, cls;
+    if(!d){ status = "No record"; cls = "warn"; }
+    else { const m = monthsSince(d); status = m>=12 ? "Due ("+m+" months ago)" : m<=0 ? "This month" : m+" month"+(m===1?"":"s")+" ago"; cls = m>=12 ? "bad" : "ok"; }
+    return el("tr",{}, el("td",{},panel), el("td",{}, d ? shortDate(d)+" "+fromKey(d).getFullYear() : "–"), el("td",{}, el("span",{class:"pill "+cls,style:"margin-left:0"}, status)));
+  });
+  return el("section",{},
+    el("div",{class:"sec-head"}, el("h3",{},"Checkups"), el("span",{class:"hint"},"When each test was last done, from your saved reports. Most adults should repeat these yearly.")),
+    el("div",{class:"card table-wrap"}, el("table",{}, el("thead",{}, el("tr",{}, el("th",{},"Test"), el("th",{},"Last done"), el("th",{},"Status"))), el("tbody",{}, rows))));
+}
+
+function renderLabs(){
+  const sec = el("section",{});
+  sec.append(el("div",{class:"sec-head"}, el("h3",{},"Lab reports"), el("span",{class:"hint"},"Add a photo of each report, or type in the key values")));
+  const card = el("div",{class:"card scan-card"});
+  const canPhoto = sample && imgLimits;
+  if(labDraft){ card.append(renderLabDraft()); }
+  else {
+    card.append(el("div",{class:"actions"},
+      canPhoto ? el("label",{class:"btn",for:"labCam"},"Photograph a report") : null,
+      canPhoto ? el("label",{class:"btn ghost",for:"labGal"},"Choose photos") : null,
+      el("button",{type:"button",class:"btn ghost",onclick:()=>{ labDraft = {id:uid(), date:todayKey(), lab:"", source:"manual", results:[], manual:true}; renderHealth(); }},"Type values in")),
+      canPhoto ? el("p",{class:"hint",style:"margin:0"},"One photo per page, flat and in focus. For a PDF report, take a screenshot of each page. Claude reads the values; you check them before saving.") : el("p",{class:"hint",style:"margin:0"},"Reading reports from photos needs the shared Claude page. You can type values in here."));
+    if(labShots.length){
+      card.append(el("div",{class:"shots"}, labShots.map((f,i)=>el("div",{class:"shot"}, el("img",{src:f.url,alt:"Report photo "+(i+1)}),
+        el("button",{type:"button","aria-label":"Remove photo",onclick:()=>{ URL.revokeObjectURL(f.url); labShots.splice(i,1); renderHealth(); }},"×")))));
+      card.append(el("div",{class:"actions"}, el("button",{type:"button",class:"btn",disabled:!!labCtl,onclick:readLabPhotos},"Read report"),
+        labCtl ? el("span",{class:"hint"},"Reading the report…") : null,
+        labCtl ? el("button",{type:"button",class:"btn ghost small",onclick:()=>labCtl.abort()},"Stop") : null));
+    }
+  }
+  sec.append(card);
+  const list = el("div",{class:"scan-list"});
+  const labs = labsSorted();
+  if(!labs.length) list.append(el("div",{class:"empty"},"No reports saved yet."));
+  for(const lab of labs){
+    const rs = arr(lab.results), flagged = rs.filter(r=>{ const f = resultFlag(r); return f && f!=="normal"; }).length;
+    const isOpen = openLab===lab.id, del = pendingLabDel===lab.id;
+    list.append(el("div",{class:"s"},
+      el("span",{class:"sc num",style:"font-size:14px;width:3.4em"}, lab.date ? shortDate(lab.date) : "?"),
+      el("button",{type:"button",style:"border:0;background:none;text-align:left;padding:0",onclick:()=>{ openLab = isOpen?null:lab.id; renderHealth(); }},
+        el("b",{style:"display:block"}, (arr(lab.panels).length ? arr(lab.panels).join(", ") : "Lab report")+(lab.lab?" · "+lab.lab:"")),
+        el("span",{class:"hint"}, rs.length+" values"+(flagged?" · "+flagged+" outside range":"")+" · "+(isOpen?"Hide":"Show"))),
+      el("button",{type:"button",class:"btn ghost small",style:del?"border-color:var(--bad);color:var(--bad)":"",onclick:()=>{
+        if(del){ pendingLabDel = null; deleteLab(lab.id); toast("Report deleted."); }
+        else { pendingLabDel = lab.id; renderHealth(); setTimeout(()=>{ if(pendingLabDel===lab.id){ pendingLabDel = null; renderHealth(); } },4000); }
+      }}, del?"Confirm delete":"Delete")));
+    if(isOpen) list.append(el("div",{class:"table-wrap",style:"padding-bottom:10px"}, resultsTable(rs)));
+  }
+  sec.append(list);
+  return sec;
+}
+function resultsTable(rs){
+  return el("table",{}, el("thead",{}, el("tr",{}, el("th",{},"Test"), el("th",{},"Result"), el("th",{},"Range"), el("th",{},""))),
+    el("tbody",{}, rs.map(r=>el("tr",{}, el("td",{style:"white-space:normal"}, str(r.test)+(str(r.panel)&&str(r.panel)!=="Other"?" ":""), str(r.panel)?el("span",{class:"hint"}," "+str(r.panel)):null),
+      el("td",{}, (numOrNull(r.value)!=null ? r.value : str(r.text))+" "+str(r.unit)), el("td",{}, str(r.range)), el("td",{}, hpill(resultFlag(r)))))));
+}
+function renderLabDraft(){
+  const d = labDraft;
+  const wrap = el("div",{class:"scan-card"});
+  wrap.append(el("h3",{}, d.manual ? "Type in report values" : "Check the values before saving"));
+  wrap.append(el("div",{class:"grid2"},
+    el("label",{class:"field"}, el("span",{class:"label"},"Report date"), el("input",{id:"ldDate",type:"date",value:d.date||"",max:todayKey()})),
+    el("label",{class:"field"}, el("span",{class:"label"},"Lab (optional)"), el("input",{id:"ldLab",maxlength:"60",value:d.lab||""}))));
+  if(d.manual){
+    wrap.append(el("p",{class:"hint",style:"margin:0"},"Fill in only the values on your report. Leave the rest blank."));
+    wrap.append(el("div",{class:"grid2"}, MARKERS.map(m=>el("label",{class:"field"}, el("span",{class:"label"}, m.label+" ("+m.unit+")"), el("input",{id:"lm_"+m.key,type:"number",step:"any",min:"0",inputmode:"decimal"})))));
+  } else {
+    if(d.issues) wrap.append(el("p",{class:"hint",style:"margin:0"},"Note: "+d.issues));
+    wrap.append(el("div",{class:"table-wrap"}, resultsTable(d.results)));
+  }
+  wrap.append(el("div",{class:"actions"},
+    el("button",{type:"button",class:"btn",onclick:()=>{
+      const date = $("#ldDate").value;
+      if(!date){ toast("Add the date the sample was taken."); return; }
+      let results = d.results;
+      if(d.manual){
+        results = MARKERS.map(m=>{ const v = +document.getElementById("lm_"+m.key).value; return v>0 ? {key:m.key, test:m.label, panel:m.panel, value:v, unit:m.unit, range:"", flag:m.flag(v, prof().sex)} : null; }).filter(Boolean);
+        if(!results.length){ toast("Enter at least one value."); return; }
+      }
+      const panels = [...new Set(results.map(r=>str(r.panel)||(MARKERS.find(m=>m.key===r.key)||{}).panel).filter(p=>p && p!=="Other"))];
+      saveLab({id:d.id, date, lab:$("#ldLab").value.trim().slice(0,60), source:d.manual?"manual":"photo", panels, results, t:Date.now()});
+      labDraft = null; hDirty = {}; toast("Report saved."); renderHealth(true);
+    }},"Save report"),
+    el("button",{type:"button",class:"btn ghost",onclick:()=>{ labDraft = null; hDirty = {}; renderHealth(true); }},"Discard")));
+  return wrap;
+}
+function addLabShots(files){
+  const max = imgLimits ? imgLimits.maxCount : 4;
+  for(const f of files){
+    if(labShots.length>=max){ toast("Up to "+max+" pages per report."); break; }
+    if(imgLimits && !imgLimits.mediaTypes.includes(f.type)){ toast("Use a JPEG or PNG photo. For a PDF, screenshot each page."); continue; }
+    labShots.push({file:f, url:URL.createObjectURL(f)});
+  }
+  renderHealth();
+}
+async function readLabPhotos(){
+  if(!sample || !labShots.length || labCtl) return;
+  labCtl = new AbortController(); renderHealth();
+  const keys = MARKERS.map(m=>m.key+" = "+m.label).join(", ");
+  const prompt = `The attached photo(s) are pages of one medical lab report. Read every test result exactly as printed. Do not guess values you cannot read; leave them out and mention them in "issues".
+Reply with only one JSON object:
+{"date": "YYYY-MM-DD of sample collection or report, or null", "lab": "lab name or empty string", "issues": "anything unreadable, or empty string",
+ "results": [{"test": "name as printed", "panel": "one of: ${PANELS.join(", ")}", "key": "one of: ${keys}; or empty string if none match", "value": 5.9, "text": "the result as text when it is not a number, else empty", "unit": "", "range": "reference range as printed", "flag": "normal, borderline, high or low, judged against the printed range"}]}
+Include every result (up to 80). Use a number for "value" whenever the result is numeric, otherwise null.`;
+  try{
+    const r = await sample.json(prompt, {images: labShots.map(x=>x.file), signal: labCtl.signal});
+    const results = arr(r && r.results).map(x=>({test:str(x.test).slice(0,80), panel:PANELS.includes(x.panel)?x.panel:"Other", key:MARKERS.some(m=>m.key===x.key)?x.key:"",
+      value:numOrNull(x.value), text:str(x.text).slice(0,60), unit:str(x.unit).slice(0,20), range:str(x.range).slice(0,40), flag:str(x.flag).toLowerCase()})).filter(x=>x.test).slice(0,80);
+    if(!results.length){ toast("Couldn't find any results in those photos. Try clearer photos."); }
+    else {
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(str(r.date)) && str(r.date)<=todayKey() ? r.date : "";
+      labDraft = {id:uid(), date, lab:str(r.lab).slice(0,60), issues:str(r.issues), results, manual:false};
+      for(const x of labShots) URL.revokeObjectURL(x.url); labShots = [];
+    }
+  }catch(e){ sampleError(e, "Try again with clearer photos."); }
+  finally{ labCtl = null; renderHealth(); }
+}
+function sampleError(e, tail){
+  const c = e && e.code;
+  if(c==="cancelled") return;
+  if(c==="not_granted" || c==="sampling_disabled") toast("Claude wasn't allowed for this page.");
+  else if(c==="rate_limited") toast("Claude is busy or your usage limit is reached. Try again later.");
+  else if(c==="image_rejected") toast("A photo couldn't be read. Use JPEG or PNG.");
+  else toast("Something went wrong. "+(tail||"Try again."));
+}
+
+function renderTrends(){
+  const labs = labsSorted().filter(l=>arr(l.results).some(r=>r.key)).slice(0,6).reverse();
+  const sec = el("section",{}, el("div",{class:"sec-head"}, el("h3",{},"Your key numbers over time"), el("span",{class:"hint"},"Oldest to newest")));
+  if(!labs.length){ sec.append(el("div",{class:"empty"},"Add a report to see HbA1c, sugar, cholesterol, liver and other values side by side.")); return sec; }
+  const rows = MARKERS.filter(m=>labs.some(l=>arr(l.results).some(r=>r.key===m.key && numOrNull(r.value)!=null))).map(m=>el("tr",{},
+    el("td",{}, m.label, el("span",{class:"hint"}," "+m.unit)),
+    labs.map(l=>{ const r = arr(l.results).find(x=>x.key===m.key && numOrNull(x.value)!=null); if(!r) return el("td",{},"–"); const f = resultFlag(r);
+      return el("td",{class:f==="high"||f==="low"?"bad":f==="borderline"?"":""}, String(r.value), f==="borderline"?el("span",{style:"color:var(--warn)"}," ●"):null); })));
+  sec.append(el("div",{class:"card table-wrap"}, el("table",{}, el("thead",{}, el("tr",{}, el("th",{},"Test"), labs.map(l=>el("th",{}, l.date?shortDate(l.date)+" "+String(fromKey(l.date).getFullYear()).slice(2):"?")))), el("tbody",{}, rows)),
+    el("p",{class:"hint",style:"margin:10px 0 0"},"Red is outside the normal range, ● is borderline. Ranges differ between labs; your report's own range counts.")));
+  return sec;
+}
+
+function renderAnalysisSection(){
+  const sec = el("section",{});
+  const a = health.analysis;
+  sec.append(el("div",{class:"sec-head"}, el("h3",{},"Health analysis"), el("span",{class:"hint"}, a && a.t ? "Last updated "+dayLabel(dkey(new Date(a.t))) : "")));
+  const card = el("div",{class:"card scan-card"},
+    el("p",{style:"margin:0"},"Claude reads your profile, every saved report, your weight and your junk-food log. It explains where you stand, your tendencies, what to watch, and what's likely ahead if nothing changes. It also covers how to prevent or delay it and which tests are due."),
+    !sample ? el("p",{class:"hint",style:"margin:0"},"The analysis needs the shared Claude page.") :
+    el("div",{class:"actions"},
+      el("button",{type:"button",class:"btn",disabled:!!anaCtl || !hasProfile(),onclick:runAnalysis}, a ? "Update analysis" : "Analyze my health"),
+      !hasProfile() ? el("span",{class:"hint"},"Fill in your profile or add a report first.") : null,
+      anaCtl ? el("span",{class:"hint",id:"anaStatus"},"Thinking it through. This takes 1-2 minutes…") : null,
+      anaCtl ? el("button",{type:"button",class:"btn ghost small",onclick:()=>anaCtl.abort()},"Stop") : null));
+  sec.append(card);
+  if(a && a.report) sec.append(renderAnalysis(a.report));
+  return sec;
+}
+async function runAnalysis(){
+  if(!sample || anaCtl) return;
+  anaCtl = new AbortController(); renderHealth();
+  const prompt = `You are a careful preventive-health advisor writing for a young person in India who, with their sibling, has eaten a lot of junk food for years and is now seeing it affect their health. Read their data below and write a personal, specific analysis. Refer to their actual values, dates and trends. Do not give generic advice that ignores their numbers.
+
+${healthContext(false)}
+
+Rules:
+- Be honest and calibrated. Do not diagnose. Describe likelihood in words (low, moderate or high) and explain the basis. Do not invent precise percentages. Say clearly when data is missing or too old to judge, and when their age makes a risk small.
+- Use Indian and South Asian context: South Asians develop diabetes and heart disease earlier and at lower BMI and waist sizes, and Asian BMI cut-offs apply.
+- Tie findings to their junk-food habits where the link is real (sugar and HbA1c or triglycerides, salt and blood pressure, fried food and LDL or fatty liver, and so on).
+- Lifestyle changes must be concrete and doable, for example "swap the evening chips for roasted chana on weekdays", not "eat healthy".
+- For each prediction, give a realistic time horizon if nothing changes, what it is based on, and specific steps that prevent or delay it.
+- Recommend tests with timing (e.g. "HbA1c in 3 months") and say why.
+- List warning symptoms that mean they should see a doctor promptly.
+
+Reply with only one JSON object in this shape. Text fields are 1-3 plain sentences, no markdown. "status" is "good", "watch" or "concern". "likelihood" is "low", "moderate" or "high".
+{
+ "summary": "overall picture in 2-4 sentences",
+ "dataGaps": ["missing information that would sharpen this analysis"],
+ "findings": [{"area": "e.g. Blood sugar, Cholesterol and fats, Liver, Kidneys, Blood count, Thyroid, Vitamins, Weight, Blood pressure", "status": "watch", "detail": "what their values show, with numbers and dates"}],
+ "tendencies": ["patterns in their body or habits, e.g. triglycerides rise with sugar intake"],
+ "takeCare": [{"item": "", "why": ""}],
+ "lifestyle": [{"area": "Diet, Junk food, Activity, Sleep, Stress, Alcohol and tobacco, or Other", "change": "", "why": "", "start": "a first small step this week"}],
+ "predictions": [{"condition": "", "horizon": "e.g. within 5-10 years", "likelihood": "moderate", "basis": "", "prevent": ["specific steps"]}],
+ "tests": [{"test": "", "when": "", "why": ""}],
+ "redFlags": ["symptoms needing a doctor soon"],
+ "doctorQuestions": ["questions to ask their doctor"],
+ "junkLink": "how their current junk-food pattern connects to their numbers"
+}
+Sizes: findings 3-10, tendencies 2-6, takeCare 3-8, lifestyle 5-10, predictions 2-7, tests 2-10, redFlags 3-8, doctorQuestions 3-6.`;
+  try{
+    const report = await sample.json(prompt, {modelTier:"complex", signal:anaCtl.signal, cache:false,
+      onText:({text})=>{ const s = document.getElementById("anaStatus"); if(s) s.textContent = "Writing the analysis… "+(text.length/1000).toFixed(1)+"k characters"; }});
+    if(!report || typeof report!=="object" || Array.isArray(report)) throw {code:"invalid_json"};
+    saveAnalysis({t:Date.now(), report}); toast("Analysis ready.");
+  }catch(e){ if(e && e.code==="invalid_json") toast("The analysis came back incomplete. Try again."); else sampleError(e); }
+  finally{ anaCtl = null; renderHealth(); }
+}
+function renderAnalysis(r){
+  const wrap = el("div",{class:"report"});
+  wrap.append(el("div",{class:"panel"}, el("span",{class:"label"},"Where you stand"), el("p",{style:"margin:6px 0 0;font-size:17px"}, str(r.summary))));
+  const f = arr(r.findings);
+  if(f.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Your numbers"),
+    el("div",{}, f.map(x=>el("div",{class:"risk"}, el("b",{}, str(x.area)), el("span",{class:"meta"}, hpill(x.status)), el("p",{style:"margin:0"}, str(x.detail)))))));
+  if(str(r.junkLink)) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"How junk food fits in"), el("p",{}, str(r.junkLink))));
+  const t = arr(r.tendencies);
+  if(t.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Your tendencies"), el("ul",{style:"margin:0;padding-left:18px"}, t.map(x=>el("li",{}, str(x))))));
+  const c = arr(r.takeCare);
+  if(c.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"What to take care of"),
+    el("div",{}, c.map(x=>el("div",{class:"risk"}, el("b",{}, str(x.item)), el("span",{}), el("p",{style:"margin:0"}, str(x.why)))))));
+  const l = arr(r.lifestyle);
+  if(l.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Lifestyle changes"),
+    el("div",{class:"organs"}, l.map(x=>el("div",{class:"organ"}, el("div",{class:"t"}, el("b",{}, str(x.change)), el("span",{class:"flag"}, str(x.area))),
+      el("dl",{}, el("dt",{},"Why"), el("dd",{}, str(x.why)), el("dt",{},"Start"), el("dd",{}, str(x.start))))))));
+  const p = arr(r.predictions);
+  if(p.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Looking ahead, if nothing changes"),
+    el("p",{class:"hint"},"These are likelihoods based on your data and habits, not diagnoses. Most of them can be prevented or pushed back years with the steps listed."),
+    el("div",{class:"organs"}, p.map(x=>el("div",{class:"organ"},
+      el("div",{class:"t"}, el("b",{}, str(x.condition)), hpill(x.likelihood)),
+      el("dl",{}, el("dt",{},"When"), el("dd",{}, str(x.horizon)), el("dt",{},"Based on"), el("dd",{}, str(x.basis))),
+      arr(x.prevent).length ? el("div",{}, el("span",{class:"label"},"To prevent or delay it"), el("ul",{style:"margin:4px 0 0;padding-left:18px;font-size:14px"}, arr(x.prevent).map(s=>el("li",{}, str(s))))) : null)))));
+  const ts = arr(r.tests);
+  if(ts.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Tests to get"),
+    el("div",{class:"card table-wrap"}, el("table",{}, el("thead",{}, el("tr",{}, el("th",{},"Test"), el("th",{},"When"), el("th",{},"Why"))),
+      el("tbody",{}, ts.map(x=>el("tr",{}, el("td",{style:"white-space:normal"}, str(x.test)), el("td",{style:"white-space:normal"}, str(x.when)), el("td",{style:"white-space:normal;text-align:left"}, str(x.why)))))))));
+  const rf = arr(r.redFlags);
+  if(rf.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"See a doctor soon if you notice"), el("ul",{style:"margin:0;padding-left:18px"}, rf.map(x=>el("li",{}, str(x))))));
+  const dq = arr(r.doctorQuestions);
+  if(dq.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"Questions for your doctor"), el("ul",{style:"margin:0;padding-left:18px"}, dq.map(x=>el("li",{}, str(x))))));
+  const g = arr(r.dataGaps);
+  if(g.length) wrap.append(el("section",{class:"rep-sec"}, el("h4",{},"What would make this more accurate"), el("ul",{style:"margin:0;padding-left:18px"}, g.map(x=>el("li",{}, str(x))))));
+  wrap.append(el("p",{class:"rep-note"},"Written by Claude from the information you entered. It can be wrong and is not a diagnosis or a substitute for a doctor. Take your reports and this list of questions to a physician, and don't start or stop any medicine based on it."));
+  return wrap;
+}
+
+$("#labCam").addEventListener("change", ev=>{ addLabShots([...ev.target.files]); ev.target.value = ""; });
+$("#labGal").addEventListener("change", ev=>{ addLabShots([...ev.target.files]); ev.target.value = ""; });
+
 /* ---------- render ---------- */
 function render(){
   renderWho(); renderVs(); renderFacts(); renderQuick(); renderToday();
   renderChart(); renderCalendars(); renderWeekly(); renderWeights();
-  renderPatterns(); renderHistory(); renderSettingsForm(false); renderScanForm(); renderScanList();
+  renderPatterns(); renderHistory(); renderSettingsForm(false); renderScanForm(); renderScanList(); renderHealth();
   $("#sync").classList.toggle("on", mode==="db");
   $("#syncText").textContent = mode==="db" ? "Synced between both of you" : "Saved on this device";
 }
@@ -1473,7 +1933,8 @@ const hashTab = (location.hash||"").slice(1), savedTab = lsGet(TAB_KEY);
 setTab(TABS.includes(hashTab) ? hashTab : TABS.includes(savedTab) ? savedTab : "today", false);
 render();
 connect().then(inArtifact=>{ if(!inArtifact) $("#backupCard").hidden = false; });
-connectSample();
+connectSample().then(()=>renderHealth());
+connectHealth();
 // Re-render when the day rolls over.
 let lastDay = todayKey();
 setInterval(()=>{ const k = todayKey(); if(k!==lastDay){ lastDay = k; selDay = null; calMonth = null; render(); } }, 60000);
