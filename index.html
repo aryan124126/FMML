@@ -210,6 +210,65 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
 .favs .f{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
 .ref{font-size:13px;color:var(--muted);margin:0;padding-left:18px}
 
+/* motivation */
+.hero{display:flex;flex-direction:column;gap:12px}
+.hero-card{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:var(--surface);border:2px solid var(--ink);border-radius:16px;padding:16px 18px}
+.hero-ring{display:flex;flex-direction:column;align-items:center;gap:4px}
+.ring-arc{transition:stroke-dasharray .6s ease}
+.hero-body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.hero-body h2{font-size:26px;font-weight:900;font-variation-settings:"wdth" 90;line-height:1.1}
+.coach{margin:0;font-size:16px;line-height:1.45}
+.why{margin:0;font-size:14px;background:var(--chip);border-radius:8px;padding:6px 10px}
+.hero-stats{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.hero-stats b{color:var(--ink);font-size:18px}
+.btn.sos{background:var(--ok);border-color:var(--ok);color:#fff}
+.cheer-banner{background:color-mix(in srgb,var(--ok) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);border-radius:12px;padding:10px 14px}
+.habits{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.habit{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;text-align:left;font-size:14px;font-weight:600}
+.habit .hk{min-width:2.6em;height:2.2em;border-radius:8px;background:var(--chip);display:inline-flex;align-items:center;justify-content:center;font-weight:800}
+.habit.done{border-color:color-mix(in srgb,var(--ok) 55%,transparent);background:color-mix(in srgb,var(--ok) 10%,var(--surface))}
+.habit.done .hk{background:var(--ok);color:#fff}
+.habit .step{margin-left:auto;display:flex;gap:4px}
+.habit .step button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:18px;font-weight:800;line-height:1}
+.habit .step button:disabled{opacity:.35}
+.onboard{background:var(--surface);border:2px dashed var(--ink);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.onboard h3{font-size:22px;font-weight:900}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:14px}
+.steps li{display:flex;flex-direction:column;gap:6px}
+.steps input{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;width:100%}
+.sos-overlay{position:fixed;inset:0;z-index:20;background:color-mix(in srgb,var(--ink) 55%,transparent);display:flex;align-items:flex-end;justify-content:center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.sos-card{background:var(--surface);border-radius:18px;padding:18px;max-width:520px;width:100%;max-height:calc(100% - env(safe-area-inset-top,0px));overflow:auto;display:flex;flex-direction:column;gap:12px}
+.sos-card h3{font-size:22px;font-weight:900;line-height:1.2}
+.sos-card ul{margin:4px 0 0;padding-left:18px}
+.sos-top{display:flex;align-items:center;gap:18px}
+.sos-time{display:block;font-size:40px;font-weight:900;line-height:1}
+.breath{width:112px;height:112px;flex:none;border-radius:50%;background:color-mix(in srgb,var(--ok) 25%,var(--surface));display:flex;align-items:center;justify-content:center;text-align:center;transform:scale(.7);transition:transform 4s ease-in-out}
+.breath.in{transform:scale(1)} .breath.out{transform:scale(.7);transition-duration:6s}
+.breath-text{font-weight:800;font-size:14px;padding:6px}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
+.prog-card{display:flex;flex-direction:column;gap:10px}
+.big-money{font-size:44px;font-weight:900;line-height:1;color:var(--ok)}
+.goal{display:flex;flex-direction:column;gap:6px}
+.goal-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.goal-bar{height:12px;border-radius:6px;background:var(--chip);overflow:hidden;display:flex}
+.goal-bar span{display:block;height:100%;background:var(--ok);transition:width .6s ease}
+.identity{font-size:14px;font-weight:700;background:var(--chip);border-radius:999px;padding:4px 12px}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.badge{border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted);opacity:.75}
+.badge b{font-size:14px;color:var(--ink)}
+.badge .medal{width:40px;height:40px;border-radius:50%;background:var(--chip);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;margin-bottom:4px;color:var(--muted)}
+.badge.got{opacity:1;border-color:color-mix(in srgb,var(--warn) 60%,transparent);background:color-mix(in srgb,var(--warn) 8%,var(--surface))}
+.badge.got .medal{background:var(--warn);color:#fff;font-size:20px}
+.timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.timeline li{display:grid;grid-template-columns:4.2em 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);opacity:.6}
+.timeline li.reached{opacity:1}
+.timeline li.reached .tl-day{background:var(--ok);color:#fff}
+.tl-day{font-size:12px;font-weight:800;background:var(--chip);border-radius:999px;padding:3px 8px;text-align:center;align-self:start}
+.timeline p{margin:2px 0 0;font-size:14px}
+.plan{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;margin-bottom:10px;font-size:14px;font-weight:700}
+.plan input{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 10px;min-width:0;width:100%;font-weight:400}
+@media (max-width:480px){.hero-card{grid-template-columns:1fr;justify-items:start}.hero-ring{flex-direction:row;gap:12px}}
+@media (prefers-reduced-motion:reduce){.breath,.breath.in,.breath.out{transition:none;transform:none}}
 .privacy{background:var(--chip);border-radius:10px;padding:10px 14px;font-size:14px}
 .scan-card{display:flex;flex-direction:column;gap:14px}
 .scan-card h3{font-size:22px;font-weight:900;font-variation-settings:"wdth" 90}
@@ -279,9 +338,9 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
 
   <nav class="tabs" id="tabs" role="tablist" aria-label="Sections">
     <button type="button" role="tab" data-tab="today">Today</button>
+    <button type="button" role="tab" data-tab="progress">Progress</button>
     <button type="button" role="tab" data-tab="scan">Scan</button>
     <button type="button" role="tab" data-tab="trends">Trends</button>
-    <button type="button" role="tab" data-tab="patterns">Patterns</button>
     <button type="button" role="tab" data-tab="health">Health</button>
     <button type="button" role="tab" data-tab="history">History</button>
     <button type="button" role="tab" data-tab="settings">Settings</button>
@@ -289,6 +348,8 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
 
   <!-- TODAY -->
   <div class="tab" id="tab-today" role="tabpanel">
+    <div id="onboard"></div>
+    <div id="hero" class="hero"></div>
     <div class="vs" id="vs"></div>
     <div class="facts" id="facts"></div>
 
@@ -373,6 +434,9 @@ td.bad{color:var(--bad);font-weight:700} td.good{color:var(--ok);font-weight:700
       <div class="scan-list" id="scanList"></div>
     </section>
   </div>
+
+  <!-- PROGRESS -->
+  <div class="tab" id="tab-progress" role="tabpanel" hidden></div>
 
   <!-- TRENDS -->
   <div class="tab" id="tab-trends" role="tabpanel" hidden>
@@ -532,7 +596,7 @@ const BLOCKS = [
   {n:"Late night",s:0,  e:5,  r:"12–5am"}
 ];
 const PIDS = ["p1","p2"];
-const TABS = ["today","scan","trends","patterns","health","history","settings"];
+const TABS = ["today","progress","scan","trends","health","history","settings"];
 const WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const WD_MON = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 
@@ -556,14 +620,21 @@ function normSettings(s){
     out.people[p] = {
       name: typeof src.name==="string" && src.name.trim() ? src.name.trim().slice(0,20) : d.people[p].name,
       limit: Math.round(clampNum(src.limit,0,10,d.people[p].limit)),
-      budget: Math.round(clampNum(src.budget,0,1e7,0))
+      budget: Math.round(clampNum(src.budget,0,1e7,0)),
+      why: typeof src.why==="string" ? src.why.slice(0,160) : "",
+      identity: typeof src.identity==="string" ? src.identity.slice(0,80) : "",
+      baseItems: clampNum(src.baseItems,0,200,0), baseSpend: clampNum(src.baseSpend,0,1e7,0),
+      baseSince: typeof src.baseSince==="string" && /^\d{4}-\d{2}-\d{2}$/.test(src.baseSince) ? src.baseSince : "",
+      goalName: typeof src.goalName==="string" ? src.goalName.slice(0,40) : "", goalCost: clampNum(src.goalCost,0,1e7,0),
+      plans: Array.isArray(src.plans) ? src.plans.filter(x=>x && typeof x.when==="string" && typeof x.then==="string").slice(0,3).map(x=>({when:x.when.slice(0,80), then:x.then.slice(0,80)})) : []
     };
   }
+  out.teamGoal = Math.round(clampNum(s.teamGoal,1,14,10));
   return out;
 }
 
-let state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}, scans:[]};
-let mode = "local", db = null;
+let state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}, scans:[], cheers:{}};
+let mode = "local", db = null, dataReady = true;
 let me = lsGet(ME_KEY) === "p2" ? "p2" : "p1";
 let tab = "today";
 let range = 14, selDay = null, calMonth = null;
@@ -575,7 +646,7 @@ function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 function loadLocal(){
   try{
     const raw = JSON.parse(lsGet(LS_KEY) || "null");
-    if(raw) state = {settings:normSettings(raw.settings), days:raw.days && typeof raw.days==="object" ? raw.days : {}, weights:normWeights(raw.weights), scans:Array.isArray(raw.scans) ? raw.scans : []};
+    if(raw) state = {settings:normSettings(raw.settings), days:raw.days && typeof raw.days==="object" ? raw.days : {}, weights:normWeights(raw.weights), scans:Array.isArray(raw.scans) ? raw.scans : [], cheers:raw.cheers && typeof raw.cheers==="object" ? raw.cheers : {}};
   }catch(e){}
 }
 function normWeights(w){
@@ -649,22 +720,24 @@ function trackedDays(n){ const start = startKey(); let c = 0; for(let i=0;i<n;i+
 /* ---------- writes ---------- */
 const chains = {};
 function queue(key, fn){ chains[key] = (chains[key]||Promise.resolve()).then(fn).catch(err=>toast(dbMessage(err))); }
+function dayHasData(b){ return b.entries.length || (Array.isArray(b.wins) && b.wins.length) || (b.habits && Object.values(b.habits).some(Boolean)); }
 function writeDay(id, body){
-  if(body.entries.length) state.days[id] = body; else delete state.days[id];
+  const keep = dayHasData(body);
+  if(keep) state.days[id] = body; else delete state.days[id];
   if(mode==="local"){ saveLocal(); render(); return; }
   render();
   const ref = db.doc("days/"+id);
-  queue("days/"+id, ()=> body.entries.length ? ref.set(body) : ref.delete());
+  queue("days/"+id, ()=> keep ? ref.set(body) : ref.delete());
 }
 function putEntry(p, e){
   const date = dkey(new Date(e.t)), id = p+"_"+date;
   const entries = entriesOf(p,date).filter(x=>x.id!==e.id); entries.push(e); entries.sort((a,b)=>a.t-b.t);
-  writeDay(id, {person:p, date, entries});
+  writeDay(id, Object.assign({}, state.days[id]||{}, {person:p, date, entries}));
 }
 function removeEntry(docId, eid){
   const d = state.days[docId]; if(!d) return null;
   const gone = d.entries.find(e=>e.id===eid);
-  writeDay(docId, {person:d.person, date:d.date, entries:d.entries.filter(e=>e.id!==eid)});
+  writeDay(docId, Object.assign({}, d, {entries:d.entries.filter(e=>e.id!==eid)}));
   return gone;
 }
 function saveSettings(s){
@@ -725,6 +798,7 @@ function setTab(t, scroll){
   tab = t; lsSet(TAB_KEY,t);
   for(const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", String(b.dataset.tab===t));
   for(const id of TABS) $("#tab-"+id).hidden = id!==t;
+  $("#tab-patterns").hidden = t!=="trends";
   if(scroll) $("#tabs").scrollIntoView({block:"start"});
 }
 for(const b of document.querySelectorAll("#tabs button")) b.addEventListener("click", ()=>setTab(b.dataset.tab, false));
@@ -801,7 +875,7 @@ function quickLog(src){
 }
 function afterLog(p, e){
   const k = dkey(new Date(e.t)), n = countOf(p,k), lim = person(p).limit;
-  const msg = k!==todayKey() ? "Logged for "+dayLabel(k)+"." : n>lim ? "Logged. "+n+" today, over the limit of "+lim+"." : "Logged. "+n+" of "+lim+" today.";
+  const msg = k!==todayKey() ? "Logged for "+dayLabel(k)+". Thanks for being honest." : n>lim ? "Logged. That's "+n+" today. No guilt: stop here and tomorrow is a clean slate." : n===lim ? "Logged. That's your limit for today. You've got this." : "Logged. "+n+" of "+lim+" today.";
   toast(msg, {label:"Undo", fn:()=>{ removeEntry(p+"_"+k, e.id); toast("Removed."); }});
 }
 
@@ -1872,13 +1946,346 @@ function renderAnalysis(r){
 $("#labCam").addEventListener("change", ev=>{ addLabShots([...ev.target.files]); ev.target.value = ""; });
 $("#labGal").addEventListener("change", ev=>{ addLabShots([...ev.target.files]); ev.target.value = ""; });
 
+/* ---------- MOTIVATION: wins, habits, SOS, savings, milestones, team ---------- */
+const HABITS = [
+  {key:"water", label:"Water",        unit:"glasses",  goal:8, max:12, pts:15},
+  {key:"fruit", label:"Fruit & veg",  unit:"servings", goal:5, max:10, pts:15},
+  {key:"walk",  label:"30-min walk or workout", toggle:true, pts:15},
+  {key:"sleep", label:"Slept 7+ hours",         toggle:true, pts:15}
+];
+const CHEERS = ["Proud of you!","Keep the streak going","Tomorrow's a fresh start","We've got this together","You beat that craving!"];
+const SOS_TIPS = [
+  "Drink a full glass of water, slowly.",
+  "Walk for 5 minutes, even just around the house.",
+  "Brush your teeth. Food tastes off afterwards, and the craving fades.",
+  "Eat something real instead: a fruit, roasted chana, peanuts or curd.",
+  "Text your brother that you're fighting a craving.",
+  "Step away from where the snacks are. Change rooms.",
+  "Ask yourself: am I hungry, or bored, stressed or tired?"
+];
+const BODY_TIMELINE = [
+  {d:1,  t:"Steadier blood sugar",  x:"Fewer sugar spikes and crashes. Energy through the afternoon tends to feel more even."},
+  {d:3,  t:"Less bloating",         x:"Less salt means less water retention. Many people notice they feel lighter within a few days."},
+  {d:7,  t:"Cravings start easing", x:"Cravings are usually strongest in the first week. After that they often come less often and fade faster."},
+  {d:14, t:"Taste resets",          x:"Taste cells renew every couple of weeks, so less-salty and less-sweet food starts to taste normal, even good."},
+  {d:21, t:"Better sleep and mood", x:"Less late-night junk and sugar is linked with deeper sleep and fewer energy dips."},
+  {d:30, t:"Blood pressure and gut", x:"Cutting salt for a few weeks can lower blood pressure. More fibre feeds healthier gut bacteria."},
+  {d:66, t:"It's a habit now",      x:"Research on habits found it takes about 66 days, on average, for a new behaviour to feel automatic."},
+  {d:90, t:"Time to retest",        x:"HbA1c reflects about 3 months of blood sugar. This is a good point to repeat your blood tests and see the change."}
+];
+const BADGES = [
+  {id:"clean1",  t:"First clean day",     d:"A full day with no junk",          m:"cleanDays", n:1},
+  {id:"streak3", t:"Three in a row",      d:"3-day within-limit streak",        m:"best", n:3},
+  {id:"streak7", t:"One full week",       d:"7-day streak",                     m:"best", n:7},
+  {id:"streak14",t:"Two weeks strong",    d:"14-day streak",                    m:"best", n:14},
+  {id:"streak30",t:"A month on track",    d:"30-day streak",                    m:"best", n:30},
+  {id:"streak66",t:"Habit formed",        d:"66-day streak",                    m:"best", n:66},
+  {id:"win1",    t:"Craving beaten",      d:"Resisted your first craving",      m:"wins", n:1},
+  {id:"win10",   t:"Craving crusher",     d:"10 cravings beaten",               m:"wins", n:10},
+  {id:"win50",   t:"Unshakeable",         d:"50 cravings beaten",               m:"wins", n:50},
+  {id:"clean10", t:"10 clean days",       d:"10 junk-free days in total",       m:"cleanDays", n:10},
+  {id:"clean30", t:"30 clean days",       d:"30 junk-free days in total",       m:"cleanDays", n:30},
+  {id:"well1",   t:"Full wellness day",   d:"All four healthy habits in a day", m:"fullDays", n:1},
+  {id:"well7",   t:"Wellness week",       d:"7 full wellness days",             m:"fullDays", n:7},
+  {id:"save500", t:"First savings",       d:"Saved 500 on junk",                m:"saved", n:500},
+  {id:"save2000",t:"Serious savings",     d:"Saved 2,000 on junk",              m:"saved", n:2000},
+  {id:"scan1",   t:"Label reader",        d:"Scanned your first packet label",  m:"scans", n:1}
+];
+
+/* ----- day doc helpers (entries + wins + habits share one doc per person per day) ----- */
+function dayDoc(p,k){ const d = state.days[p+"_"+k]; return d || {person:p, date:k, entries:[]}; }
+function winsOf(p,k){ const d = state.days[p+"_"+k]; return d && Array.isArray(d.wins) ? d.wins : []; }
+function habitsOf(p,k){ const d = state.days[p+"_"+k]; return d && d.habits && typeof d.habits==="object" ? d.habits : {}; }
+function updateDay(p,k,patch){ const d = dayDoc(p,k); writeDay(p+"_"+k, Object.assign({}, d, {person:p, date:k, entries:d.entries||[]}, patch)); }
+function addWin(p, note){
+  const k = todayKey(), w = winsOf(p,k).slice(); w.push({id:uid(), t:Date.now(), note:note||""});
+  updateDay(p,k,{wins:w});
+}
+function setHabit(p,k,key,v){ const h = Object.assign({}, habitsOf(p,k)); h[key] = v; updateDay(p,k,{habits:h}); }
+
+/* ----- metrics ----- */
+function wellness(p,k){
+  const n = countOf(p,k), lim = person(p).limit, h = habitsOf(p,k);
+  let junk = n===0 ? 40 : n<=lim ? 28 : Math.max(0, 16-(n-lim)*6);
+  let habits = 0;
+  for(const x of HABITS) habits += x.toggle ? (h[x.key] ? x.pts : 0) : Math.min(1,(+h[x.key]||0)/x.goal)*x.pts;
+  return Math.round(junk + habits);
+}
+function fullHabitDay(p,k){ const h = habitsOf(p,k); return HABITS.every(x=>x.toggle ? !!h[x.key] : (+h[x.key]||0)>=x.goal); }
+function pastDays(p, fn){ // completed days since tracking began (today excluded)
+  let c = 0; const start = startKey(); let d = addDays(new Date(),-1);
+  for(let i=0;i<400;i++){ const k = dkey(d); if(k<start) break; if(fn(k)) c++; d = addDays(d,-1); }
+  return c;
+}
+function savings(p){
+  const P = person(p);
+  if(!(P.baseItems>0 || P.baseSpend>0) || !P.baseSince) return null;
+  let days = 0, items = 0, spend = 0, kc = 0, kn = 0; let d = fromKey(P.baseSince); const end = todayKey();
+  for(let i=0;i<400 && dkey(d)<=end;i++){ const k = dkey(d); days++; items += countOf(p,k); spend += sumOf(p,k,"cost"); d = addDays(d,1); }
+  for(const e of allEntries()) if(e.person===p){ kc += val(e,"kcal")*(e.qty||1); kn += e.qty||1; }
+  const weeks = days/7, avgK = kn ? kc/kn : 280;
+  const itemsAvoided = Math.max(0, P.baseItems*weeks - items), saved = Math.max(0, P.baseSpend*weeks - spend);
+  return {days, itemsAvoided, saved, kcal:itemsAvoided*avgK};
+}
+function metrics(p){
+  const winsTotal = Object.values(state.days).filter(d=>d && d.person===p).reduce((s,d)=>s+(Array.isArray(d.wins)?d.wins.length:0),0);
+  const sv = savings(p);
+  return {
+    best: bestStreak(p), cur: streak(p), wins: winsTotal,
+    cleanDays: pastDays(p, k=>countOf(p,k)===0),
+    fullDays: pastDays(p, k=>fullHabitDay(p,k)) + (fullHabitDay(p,todayKey())?1:0),
+    saved: sv ? sv.saved : 0,
+    scans: state.scans.filter(x=>x.person===p).length
+  };
+}
+function earnedBadges(p){ const m = metrics(p); return BADGES.map(b=>Object.assign({}, b, {have:m[b.m]||0, got:(m[b.m]||0)>=b.n})); }
+function nextStreakBadge(cur){ return BADGES.filter(b=>b.m==="best" && b.n>cur).sort((a,b)=>a.n-b.n)[0]; }
+
+function coachMessage(p){
+  const t = todayKey(), y = dkey(addDays(new Date(),-1)), lim = person(p).limit;
+  const n = countOf(p,t), ny = countOf(p,y), cur = streak(p), m = metrics(p);
+  if(n>lim) return "Slip-ups are part of changing. "+(m.cleanDays?"One day doesn't undo your "+m.cleanDays+" clean day"+(m.cleanDays===1?"":"s")+". ":"")+"The rule that matters: never miss twice. Make tomorrow a good day.";
+  if(ny>lim && y>=startKey()) return "Bounce-back day. Yesterday went over, and today you're back on track. That's the skill that makes change last.";
+  const nb = nextStreakBadge(cur);
+  if(cur>=2 && nb) return "Day "+cur+" on track. "+(nb.n-cur)+" more day"+(nb.n-cur===1?"":"s")+" to “"+nb.t+"”.";
+  if(n===0) return "Nothing logged today. Each clean day makes the next one easier.";
+  return "You're within your limit. Stop here and today counts as a win.";
+}
+function greeting(){ const h = new Date().getHours(); return h<5?"Still up":h<12?"Good morning":h<17?"Good afternoon":"Good evening"; }
+
+/* ----- rendering: hero, habits, onboarding, cheers ----- */
+function ring(score, size){
+  const r = 42, c = 2*Math.PI*r, col = score>=70 ? "var(--ok)" : score>=40 ? "var(--warn)" : "var(--bad)";
+  const svg = s("svg",{viewBox:"0 0 100 100",width:size,height:size,role:"img","aria-label":"Wellness score "+score+" out of 100"});
+  svg.append(s("circle",{cx:50,cy:50,r,fill:"none",stroke:"var(--chip)","stroke-width":10}));
+  svg.append(s("circle",{cx:50,cy:50,r,fill:"none",stroke:col,"stroke-width":10,"stroke-linecap":"round","stroke-dasharray":`${c*score/100} ${c}`,transform:"rotate(-90 50 50)",class:"ring-arc"}));
+  svg.append(s("text",{x:50,y:50,"text-anchor":"middle","dominant-baseline":"central","font-size":28,"font-weight":900,fill:"var(--ink)"},score));
+  return svg;
+}
+function renderHero(){
+  const box = $("#hero"); box.replaceChildren();
+  const P = person(me), k = todayKey(), sc = wellness(me,k), m = metrics(me), wins = winsOf(me,k).length;
+  const cheer = (state.cheers||{})[me];
+  if(cheer && Date.now()-cheer.t < 48*3600e3 && cheer.from!==me){
+    box.append(el("div",{class:"cheer-banner"}, el("b",{}, person(cheer.from).name+" sent you: "), "“"+str(cheer.msg)+"”"));
+  }
+  box.append(el("div",{class:"hero-card"},
+    el("div",{class:"hero-ring"}, ring(sc, 112), el("span",{class:"label"},"Wellness today")),
+    el("div",{class:"hero-body"},
+      el("h2",{}, greeting()+", "+P.name),
+      el("p",{class:"coach"}, coachMessage(me)),
+      P.why ? el("p",{class:"why"}, el("span",{class:"label"},"Your why "), P.why) : null,
+      el("div",{class:"hero-stats"},
+        el("span",{}, el("b",{class:"num"}, m.cur), " day streak"),
+        el("span",{}, el("b",{class:"num"}, countOf(me,k)+"/"+P.limit), " junk today"),
+        el("span",{}, el("b",{class:"num"}, wins), wins===1?" craving beaten today":" cravings beaten today")),
+      el("div",{class:"actions"},
+        el("button",{type:"button",class:"btn sos",onclick:()=>openSOS()},"I'm having a craving"),
+        el("button",{type:"button",class:"btn ghost",onclick:()=>{ addWin(me,"Resisted"); celebrateSmall("Craving beaten. That's a win."); }},"I resisted one")))));
+  // habits
+  const h = habitsOf(me,k);
+  box.append(el("div",{class:"habits"}, HABITS.map(x=>{
+    if(x.toggle){ const on = !!h[x.key];
+      return el("button",{type:"button",class:"habit"+(on?" done":""),"aria-pressed":String(on),onclick:()=>setHabit(me,k,x.key,!on)},
+        el("span",{class:"hk"}, on?"✓":"○"), el("span",{}, x.label)); }
+    const v = +h[x.key]||0, done = v>=x.goal;
+    return el("div",{class:"habit"+(done?" done":"")},
+      el("span",{class:"hk num"}, v+"/"+x.goal), el("span",{}, x.label+" ("+x.unit+")"),
+      el("span",{class:"step"},
+        el("button",{type:"button","aria-label":"Less "+x.label,disabled:v<=0,onclick:()=>setHabit(me,k,x.key,v-1)},"−"),
+        el("button",{type:"button","aria-label":"More "+x.label,disabled:v>=x.max,onclick:()=>{ setHabit(me,k,x.key,v+1); if(v+1===x.goal) celebrateSmall(x.label+" goal reached."); }},"+")));
+  })));
+  renderOnboarding();
+}
+
+function renderOnboarding(){
+  const box = $("#onboard"); box.replaceChildren();
+  const P = person(me);
+  let dismissed = false; try{ dismissed = localStorage.getItem("junkfacts.onboard."+me)==="later"; }catch(e){}
+  if(P.why || dismissed) return;
+  box.append(el("form",{class:"onboard",onsubmit:ev=>{
+      ev.preventDefault();
+      const s2 = JSON.parse(JSON.stringify(state.settings)), q = s2.people[me];
+      q.why = $("#obWhy").value.trim().slice(0,160); q.identity = $("#obId").value.trim().slice(0,80);
+      q.baseItems = +$("#obItems").value||0; q.baseSpend = +$("#obSpend").value||0; q.baseSince = todayKey();
+      q.goalName = $("#obGoal").value.trim().slice(0,40); q.goalCost = +$("#obGoalCost").value||0;
+      if(!q.why){ toast("Write down your reason first. It's the most important part."); return; }
+      saveSettings(s2); celebrate("You're set up, "+P.name+". Day one starts now.");
+    }},
+    el("span",{class:"label"},"Start here · takes one minute"),
+    el("h3",{},"Set up your change, "+P.name),
+    el("ol",{class:"steps"},
+      el("li",{}, el("b",{},"Your reason. "), "People who write down why they're changing stick with it far longer.",
+        el("input",{id:"obWhy",maxlength:"160",placeholder:"e.g. I want my energy back and to never need diabetes medicine like Dad"}),
+        el("input",{id:"obId",maxlength:"80",placeholder:"Who you're becoming, e.g. someone who eats real food"})),
+      el("li",{}, el("b",{},"Your starting point. "), "Roughly how much junk did you eat before? The app counts what you save against this.",
+        el("div",{class:"grid2"},
+          el("label",{class:"field"}, el("span",{class:"label"},"Junk items a week"), el("input",{id:"obItems",type:"number",min:"0",max:"100",inputmode:"numeric",placeholder:"e.g. 12"})),
+          el("label",{class:"field"}, el("span",{class:"label"},"Spent a week ("+state.settings.currency+")"), el("input",{id:"obSpend",type:"number",min:"0",inputmode:"numeric",placeholder:"e.g. 600"})))),
+      el("li",{}, el("b",{},"Your reward. "), "Pick something to buy with the money you save.",
+        el("div",{class:"grid2"},
+          el("label",{class:"field"}, el("span",{class:"label"},"Reward"), el("input",{id:"obGoal",maxlength:"40",placeholder:"e.g. new running shoes"})),
+          el("label",{class:"field"}, el("span",{class:"label"},"It costs ("+state.settings.currency+")"), el("input",{id:"obGoalCost",type:"number",min:"0",inputmode:"numeric",placeholder:"e.g. 3000"}))))),
+    el("div",{class:"actions"}, el("button",{class:"btn",type:"submit"},"Start my change"),
+      el("button",{type:"button",class:"btn ghost",onclick:()=>{ try{ localStorage.setItem("junkfacts.onboard."+me,"later"); }catch(e){} renderOnboarding(); }},"Later"))));
+}
+
+/* ----- craving SOS ----- */
+let sosTimer = null, sosBreath = null;
+function openSOS(){
+  const P = person(me), other = PIDS.find(x=>x!==me);
+  const tips = SOS_TIPS.slice().sort(()=>Math.random()-.5).slice(0,3);
+  const plans = arr(P.plans).filter(x=>x && x.when && x.then);
+  let left = 300;
+  const timeEl = el("b",{class:"sos-time num"},"5:00");
+  const breathText = el("span",{class:"breath-text"},"Breathe in");
+  const circle = el("div",{class:"breath"}, breathText);
+  const ov = el("div",{class:"sos-overlay",role:"dialog","aria-modal":"true","aria-label":"Craving help"},
+    el("div",{class:"sos-card"},
+      el("span",{class:"label"},"Craving SOS"),
+      el("h3",{},"Wait five minutes. Cravings peak and then fade."),
+      el("div",{class:"sos-top"}, circle, el("div",{}, timeEl, el("span",{class:"hint"},"Breathe with the circle until the timer ends."))),
+      P.why ? el("p",{class:"why"}, el("span",{class:"label"},"Remember why "), P.why) : null,
+      plans.length ? el("div",{}, el("span",{class:"label"},"Your plan"), el("ul",{}, plans.map(x=>el("li",{}, "When "+x.when+", I will "+x.then+".")))) : null,
+      el("div",{}, el("span",{class:"label"},"Try one of these now"), el("ul",{}, tips.map(t=>el("li",{},t)))),
+      el("div",{class:"actions"},
+        el("button",{type:"button",class:"btn",onclick:()=>{ closeSOS(); addWin(me,"Beat a craving with SOS"); celebrate("You beat it! Every craving you ride out makes the next one weaker."); }},"I beat it"),
+        el("button",{type:"button",class:"btn ghost",onclick:()=>{
+          const c = (state.cheers||{})[other];
+          sendCheer(other, P.name+" is fighting a craving right now. Send some support!", me);
+          toast(person(other).name+" will see your SOS next time they open the app.");
+        }},"Ask "+person(other).name+" for backup"),
+        el("button",{type:"button",class:"btn ghost",onclick:()=>{ closeSOS(); openSheet({item:"",cat:"Fast food",kcal:300,fat:12,sugar:5,sodium:500,cost:100}); toast("That's OK. Log it honestly. Tomorrow is a fresh start."); }},"I'm going to eat it"),
+        el("button",{type:"button",class:"btn ghost small",onclick:closeSOS},"Close"))));
+  document.body.append(ov);
+  ov.querySelector(".btn").focus();
+  const tick = ()=>{ left--; timeEl.textContent = Math.floor(left/60)+":"+pad(left%60); if(left<=0){ clearInterval(sosTimer); sosTimer = null; timeEl.textContent = "Done"; breathText.textContent = "Still want it?"; } };
+  sosTimer = setInterval(tick, 1000);
+  let phase = 0; const phases = [["Breathe in",4000,"in"],["Hold",4000,"in"],["Breathe out",6000,"out"]];
+  const step = ()=>{ const [t,ms,cls] = phases[phase%3]; if(left>0) breathText.textContent = t; circle.className = "breath "+cls; phase++; sosBreath = setTimeout(step, ms); };
+  step();
+  ov.addEventListener("keydown", ev=>{ if(ev.key==="Escape") closeSOS(); });
+}
+function closeSOS(){ clearInterval(sosTimer); clearTimeout(sosBreath); sosTimer = sosBreath = null; const o = document.querySelector(".sos-overlay"); if(o) o.remove(); }
+
+/* ----- cheers ----- */
+function sendCheer(to, msg, from){
+  const body = {from:from||me, msg:String(msg).slice(0,140), t:Date.now()};
+  state.cheers = Object.assign({}, state.cheers||{}, {[to]:body});
+  if(mode==="local"){ saveLocal(); render(); return; }
+  render();
+  queue("cheers/"+to, ()=>db.doc("cheers/"+to).set(body));
+}
+
+/* ----- celebrations ----- */
+function celebrateSmall(msg){ toast(msg); }
+function celebrate(msg){
+  toast(msg);
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv = el("canvas",{class:"confetti","aria-hidden":"true"}); document.body.append(cv);
+  const ctx = cv.getContext("2d"), W = cv.width = innerWidth, H = cv.height = innerHeight;
+  const cols = ["#2E8B57","#2F6FDB","#C7731F","#E0B04F","#C8372D"];
+  const ps = Array.from({length:140},()=>({x:W/2+(Math.random()-.5)*W*.3, y:H*.35, vx:(Math.random()-.5)*12, vy:-Math.random()*12-4, r:Math.random()*6+3, c:cols[Math.floor(Math.random()*cols.length)], a:Math.random()*6}));
+  const t0 = performance.now();
+  (function frame(t){
+    ctx.clearRect(0,0,W,H);
+    for(const q of ps){ q.vy += .35; q.x += q.vx; q.y += q.vy; q.a += .2; ctx.save(); ctx.translate(q.x,q.y); ctx.rotate(q.a); ctx.fillStyle = q.c; ctx.fillRect(-q.r/2,-q.r/4,q.r,q.r/2); ctx.restore(); }
+    if(t-t0<2200) requestAnimationFrame(frame); else cv.remove();
+  })(t0);
+}
+function checkNewBadges(){
+  if(!dataReady) return;
+  const key = "junkfacts.badges."+me; let seen = null;
+  try{ seen = JSON.parse(localStorage.getItem(key)||"null"); }catch(e){}
+  const got = earnedBadges(me).filter(b=>b.got).map(b=>b.id);
+  if(seen){ const fresh = got.filter(id=>!seen.includes(id)); if(fresh.length){ const b = BADGES.find(x=>x.id===fresh[0]); celebrate("Milestone unlocked: "+b.t+"!"); } }
+  try{ localStorage.setItem(key, JSON.stringify(got)); }catch(e){}
+}
+
+/* ----- PROGRESS tab ----- */
+function renderProgress(){
+  const box = $("#tab-progress"); if(!box) return;
+  if(box.contains(document.activeElement) && /^(INPUT|SELECT)$/.test(document.activeElement.tagName)) return;
+  box.replaceChildren();
+  const P = person(me), other = PIDS.find(x=>x!==me), m = metrics(me);
+
+  // savings + reward
+  const sv = savings(me);
+  const sav = el("div",{class:"card prog-card"}, el("span",{class:"label"},"Money and body fat you've saved"));
+  if(sv){
+    const pctGoal = P.goalCost>0 ? Math.min(100, sv.saved/P.goalCost*100) : null;
+    sav.append(el("div",{class:"big-money num"}, money(sv.saved)),
+      el("p",{style:"margin:0"}, "Since "+dayLabel(P.baseSince)+" you've skipped about "+Math.round(sv.itemsAvoided)+" junk items. That's "+Math.round(sv.kcal).toLocaleString()+" kcal, roughly "+(sv.kcal/KCAL_PER_KG_FAT>=1 ? fmt1(sv.kcal/KCAL_PER_KG_FAT)+" kg" : Math.round(sv.kcal/KCAL_PER_KG_FAT*1000)+" g")+" of body fat you didn't gain."),
+      P.goalName ? el("div",{class:"goal"}, el("div",{class:"goal-top"}, el("b",{}, "Reward: "+P.goalName), el("span",{class:"num"}, money(sv.saved)+" / "+money(P.goalCost))),
+        el("div",{class:"goal-bar"}, el("span",{style:`width:${pctGoal||0}%`})),
+        el("span",{class:"hint"}, pctGoal>=100 ? "You've earned it. Go get it, you deserve it." : money(Math.max(0,P.goalCost-sv.saved))+" to go.")) : null);
+  } else sav.append(el("p",{class:"hint",style:"margin:0"},"Set your starting point below to see how much money and body fat you're saving."));
+
+  // milestones
+  const bs = earnedBadges(me), gotN = bs.filter(b=>b.got).length;
+  const badges = el("div",{class:"card prog-card"}, el("div",{class:"sec-head"}, el("span",{class:"label"},"Milestones"), el("span",{class:"hint"}, gotN+" of "+bs.length+" unlocked")),
+    el("div",{class:"badges"}, bs.map(b=>el("div",{class:"badge"+(b.got?" got":""),title:b.d},
+      el("span",{class:"medal"}, b.got?"★":Math.min(b.have,b.n)+"/"+b.n), el("b",{}, b.t), el("span",{}, b.d.replace("Saved ","Saved "+state.settings.currency))))));
+
+  // body timeline
+  const cur = m.cur;
+  const tl = el("div",{class:"card prog-card"}, el("span",{class:"label"},"What's changing in your body"),
+    el("p",{class:"hint",style:"margin:0"},"Based on your current streak of "+cur+" day"+(cur===1?"":"s")+" within your limit. Everyone's body is different; these are common patterns, not promises."),
+    el("ol",{class:"timeline"}, BODY_TIMELINE.map(x=>el("li",{class:cur>=x.d?"reached":""},
+      el("span",{class:"tl-day"}, "Day "+x.d), el("div",{}, el("b",{}, x.t+(cur>=x.d?" ✓":"")), el("p",{}, x.x))))));
+
+  // team
+  const tgoal = state.settings.teamGoal || 10;
+  let team = 0; const per = {};
+  for(const p of PIDS){ per[p] = 0; let d = monday(new Date()); const start = startKey(); while(dkey(d)<=todayKey()){ const k = dkey(d); if(k>=start && countOf(p,k)<=person(p).limit){ per[p]++; team++; } d = addDays(d,1); } }
+  const teamCard = el("div",{class:"card prog-card"}, el("span",{class:"label"},"Team goal this week"),
+    el("div",{class:"goal"}, el("div",{class:"goal-top"}, el("b",{}, team+" of "+tgoal+" on-track days together"), el("span",{class:"hint"}, PIDS.map(p=>person(p).name+" "+per[p]).join(" · "))),
+      el("div",{class:"goal-bar team"}, el("span",{style:`width:${Math.min(100,per.p1/tgoal*100)}%;background:var(--p1)`}), el("span",{style:`width:${Math.min(100-Math.min(100,per.p1/tgoal*100),per.p2/tgoal*100)}%;background:var(--p2)`})),
+      el("span",{class:"hint"}, team>=tgoal ? "Team goal reached this week. Well done, both of you." : "A day counts when you stay within your limit. Support each other.")),
+    el("span",{class:"label",style:"margin-top:6px"},"Send "+person(other).name+" a cheer"),
+    el("div",{class:"chips"}, CHEERS.map(c=>el("button",{type:"button",class:"chip",onclick:()=>{ sendCheer(other,c); toast("Cheer sent to "+person(other).name+"."); }}, c))));
+
+  // plans + why editor
+  const plans = arr(P.plans).concat([{},{},{}]).slice(0,3);
+  const topTrig = (()=>{ const t = tally(entriesSince(0,30).filter(e=>e.person===me), e=>e.triggers||[]); let b = null, n = 0; for(const [k,v] of Object.entries(t)) if(v[me]>n){ n = v[me]; b = k; } return b; })();
+  const form = el("form",{class:"card prog-card",onsubmit:ev=>{
+      ev.preventDefault();
+      const s2 = JSON.parse(JSON.stringify(state.settings)), q = s2.people[me];
+      q.why = $("#pgWhy").value.trim().slice(0,160); q.identity = $("#pgId").value.trim().slice(0,80);
+      q.plans = [0,1,2].map(i=>({when:$("#pgW"+i).value.trim().slice(0,80), then:$("#pgT"+i).value.trim().slice(0,80)})).filter(x=>x.when&&x.then);
+      const bi = +$("#pgItems").value||0, bsp = +$("#pgSpend").value||0;
+      if((bi!==q.baseItems || bsp!==q.baseSpend) && !q.baseSince) q.baseSince = todayKey();
+      q.baseItems = bi; q.baseSpend = bsp; if((bi||bsp) && !q.baseSince) q.baseSince = todayKey();
+      q.goalName = $("#pgGoal").value.trim().slice(0,40); q.goalCost = +$("#pgGoalCost").value||0;
+      saveSettings(s2); toast("Saved. Your plan is ready for the next craving.");
+    }},
+    el("span",{class:"label"},"Your reason and your plan"),
+    el("label",{class:"field"}, el("span",{class:"label"},"Why I'm changing"), el("input",{id:"pgWhy",maxlength:"160",value:P.why||""})),
+    el("label",{class:"field"}, el("span",{class:"label"},"Who I'm becoming"), el("input",{id:"pgId",maxlength:"80",value:P.identity||"",placeholder:"e.g. someone who eats real food"})),
+    el("div",{}, el("span",{class:"label"},"If-then plans"),
+      el("p",{class:"hint",style:"margin:2px 0 8px"},"Deciding in advance what you'll do in a tempting moment roughly doubles the chance you follow through."+(topTrig?" Your most common trigger lately: "+topTrig.toLowerCase()+".":"")),
+      plans.map((x,i)=>el("div",{class:"plan"}, el("span",{},"When"), el("input",{id:"pgW"+i,maxlength:"80",value:x.when||"",placeholder:i===0&&topTrig?"I feel "+topTrig.toLowerCase():"I pass the snack shop after college"}),
+        el("span",{},"I will"), el("input",{id:"pgT"+i,maxlength:"80",value:x.then||"",placeholder:"drink water and walk for 5 minutes"})))),
+    el("div",{class:"grid2"},
+      el("label",{class:"field"}, el("span",{class:"label"},"Before: junk items a week"), el("input",{id:"pgItems",type:"number",min:"0",inputmode:"numeric",value:P.baseItems||""})),
+      el("label",{class:"field"}, el("span",{class:"label"},"Before: spent a week"), el("input",{id:"pgSpend",type:"number",min:"0",inputmode:"numeric",value:P.baseSpend||""})),
+      el("label",{class:"field"}, el("span",{class:"label"},"Reward"), el("input",{id:"pgGoal",maxlength:"40",value:P.goalName||""})),
+      el("label",{class:"field"}, el("span",{class:"label"},"Reward costs"), el("input",{id:"pgGoalCost",type:"number",min:"0",inputmode:"numeric",value:P.goalCost||""}))),
+    el("div",{class:"actions"}, el("button",{class:"btn",type:"submit"},"Save")));
+
+  box.append(
+    el("div",{class:"sec-head"}, el("h3",{}, P.name+"'s progress"), P.identity ? el("span",{class:"identity"}, "Becoming "+P.identity) : null),
+    el("div",{class:"cards"}, sav, teamCard), badges, tl, form);
+}
+
 /* ---------- render ---------- */
 function render(){
-  renderWho(); renderVs(); renderFacts(); renderQuick(); renderToday();
+  renderWho(); renderHero(); renderVs(); renderFacts(); renderProgress(); renderQuick(); renderToday();
   renderChart(); renderCalendars(); renderWeekly(); renderWeights();
   renderPatterns(); renderHistory(); renderSettingsForm(false); renderScanForm(); renderScanList(); renderHealth();
   $("#sync").classList.toggle("on", mode==="db");
   $("#syncText").textContent = mode==="db" ? "Synced between both of you" : "Saved on this device";
+  checkNewBadges();
 }
 
 let toastTimer;
@@ -1912,16 +2319,19 @@ async function connect(){
   let d = null;
   try{ d = await window.claude.use("db"); }catch(e){ d = null; }
   if(!d) return true;
-  db = d; mode = "db"; state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}, scans:[]}; render();
+  db = d; mode = "db"; dataReady = false; state = {settings:defaultSettings(), days:{}, weights:{p1:[],p2:[]}, scans:[], cheers:{}}; render();
   const onErr = err=>{ if(err && err.code!=="revoked") toast("Lost the live connection. Reload the page to reconnect."); };
   db.doc("settings/main").onSnapshot(snap=>{ state.settings = normSettings(snap.exists ? snap.data() : null); render(); }, onErr);
   db.collection("days").where("date",">=",dkey(addDays(new Date(),-180))).limit(1000).onSnapshot(q=>{
     const m = {}; for(const doc of q.docs) m[doc.id] = doc.data();
-    state.days = m; render();
+    state.days = m; dataReady = true; render();
   }, onErr);
   db.collection("weights").onSnapshot(q=>{
     const w = {p1:[],p2:[]}; for(const doc of q.docs) if(PIDS.includes(doc.id)) w[doc.id] = (doc.data().entries)||[];
     state.weights = normWeights(w); render();
+  }, onErr);
+  db.collection("cheers").onSnapshot(q=>{
+    const c = {}; for(const doc of q.docs) if(PIDS.includes(doc.id)) c[doc.id] = doc.data(); state.cheers = c; render();
   }, onErr);
   db.collection("scans").orderBy("t","desc").limit(60).onSnapshot(q=>{
     state.scans = q.docs.map(doc=>Object.assign({id:doc.id}, doc.data())); renderScanList();
@@ -1929,7 +2339,7 @@ async function connect(){
   return true;
 }
 loadLocal();
-const hashTab = (location.hash||"").slice(1), savedTab = lsGet(TAB_KEY);
+const hashTab = ((location.hash||"").slice(1)).replace(/^patterns$/,"trends"), savedTab = lsGet(TAB_KEY);
 setTab(TABS.includes(hashTab) ? hashTab : TABS.includes(savedTab) ? savedTab : "today", false);
 render();
 connect().then(inArtifact=>{ if(!inArtifact) $("#backupCard").hidden = false; });

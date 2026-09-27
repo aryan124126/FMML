@@ -2,6 +2,21 @@
 
 Shevi and Rupesh's junk-food tracker. It's one self-contained page, `index.html`, with no build step and no server.
 
+## How it keeps you going
+
+The app is built around what behavior-change research says actually works:
+- **Your reason and identity:** a one-minute setup asks why you're changing and who you're becoming, and shows it back to you every day.
+- **A daily coach and wellness score:** a 0–100 ring combining junk items with four healthy habits (water, fruit and veg, a 30-minute walk or workout, and 7+ hours of sleep), with a supportive message for where you are.
+- **Wins, not just junk:** tap "I resisted one" whenever you beat a craving. Wins count toward milestones.
+- **Craving SOS:** a 5-minute urge timer with a guided breathing circle, your reason, your if-then plans and quick things to try. It can also send your brother an alert to back you up.
+- **Kind slip-ups:** going over your limit gets a "never miss twice" message instead of shame, and your total clean days and best streak stay visible.
+- **Progress tab:**
+  - money saved and body fat avoided, measured against your "before" habits, counting toward a reward you choose
+  - 16 milestones with a celebration when you unlock one
+  - a "what's changing in your body" timeline
+  - a shared team goal for the week, and cheers you can send each other
+  - your if-then plans
+
 ## Tabs
 
 ### Today
@@ -31,7 +46,7 @@ One tap logs the item with the numbers from the scan, and reports are saved unde
 - **Week by week table** for the last 8 weeks: items, junk-free days, over-limit days, calories, sugar and spend.
 - **Weight check-in** with a trend line. Once a week is enough.
 
-### Patterns (last 30 days)
+### Patterns (on the Trends tab, last 30 days)
 - A written summary for each person:
   - items per day, and the change from the previous 30 days
   - favorite item, usual time and weekday, top reason and usual place
