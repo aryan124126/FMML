@@ -20,7 +20,6 @@ The app is built around what behavior-change research says actually works:
 ## Tabs
 
 ### Today
-- **This week's score:** who has eaten fewer junk items since Monday.
 - **A nutrition label for each of you**, like the one on food packets:
   - today's item count against your daily limit (*Clean*, *Under limit*, *At limit*, *Over by N*)
   - calories, fat, sugar and sodium from junk, as a % of a full day's maximum
