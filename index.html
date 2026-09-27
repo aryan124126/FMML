@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- APP:START -->
+<title>Junk Facts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap">
+<style>
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --ink:#15191A; --muted:#5C6663; --line:#D9DFDB; --chip:#E8ECE9;
+  --p1:#2F6FDB; --p2:#D9822B; --ok:#2E8B57; --bad:#C8372D; --warn:#B7791F;
+  --font:"Archivo",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#101413; --surface:#191E1D; --ink:#ECF0EE; --muted:#9AA5A1; --line:#2C3432; --chip:#242B29;
+    --p1:#6C9BF0; --p2:#F0A456; --ok:#4FBF83; --bad:#EF6B5E; --warn:#E0B04F;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101413; --surface:#191E1D; --ink:#ECF0EE; --muted:#9AA5A1; --line:#2C3432; --chip:#242B29;
+  --p1:#6C9BF0; --p2:#F0A456; --ok:#4FBF83; --bad:#EF6B5E; --warn:#E0B04F;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font);font-variation-settings:"wdth" 100}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:20px 64px;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{margin:0;text-wrap:balance}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--p1);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;font-variation-settings:"wdth" 80;color:var(--muted)}
+
+/* header */
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.brand h1{font-size:40px;line-height:1;font-weight:900;font-variation-settings:"wdth" 112;letter-spacing:-.01em}
+.brand p{margin:6px 0 0;color:var(--muted);max-width:46ch}
+.sync{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.sync.on i{background:var(--ok)}
+.who{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.seg{display:inline-flex;background:var(--chip);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;padding:7px 16px;border-radius:999px;font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.seg button[data-p="p1"][aria-pressed="true"]{color:var(--p1)}
+.seg button[data-p="p2"][aria-pressed="true"]{color:var(--p2)}
+
+/* nutrition-label panels */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.panel{background:var(--surface);border:2px solid var(--ink);padding:10px 14px 12px;display:flex;flex-direction:column}
+.panel h2{font-size:34px;line-height:1;font-weight:900;font-variation-settings:"wdth" 70;letter-spacing:-.01em}
+.panel .sub{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding-bottom:4px;border-bottom:10px solid var(--ink)}
+.panel .sub b{font-size:18px}
+.panel .sub .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:4px 0;border-bottom:1px solid var(--ink)}
+.row.big{border-bottom:5px solid var(--ink);padding:6px 0}
+.row.big .v{font-size:30px;font-weight:900;line-height:1}
+.row .k{font-weight:700}
+.row .k small{font-weight:400;color:var(--muted)}
+.row .v{font-weight:800}
+.row:last-child{border-bottom:0}
+.pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;vertical-align:middle;margin-left:8px}
+.pill.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.pill.warn{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}
+.pill.bad{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
+.foot{font-size:11px;color:var(--muted);padding-top:6px;line-height:1.35}
+.down{color:var(--ok)} .up{color:var(--bad)}
+
+/* sections */
+section{display:flex;flex-direction:column;gap:12px}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.sec-head h3{font-size:20px;font-weight:800}
+.hint{color:var(--muted);font-size:13px}
+
+.quick{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}
+.q{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:2px;transition:border-color .12s,transform .12s}
+.q:hover{border-color:var(--ink)}
+.q:active{transform:scale(.98)}
+.q b{font-size:15px}
+.q span{font-size:12px;color:var(--muted)}
+.q.custom{border-style:dashed}
+
+/* log sheet */
+.sheet{background:var(--surface);border:2px solid var(--ink);padding:16px;display:flex;flex-direction:column;gap:14px}
+.sheet h4{margin:0;font-size:22px;font-weight:900;font-variation-settings:"wdth" 90}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field input,.field select{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 12px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--surface);font-weight:800;border-radius:8px;padding:8px 18px}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.small{padding:4px 10px;font-size:13px;border-width:1px}
+
+/* chart */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.chart-wrap{overflow-x:auto}
+.chart-wrap svg{display:block;width:100%;min-width:520px;height:auto}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+.insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.bars{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.bar-row{display:grid;grid-template-columns:minmax(90px,120px) 1fr auto;gap:10px;align-items:center;font-size:14px}
+.bar-row .track{height:10px;background:var(--chip);border-radius:3px;display:flex;overflow:hidden}
+.bar-row .track span{display:block;height:100%}
+.empty{color:var(--muted);font-size:14px;padding:6px 0}
+.money{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.money .m{display:flex;justify-content:space-between;gap:8px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:6px}
+.money .m b{font-size:20px}
+
+/* history */
+.hist{display:flex;flex-direction:column}
+.h{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.h .who-dot{width:10px;height:10px;border-radius:50%}
+.h .what b{display:block}
+.h .what span{font-size:13px;color:var(--muted)}
+.h .del{border:1px solid var(--line);background:transparent;border-radius:6px;padding:3px 10px;font-size:12px;color:var(--muted)}
+.h .del.confirm{border-color:var(--bad);color:var(--bad);font-weight:700}
+.day-sep{padding-top:14px;font-size:12px}
+
+details.settings{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+details.settings summary{font-weight:800;cursor:pointer}
+details.settings .body{display:flex;flex-direction:column;gap:14px;padding-top:12px}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-weight:700;font-size:14px;max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:480px){.brand h1{font-size:32px}.panel h2{font-size:28px}}
+</style>
+<!-- APP:HEAD-END -->
+</head>
+<body>
+<!-- APP:BODY-START -->
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Junk Facts</h1>
+      <p>A shared junk-food log for two brothers. Log it when you eat it, keep under your daily limit, and watch the streak grow.</p>
+      <span class="sync" id="sync"><i></i><span id="syncText">Saved on this device</span></span>
+    </div>
+    <div class="who">
+      <span class="label">Logging as</span>
+      <div class="seg" id="whoSeg" role="group" aria-label="Who is logging"></div>
+    </div>
+  </header>
+
+  <div class="facts" id="facts"></div>
+
+  <section>
+    <div class="sec-head">
+      <h3>Log something</h3>
+      <span class="hint" id="logHint"></span>
+    </div>
+    <div class="quick" id="quick"></div>
+    <form class="sheet" id="sheet" hidden>
+      <h4 id="sheetTitle">Log</h4>
+      <div class="grid2">
+        <label class="field"><span class="label">What</span><input id="fItem" required maxlength="40"></label>
+        <label class="field"><span class="label">Type</span>
+          <select id="fCat"><option>Fried</option><option>Sugary</option><option>Fast food</option><option>Packaged snack</option><option>Sugary drink</option></select>
+        </label>
+        <label class="field"><span class="label">How many</span><input id="fQty" type="number" min="1" max="20" step="1" value="1" inputmode="numeric"></label>
+        <label class="field"><span class="label">Calories each (approx)</span><input id="fKcal" type="number" min="0" max="3000" step="1" inputmode="numeric"></label>
+        <label class="field"><span class="label" id="fCostLabel">Cost each</span><input id="fCost" type="number" min="0" step="1" inputmode="decimal"></label>
+        <label class="field"><span class="label">When</span><input id="fWhen" type="datetime-local"></label>
+      </div>
+      <div class="field">
+        <span class="label">Why did you eat it?</span>
+        <div class="chips" id="fTriggers"></div>
+      </div>
+      <label class="field"><span class="label">Note (optional)</span><input id="fNote" maxlength="120" placeholder="e.g. ordered with friends after cricket"></label>
+      <div class="actions">
+        <button class="btn" type="submit" id="fSave">Log it</button>
+        <button class="btn ghost" type="button" id="fCancel">Cancel</button>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h3>Last 14 days</h3>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="card chart-wrap" id="chart"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h3>Last 30 days</h3><span class="hint">What you eat, why you eat it, and what it costs</span></div>
+    <div class="insights">
+      <div class="card"><span class="label">Most eaten</span><div class="bars" id="topItems"></div></div>
+      <div class="card"><span class="label">Why it happened</span><div class="bars" id="topTriggers"></div></div>
+      <div class="card"><span class="label">Cost</span><div class="money" id="money"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h3>History</h3>
+      <div class="seg" id="histSeg" role="group" aria-label="Filter history"></div>
+    </div>
+    <div class="hist" id="hist"></div>
+  </section>
+
+  <details class="settings" id="settings">
+    <summary>Settings</summary>
+    <form class="body" id="setForm">
+      <div class="grid2">
+        <label class="field"><span class="label">Person 1 name</span><input id="sN1" maxlength="20"></label>
+        <label class="field"><span class="label">Daily limit</span><input id="sL1" type="number" min="0" max="10" step="1"></label>
+        <label class="field"><span class="label">Person 2 name</span><input id="sN2" maxlength="20"></label>
+        <label class="field"><span class="label">Daily limit</span><input id="sL2" type="number" min="0" max="10" step="1"></label>
+        <label class="field"><span class="label">Currency symbol</span><input id="sCur" maxlength="3"></label>
+      </div>
+      <p class="hint" style="margin:0">A daily limit of 0 means no junk at all. Start with something you can actually hit, like 1 a day, and lower it once the streak holds.</p>
+      <div class="actions">
+        <button class="btn" type="submit">Save settings</button>
+        <button class="btn ghost" type="button" id="exportBtn" hidden>Export backup</button>
+        <label class="btn ghost" id="importLbl" hidden>Import backup<input type="file" id="importFile" accept="application/json" hidden></label>
+      </div>
+    </form>
+  </details>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s);
+const LS_KEY = "junkfacts.v1", ME_KEY = "junkfacts.me";
+const KCAL_PER_KG_FAT = 7700;
+const ITEMS = [
+  {item:"Chips",          cat:"Packaged snack", kcal:160, cost:20},
+  {item:"Cold drink",     cat:"Sugary drink",   kcal:140, cost:40},
+  {item:"Pizza slice",    cat:"Fast food",      kcal:285, cost:120},
+  {item:"Burger",         cat:"Fast food",      kcal:350, cost:120},
+  {item:"French fries",   cat:"Fried",          kcal:320, cost:100},
+  {item:"Samosa",         cat:"Fried",          kcal:260, cost:20},
+  {item:"Instant noodles",cat:"Packaged snack", kcal:350, cost:20},
+  {item:"Momos (fried)",  cat:"Fried",          kcal:400, cost:80},
+  {item:"Chocolate bar",  cat:"Sugary",         kcal:230, cost:40},
+  {item:"Ice cream",      cat:"Sugary",         kcal:270, cost:60},
+  {item:"Sweets / mithai",cat:"Sugary",         kcal:300, cost:50},
+  {item:"Biscuits",       cat:"Packaged snack", kcal:150, cost:20},
+  {item:"Pastry / cake",  cat:"Sugary",         kcal:350, cost:80},
+  {item:"Energy drink",   cat:"Sugary drink",   kcal:110, cost:110}
+];
+const TRIGGERS = ["Hungry","Craving","Bored","Stressed","With friends","Late night","Watching something","Skipped a meal"];
+const PIDS = ["p1","p2"];
+
+function defaultSettings(){
+  return {people:{p1:{name:"Aryan",limit:1},p2:{name:"Brother",limit:1}},currency:"₹"};
+}
+function normSettings(s){
+  const d = defaultSettings();
+  if(!s || typeof s!=="object") return d;
+  const out = {people:{},currency: typeof s.currency==="string" && s.currency ? s.currency : d.currency};
+  for(const p of PIDS){
+    const src = (s.people && s.people[p]) || {};
+    out.people[p] = {
+      name: typeof src.name==="string" && src.name.trim() ? src.name.trim().slice(0,20) : d.people[p].name,
+      limit: Number.isFinite(+src.limit) && +src.limit>=0 ? Math.min(10,Math.round(+src.limit)) : d.people[p].limit
+    };
+  }
+  return out;
+}
+
+let state = {settings:defaultSettings(), days:{}};
+let mode = "local", db = null;
+let me = lsGet(ME_KEY) === "p2" ? "p2" : "p1";
+let histFilter = "all";
+let draft = null, pendingDelete = null;
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function loadLocal(){
+  try{
+    const raw = JSON.parse(lsGet(LS_KEY) || "null");
+    if(raw){ state.settings = normSettings(raw.settings); state.days = raw.days && typeof raw.days==="object" ? raw.days : {}; }
+  }catch(e){}
+}
+function saveLocal(){ lsSet(LS_KEY, JSON.stringify(state)); }
+
+/* ---------- dates ---------- */
+function pad(n){ return String(n).padStart(2,"0"); }
+function dkey(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function addDays(d,n){ const x = new Date(d); x.setDate(x.getDate()+n); return x; }
+function fromKey(k){ const [y,m,d] = k.split("-").map(Number); return new Date(y,m-1,d); }
+function localInputValue(d){ return dkey(d)+"T"+pad(d.getHours())+":"+pad(d.getMinutes()); }
+const WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function dayLabel(k){
+  const today = dkey(new Date()), yest = dkey(addDays(new Date(),-1));
+  if(k===today) return "Today"; if(k===yest) return "Yesterday";
+  const d = fromKey(k); return WD[d.getDay()]+" "+d.getDate()+" "+d.toLocaleString(undefined,{month:"short"});
+}
+function timeLabel(t){ const d = new Date(t); return pad(d.getHours())+":"+pad(d.getMinutes()); }
+
+/* ---------- data helpers ---------- */
+function person(p){ return state.settings.people[p]; }
+function money(v){ return state.settings.currency + Math.round(v).toLocaleString(); }
+function entriesOf(p,k){ const d = state.days[p+"_"+k]; return d && Array.isArray(d.entries) ? d.entries : []; }
+function countOf(p,k){ return entriesOf(p,k).reduce((s,e)=>s+(e.qty||1),0); }
+function allEntries(){
+  const out = [];
+  for(const [id,d] of Object.entries(state.days)){
+    if(!d || !Array.isArray(d.entries)) continue;
+    for(const e of d.entries) out.push(Object.assign({}, e, {person:d.person, date:d.date, docId:id}));
+  }
+  return out.sort((a,b)=>b.t-a.t);
+}
+function startKey(){
+  let min = null;
+  for(const d of Object.values(state.days)) if(d && d.date && (!min || d.date<min)) min = d.date;
+  return min || dkey(new Date());
+}
+function streak(p){
+  const lim = person(p).limit, start = startKey();
+  let n = 0, d = new Date();
+  for(let i=0;i<400;i++){
+    const k = dkey(d);
+    if(k<start || countOf(p,k)>lim) break;
+    n++; d = addDays(d,-1);
+  }
+  return n;
+}
+function rangeSum(p,fromBack,toBack,fn){
+  let s = 0;
+  for(let i=fromBack;i<toBack;i++){ const k = dkey(addDays(new Date(),-i)); s += fn(p,k); }
+  return s;
+}
+const kcalOf = (p,k)=>entriesOf(p,k).reduce((s,e)=>s+(e.kcal||0)*(e.qty||1),0);
+const costOf = (p,k)=>entriesOf(p,k).reduce((s,e)=>s+(e.cost||0)*(e.qty||1),0);
+
+/* ---------- writes ---------- */
+const chains = {};
+function writeDay(id, body){
+  if(body.entries.length) state.days[id] = body; else delete state.days[id];
+  if(mode==="local"){ saveLocal(); render(); return; }
+  render();
+  const ref = db.doc("days/"+id);
+  chains[id] = (chains[id]||Promise.resolve())
+    .then(()=> body.entries.length ? ref.set(body) : ref.delete())
+    .catch(err=>toast(dbMessage(err)));
+}
+function addEntry(p, e){
+  const date = dkey(new Date(e.t)), id = p+"_"+date;
+  const entries = entriesOf(p,date).slice(); entries.push(e);
+  writeDay(id, {person:p, date, entries});
+}
+function removeEntry(docId, eid){
+  const d = state.days[docId]; if(!d) return;
+  writeDay(docId, {person:d.person, date:d.date, entries:d.entries.filter(e=>e.id!==eid)});
+}
+function saveSettings(s){
+  state.settings = normSettings(s);
+  if(mode==="local"){ saveLocal(); render(); return; }
+  render();
+  db.doc("settings/main").set(state.settings).catch(err=>toast(dbMessage(err)));
+}
+function dbMessage(err){
+  const c = err && err.code;
+  if(c==="invalid_argument") return "You can view this tracker but not change it. Ask the owner for Contributor access.";
+  if(c==="quota_exceeded") return "Storage is full. Delete some old entries and try again.";
+  if(c==="resource_exhausted") return "Too many changes at once. Wait a moment and try again.";
+  return "Couldn't save that change. Check your connection and try again.";
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+/* ---------- rendering ---------- */
+function el(tag, attrs, ...kids){
+  const n = document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs||{})){
+    if(k==="class") n.className = v; else if(k==="style") n.style.cssText = v;
+    else if(k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else if(v!==false && v!=null) n.setAttribute(k, v===true ? "" : v);
+  }
+  for(const c of kids.flat()) if(c!=null && c!==false) n.append(c.nodeType ? c : String(c));
+  return n;
+}
+function color(p){ return "var(--"+p+")"; }
+
+function renderWho(){
+  const seg = $("#whoSeg"); seg.replaceChildren();
+  for(const p of PIDS) seg.append(el("button",{type:"button","data-p":p,"aria-pressed":String(me===p),onclick:()=>{me=p;lsSet(ME_KEY,p);render();}}, person(p).name));
+  $("#logHint").textContent = "Tap an item to log it for "+person(me).name+".";
+}
+
+function renderFacts(){
+  const box = $("#facts"); box.replaceChildren();
+  const today = dkey(new Date());
+  for(const p of PIDS){
+    const P = person(p), n = countOf(p,today), lim = P.limit;
+    let pill;
+    if(n===0) pill = el("span",{class:"pill ok"},"Clean");
+    else if(n<=lim) pill = el("span",{class:"pill warn"},"At limit");
+    else pill = el("span",{class:"pill bad"},"Over by "+(n-lim));
+    if(n>0 && n<lim) pill = el("span",{class:"pill ok"},"Under limit");
+    const wk = rangeSum(p,0,7,countOf), prev = rangeSum(p,7,14,countOf);
+    let trend = "";
+    if(prev>0){ const ch = Math.round((wk-prev)/prev*100); trend = el("small",{class:ch<=0?"down":"up"}," "+(ch<=0?"▼ ":"▲ ")+Math.abs(ch)+"% vs last week"); }
+    const clean7 = (()=>{ let c=0; const start=startKey(); for(let i=0;i<7;i++){ const k=dkey(addDays(new Date(),-i)); if(k>=start && countOf(p,k)===0) c++; } return c; })();
+    const s = streak(p);
+    box.append(el("article",{class:"panel","aria-label":P.name+" today"},
+      el("h2",{},"Junk Facts"),
+      el("div",{class:"sub"}, el("b",{}, el("span",{class:"dot",style:"background:"+color(p)}), P.name), el("span",{class:"hint"},"Today")),
+      el("div",{class:"row big"}, el("span",{class:"k"},"Junk items", pill), el("span",{class:"v num"}, n, el("small",{class:"hint",style:"font-size:14px;font-weight:600"}," / "+lim))),
+      el("div",{class:"row"}, el("span",{class:"k"},"Calories"), el("span",{class:"v num"}, kcalOf(p,today).toLocaleString())),
+      el("div",{class:"row"}, el("span",{class:"k"},"Spent"), el("span",{class:"v num"}, money(costOf(p,today)))),
+      el("div",{class:"row",style:"border-bottom:5px solid var(--ink)"}, el("span",{class:"k"},"Within-limit streak"), el("span",{class:"v num"}, s+(s===1?" day":" days"))),
+      el("div",{class:"row"}, el("span",{class:"k"},"Last 7 days ", el("small",{},"items")), el("span",{class:"v num"}, wk, trend)),
+      el("div",{class:"row"}, el("span",{class:"k"},"Junk-free days ", el("small",{},"of last 7")), el("span",{class:"v num"}, clean7+" / 7")),
+      el("div",{class:"foot"},"Daily limit is "+lim+" item"+(lim===1?"":"s")+". Streak counts days at or under the limit, today included.")
+    ));
+  }
+}
+
+function renderQuick(){
+  const q = $("#quick"); q.replaceChildren();
+  for(const it of ITEMS){
+    q.append(el("button",{type:"button",class:"q",onclick:()=>openSheet(it)}, el("b",{},it.item), el("span",{},"~"+it.kcal+" kcal · "+state.settings.currency+it.cost)));
+  }
+  q.append(el("button",{type:"button",class:"q custom",onclick:()=>openSheet({item:"",cat:"Fast food",kcal:300,cost:100})}, el("b",{},"Something else"), el("span",{},"Type your own")));
+}
+
+function openSheet(it){
+  draft = {triggers:new Set()};
+  $("#sheetTitle").textContent = it.item ? "Log "+it.item.toLowerCase()+" for "+person(me).name : "Log something for "+person(me).name;
+  $("#fItem").value = it.item; $("#fCat").value = it.cat; $("#fQty").value = 1;
+  $("#fKcal").value = it.kcal; $("#fCost").value = it.cost; $("#fNote").value = "";
+  $("#fWhen").value = localInputValue(new Date());
+  $("#fCostLabel").textContent = "Cost each ("+state.settings.currency+")";
+  renderTriggerChips();
+  $("#sheet").hidden = false;
+  $("#sheet").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
+  (it.item ? $("#fQty") : $("#fItem")).focus({preventScroll:true});
+}
+function renderTriggerChips(){
+  const box = $("#fTriggers"); box.replaceChildren();
+  for(const t of TRIGGERS){
+    box.append(el("button",{type:"button",class:"chip","aria-pressed":String(draft.triggers.has(t)),onclick:()=>{draft.triggers.has(t)?draft.triggers.delete(t):draft.triggers.add(t);renderTriggerChips();}}, t));
+  }
+}
+$("#sheet").addEventListener("submit", ev=>{
+  ev.preventDefault();
+  const item = $("#fItem").value.trim(); if(!item){ $("#fItem").focus(); return; }
+  const when = $("#fWhen").value ? new Date($("#fWhen").value) : new Date();
+  const t = isNaN(when) ? Date.now() : when.getTime();
+  if(t > Date.now()+60000){ toast("That time is in the future. Pick a time that has already happened."); return; }
+  const e = {id:uid(), t, item:item.slice(0,40), cat:$("#fCat").value,
+    qty:Math.max(1,Math.min(20,Math.round(+$("#fQty").value||1))),
+    kcal:Math.max(0,Math.round(+$("#fKcal").value||0)), cost:Math.max(0,+$("#fCost").value||0),
+    triggers:[...draft.triggers], note:$("#fNote").value.trim().slice(0,120)};
+  addEntry(me, e);
+  $("#sheet").hidden = true; draft = null;
+  const n = countOf(me, dkey(new Date())), lim = person(me).limit;
+  toast(dkey(new Date(t))!==dkey(new Date()) ? "Logged for "+dayLabel(dkey(new Date(t))).toLowerCase()+"."
+    : n>lim ? "Logged. That's "+n+" today, over your limit of "+lim+"." : "Logged. "+n+" of "+lim+" today.");
+});
+$("#fCancel").addEventListener("click", ()=>{ $("#sheet").hidden = true; draft = null; });
+
+function renderChart(){
+  const days = []; for(let i=13;i>=0;i--) days.push(dkey(addDays(new Date(),-i)));
+  const W=680, H=240, L=34, R=10, T=14, B=40, pw=W-L-R, ph=H-T-B;
+  let max = Math.max(3, ...PIDS.map(p=>person(p).limit), ...days.flatMap(k=>PIDS.map(p=>countOf(p,k))));
+  const step = max<=6?1:max<=12?2:5; max = Math.ceil(max/step)*step;
+  const y = v => T + ph - v/max*ph;
+  const gw = pw/days.length, bw = Math.min(16,(gw-8)/2);
+  const NS = "http://www.w3.org/2000/svg";
+  const s = (tag,a,txt)=>{ const n=document.createElementNS(NS,tag); for(const k in a) n.setAttribute(k,a[k]); if(txt!=null) n.textContent=txt; return n; };
+  const svg = s("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":"Junk items per day for the last 14 days"});
+  for(let v=0; v<=max; v+=step){
+    svg.append(s("line",{x1:L,x2:W-R,y1:y(v),y2:y(v),stroke:"var(--line)","stroke-width":1}));
+    svg.append(s("text",{x:L-8,y:y(v)+4,"text-anchor":"end","font-size":11,fill:"var(--muted)"},v));
+  }
+  days.forEach((k,i)=>{
+    const gx = L + i*gw + gw/2, d = fromKey(k), isToday = i===days.length-1;
+    PIDS.forEach((p,j)=>{
+      const v = countOf(p,k), x = gx + (j===0 ? -bw-1 : 1);
+      if(v>0){
+        const over = v>person(p).limit;
+        const r = s("rect",{x, y:y(v), width:bw, height:y(0)-y(v), rx:2, fill:color(p), opacity: isToday?1:.85});
+        r.append(s("title",{},person(p).name+", "+dayLabel(k)+": "+v+" item"+(v===1?"":"s")+(over?" (over limit)":"")));
+        svg.append(r);
+        if(over) svg.append(s("circle",{cx:x+bw/2, cy:y(v)-6, r:2.5, fill:"var(--bad)"}));
+      } else {
+        svg.append(s("rect",{x, y:y(0)-2, width:bw, height:2, fill:color(p), opacity:.35}));
+      }
+    });
+    svg.append(s("text",{x:gx,y:H-B+16,"text-anchor":"middle","font-size":11,fill:isToday?"var(--ink)":"var(--muted)","font-weight":isToday?700:400}, d.getDate()));
+    svg.append(s("text",{x:gx,y:H-B+30,"text-anchor":"middle","font-size":10,fill:"var(--muted)"}, WD[d.getDay()][0]));
+  });
+  const lims = [...new Set(PIDS.map(p=>person(p).limit))];
+  for(const lim of lims){
+    const owners = PIDS.filter(p=>person(p).limit===lim);
+    const stroke = owners.length===2 ? "var(--ink)" : color(owners[0]);
+    svg.append(s("line",{x1:L,x2:W-R,y1:y(lim),y2:y(lim),stroke,"stroke-width":1.5,"stroke-dasharray":"5 4"}));
+  }
+  svg.append(s("line",{x1:L,x2:W-R,y1:y(0),y2:y(0),stroke:"var(--ink)","stroke-width":1}));
+  $("#chart").replaceChildren(svg);
+  const lg = $("#legend"); lg.replaceChildren();
+  for(const p of PIDS) lg.append(el("span",{}, el("i",{style:"background:"+color(p)}), person(p).name));
+  lg.append(el("span",{}, el("i",{style:"background:none;border-top:2px dashed var(--ink);height:0;border-radius:0"}), "Daily limit"));
+  lg.append(el("span",{}, el("i",{style:"background:var(--bad);border-radius:50%;width:6px;height:6px"}), "Over limit"));
+}
+
+function stackedBars(boxSel, counts, emptyMsg){
+  const box = $(boxSel); box.replaceChildren();
+  const rows = Object.entries(counts).map(([k,v])=>[k,v,v.p1+v.p2]).sort((a,b)=>b[2]-a[2]).slice(0,6);
+  if(!rows.length){ box.append(el("div",{class:"empty"},emptyMsg)); return; }
+  const max = rows[0][2];
+  for(const [k,v,tot] of rows){
+    box.append(el("div",{class:"bar-row"},
+      el("span",{},k),
+      el("span",{class:"track",title:person("p1").name+" "+v.p1+", "+person("p2").name+" "+v.p2},
+        el("span",{style:`width:${v.p1/max*100}%;background:var(--p1)`}),
+        el("span",{style:`width:${v.p2/max*100}%;background:var(--p2)`})),
+      el("span",{class:"num",style:"font-weight:700"},tot)));
+  }
+}
+function renderInsights(){
+  const cutoff = dkey(addDays(new Date(),-29));
+  const items = {}, trig = {};
+  const kcal = {p1:0,p2:0}, cost = {p1:0,p2:0};
+  for(const e of allEntries()){
+    if(e.date<cutoff || !PIDS.includes(e.person)) continue;
+    const q = e.qty||1;
+    (items[e.item] ||= {p1:0,p2:0})[e.person] += q;
+    for(const t of (e.triggers||[])) (trig[t] ||= {p1:0,p2:0})[e.person] += q;
+    kcal[e.person] += (e.kcal||0)*q; cost[e.person] += (e.cost||0)*q;
+  }
+  stackedBars("#topItems", items, "Nothing logged yet. Your most common junk will show up here.");
+  stackedBars("#topTriggers", trig, "Tag why you ate something when you log it. Patterns show up here.");
+  const m = $("#money"); m.replaceChildren();
+  for(const p of PIDS){
+    m.append(el("div",{class:"m"}, el("span",{}, el("span",{style:"color:"+color(p)+";font-weight:800"},person(p).name)), el("b",{class:"num"},money(cost[p]))));
+  }
+  const tk = kcal.p1+kcal.p2, tc = cost.p1+cost.p2;
+  m.append(el("div",{class:"hint"},
+    "Together: "+money(tc)+" and "+tk.toLocaleString()+" kcal from junk. That's roughly "+(tk/KCAL_PER_KG_FAT).toFixed(1)+" kg of body fat worth of energy, and "+money(tc*12)+" a year at this pace."));
+}
+
+function renderHistory(){
+  const seg = $("#histSeg"); seg.replaceChildren();
+  for(const [id,label] of [["all","Both"],["p1",person("p1").name],["p2",person("p2").name]])
+    seg.append(el("button",{type:"button","data-p":id,"aria-pressed":String(histFilter===id),onclick:()=>{histFilter=id;renderHistory();}},label));
+  const box = $("#hist"); box.replaceChildren();
+  const list = allEntries().filter(e=>histFilter==="all"||e.person===histFilter).slice(0,60);
+  if(!list.length){ box.append(el("div",{class:"empty"},"No entries yet. Every day without an entry counts as junk-free.")); return; }
+  let last = null;
+  for(const e of list){
+    if(e.date!==last){ box.append(el("div",{class:"label day-sep"},dayLabel(e.date))); last = e.date; }
+    const q = e.qty||1, key = e.docId+"/"+e.id, confirming = pendingDelete===key;
+    const meta = [person(e.person)?person(e.person).name:"?", timeLabel(e.t), e.cat, (e.kcal*q)+" kcal", money(e.cost*q)];
+    if(e.triggers && e.triggers.length) meta.push(e.triggers.join(", "));
+    box.append(el("div",{class:"h"},
+      el("span",{class:"who-dot",style:"background:"+color(e.person)}),
+      el("div",{class:"what"}, el("b",{}, (q>1?q+" × ":"")+e.item), el("span",{}, meta.join(" · ")), e.note?el("span",{style:"display:block;font-style:italic"},e.note):null),
+      el("button",{type:"button",class:"del"+(confirming?" confirm":""),onclick:()=>{
+        if(confirming){ pendingDelete=null; removeEntry(e.docId,e.id); toast("Entry deleted."); }
+        else { pendingDelete=key; renderHistory(); setTimeout(()=>{ if(pendingDelete===key){ pendingDelete=null; renderHistory(); } },4000); }
+      }}, confirming?"Confirm delete":"Delete")));
+  }
+}
+
+function renderSettingsForm(force){
+  if(!force && $("#settings").contains(document.activeElement)) return;
+  $("#sN1").value = person("p1").name; $("#sL1").value = person("p1").limit;
+  $("#sN2").value = person("p2").name; $("#sL2").value = person("p2").limit;
+  $("#sCur").value = state.settings.currency;
+}
+$("#setForm").addEventListener("submit", ev=>{
+  ev.preventDefault();
+  saveSettings({currency:$("#sCur").value.trim()||"₹", people:{
+    p1:{name:$("#sN1").value, limit:$("#sL1").value}, p2:{name:$("#sN2").value, limit:$("#sL2").value}}});
+  renderSettingsForm(true); toast("Settings saved.");
+});
+
+function render(){
+  renderWho(); renderFacts(); renderQuick(); renderChart(); renderInsights(); renderHistory(); renderSettingsForm(false);
+  const sync = $("#sync");
+  sync.classList.toggle("on", mode==="db");
+  $("#syncText").textContent = mode==="db" ? "Synced between both of you" : "Saved on this device";
+}
+
+let toastTimer;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>{ t.hidden = true; }, 3200);
+}
+
+/* ---------- backup (standalone page only) ---------- */
+$("#exportBtn").addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const a = el("a",{href:URL.createObjectURL(blob),download:"junk-facts-"+dkey(new Date())+".json"});
+  document.body.append(a); a.click(); a.remove();
+});
+$("#importFile").addEventListener("change", async ev=>{
+  const f = ev.target.files[0]; if(!f) return;
+  try{
+    const raw = JSON.parse(await f.text());
+    if(!raw || typeof raw.days!=="object") throw new Error();
+    state = {settings:normSettings(raw.settings), days:raw.days};
+    saveLocal(); render(); toast("Backup imported.");
+  }catch(e){ toast("That file isn't a Junk Facts backup."); }
+  ev.target.value = "";
+});
+
+/* ---------- boot ---------- */
+async function connect(){
+  if(!window.claude || typeof window.claude.use!=="function") return false;
+  let d = null;
+  try{ d = await window.claude.use("db"); }catch(e){ d = null; }
+  if(!d) return true;
+  db = d; mode = "db"; state = {settings:defaultSettings(), days:{}}; render();
+  const onErr = err=>{ if(err && err.code!=="revoked") toast("Lost the live connection. Reload the page to reconnect."); };
+  db.doc("settings/main").onSnapshot(snap=>{ state.settings = normSettings(snap.exists ? snap.data() : null); render(); }, onErr);
+  const cutoff = dkey(addDays(new Date(),-180));
+  db.collection("days").where("date",">=",cutoff).limit(1000).onSnapshot(q=>{
+    const m = {}; for(const doc of q.docs) m[doc.id] = doc.data();
+    state.days = m; render();
+  }, onErr);
+  return true;
+}
+loadLocal(); render();
+connect().then(inArtifact=>{
+  if(!inArtifact){ $("#exportBtn").hidden = false; $("#importLbl").hidden = false; }
+});
+// Re-render at midnight so "today" rolls over.
+setInterval(()=>{ const k = dkey(new Date()); if(k!==render.day){ render.day = k; render(); } }, 60000);
+render.day = dkey(new Date());
+})();
+</script>
+<!-- APP:END -->
+</body>
+</html>
