@@ -277,6 +277,11 @@ body.dropping::after{content:"Drop photos to add them";position:fixed;inset:12px
 .pastebox:empty::before{content:attr(data-ph)}
 .pastebox:focus{border-color:var(--ink);color:var(--ink)}
 .pastebox img{max-height:60px}
+.file-input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none;left:0;top:0}
+.phone-help{background:var(--chip);border-radius:10px;padding:10px 14px;font-size:14px}
+.phone-help summary{font-weight:800;cursor:pointer}
+.phone-help ol{margin:8px 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.phone-help p{margin:8px 0 0}
 .privacy{background:var(--chip);border-radius:10px;padding:10px 14px;font-size:14px}
 .scan-card{display:flex;flex-direction:column;gap:14px}
 .scan-card h3{font-size:22px;font-weight:900;font-variation-settings:"wdth" 90}
@@ -411,12 +416,22 @@ body.dropping::after{content:"Drop photos to add them";position:fixed;inset:12px
       <div id="scanUnavailable" class="privacy" hidden></div>
       <div id="scanForm" class="scan-card" hidden>
         <div class="actions">
-          <label class="btn" for="camInput">Take photo</label>
-          <label class="btn ghost" for="galInput">Choose from gallery</label>
-          <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
-          <input type="file" id="galInput" accept="image/*" multiple hidden>
+          <button type="button" class="btn" data-pick="camInput">Take photo</button>
+          <button type="button" class="btn ghost" data-pick="galInput">Choose from gallery</button>
+          <input type="file" id="camInput" class="file-input" accept="image/*" capture="environment" tabindex="-1" aria-hidden="true">
+          <input type="file" id="galInput" class="file-input" accept="image/*" multiple tabindex="-1" aria-hidden="true">
         </div>
         <ul class="shot-tips" id="scanTips"></ul>
+        <details class="phone-help" id="phoneHelp">
+          <summary>Buttons not opening anything on your phone?</summary>
+          <p>The Claude phone app may not let pages open your camera or gallery. Open this page in your phone's browser instead. It works there, and your data is the same.</p>
+          <ol>
+            <li>Copy the link: <button type="button" class="btn small" id="copyLink">Copy link</button></li>
+            <li>Open <b>Chrome</b> (Android) or <b>Safari</b> (iPhone), paste it into the address bar, and sign in to Claude if asked.</li>
+            <li>Tip: use the browser menu's <b>Add to Home Screen</b> so it opens like an app.</li>
+          </ol>
+          <p class="hint">Link: <span id="linkText" style="user-select:all;word-break:break-all">https://claude.ai/artifact/4V5r8aJKq7JvqFUYEgQTRE</span></p>
+        </details>
         <div class="pastebox" id="pasteBox" contenteditable="true" role="textbox" aria-label="Paste a photo here" inputmode="none" spellcheck="false" data-ph="Or paste a photo here: tap this box, then long-press and choose Paste. On a computer, click here and press Ctrl+V (⌘V on Mac)."></div>
         <div class="shots" id="shots"></div>
         <div class="grid2">
@@ -499,8 +514,8 @@ body.dropping::after{content:"Drop photos to add them";position:fixed;inset:12px
 
   <!-- HEALTH (private) -->
   <div class="tab" id="tab-health" role="tabpanel" hidden></div>
-  <input type="file" id="labCam" accept="image/*" capture="environment" hidden>
-  <input type="file" id="labGal" accept="image/*" multiple hidden>
+  <input type="file" id="labCam" class="file-input" accept="image/*" capture="environment" tabindex="-1" aria-hidden="true">
+  <input type="file" id="labGal" class="file-input" accept="image/*" multiple tabindex="-1" aria-hidden="true">
 
   <!-- HISTORY -->
   <div class="tab" id="tab-history" role="tabpanel" hidden>
@@ -1260,8 +1275,7 @@ function renderScanForm(){
   $("#scanForm").hidden = false;   // photo buttons and paste box are always available
   if(!sampleReady){ $("#scanUnavailable").hidden = false; $("#scanUnavailable").textContent = "Connecting to Claude… You can add photos while you wait."; }
   if(imgLimits){
-    const acc = imgLimits.mediaTypes.join(",");
-    $("#camInput").accept = acc; $("#galInput").accept = acc;
+    /* keep accept="image/*": other formats are converted to JPEG before sending */
   }
   $("#scanPriceLabel").textContent = "Price paid ("+state.settings.currency+", optional)";
   $("#scanWho").textContent = "The report and log go to "+person(me).name+".";
@@ -1338,6 +1352,19 @@ document.addEventListener("drop", ev=>{
   document.body.classList.remove("dropping");
   const files = imagesFrom(ev.dataTransfer && ev.dataTransfer.files);
   if(files.length){ ev.preventDefault(); routeImages(files); }
+});
+document.addEventListener("click", ev=>{
+  const b = ev.target.closest && ev.target.closest("[data-pick]"); if(!b) return;
+  const inp = document.getElementById(b.dataset.pick); if(!inp) return;
+  try{ inp.value = ""; inp.click(); }catch(e){}
+  // If nothing opens (some in-app viewers block file pickers), point to the browser fix.
+  let opened = false; const mark = ()=>{ opened = true; }; window.addEventListener("blur", mark, {once:true});
+  setTimeout(()=>{ window.removeEventListener("blur", mark); if(!opened && !document.hidden) $("#phoneHelp").open = true; }, 1500);
+});
+$("#copyLink").addEventListener("click", async ()=>{
+  const url = "https://claude.ai/artifact/4V5r8aJKq7JvqFUYEgQTRE";
+  try{ await navigator.clipboard.writeText(url); toast("Link copied. Paste it into Chrome or Safari."); }
+  catch(e){ const r = document.createRange(); r.selectNodeContents($("#linkText")); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); toast("Link selected. Copy it, then open it in Chrome or Safari."); }
 });
 $("#camInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
 $("#galInput").addEventListener("change", ev=>{ addShots([...ev.target.files]); ev.target.value = ""; });
@@ -1786,8 +1813,8 @@ function renderLabs(){
   if(labDraft){ card.append(renderLabDraft()); }
   else {
     card.append(el("div",{class:"actions"},
-      canPhoto ? el("label",{class:"btn",for:"labCam"},"Photograph a report") : null,
-      canPhoto ? el("label",{class:"btn ghost",for:"labGal"},"Choose photos") : null,
+      canPhoto ? el("button",{type:"button",class:"btn","data-pick":"labCam"},"Photograph a report") : null,
+      canPhoto ? el("button",{type:"button",class:"btn ghost","data-pick":"labGal"},"Choose photos") : null,
       el("button",{type:"button",class:"btn ghost",onclick:()=>{ labDraft = {id:uid(), date:todayKey(), lab:"", source:"manual", results:[], manual:true}; renderHealth(); }},"Type values in")),
       canPhoto ? el("div",{class:"pastebox",contenteditable:"true",role:"textbox","aria-label":"Paste a report photo here",inputmode:"none",spellcheck:"false","data-ph":"Or paste a screenshot of the report here: tap, then long-press and choose Paste (Ctrl+V on a computer)."}) : null,
       canPhoto ? el("p",{class:"hint",style:"margin:0"},"One photo per page, flat and in focus. For a PDF report, take a screenshot of each page. Claude reads the values; you check them before saving.") : el("p",{class:"hint",style:"margin:0"},"Reading reports from photos needs the shared Claude page. You can type values in here."));
