@@ -14,7 +14,7 @@ PAGES = {
     "junk-facts.html": {"title": "Junk Facts", "config": None},
     "junk-facts-couple.html": {
         "title": "Junk Facts Together",
-        "config": 'const PAGE = {names:["Shevi","Apurva"], relation:"partner", pair:"a couple", url:"https://claude.ai/artifact/PsnkUKxs1JenvSvrZGz5Ta"};',
+        "config": 'const PAGE = {names:["Aryan","Apurva"], relation:"partner", pair:"a couple", url:"https://claude.ai/artifact/PsnkUKxs1JenvSvrZGz5Ta"};',
         "standalone": "couple.html",
     },
 }
