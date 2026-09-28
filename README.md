@@ -1,6 +1,6 @@
 # Junk Facts
 
-Shevi and Rupesh's junk-food tracker. It's one self-contained page, `index.html`, with no build step and no server.
+A junk-food tracker for two people, published as two pages: Shevi and Rupesh, and Shevi and Apurva. It's one self-contained page, `index.html`, with no build step and no server.
 
 ## How it keeps you going
 
@@ -93,6 +93,14 @@ Names, daily item limits, weekly budgets, currency, your saved quick items, and 
 - 7,700 kcal ≈ 1 kg of body fat.
 - Item nutrition values are rough per-serving estimates, and you can edit them when logging.
 - A day with no entries counts as junk-free.
+
+## Two pages from one source
+
+`index.html` is the source for both published pages. The pages differ only in the `PAGE` config line (names, relationship wording, own link) and the title:
+- **Junk Facts:** Shevi and Rupesh (brothers).
+- **Junk Facts Together:** Shevi and Apurva (partners). The standalone copy is `couple.html`.
+
+Run `python3 tools/build.py OUT_DIR` to regenerate `couple.html` and the artifact bodies for both pages after changing `index.html`. Each page has its own separate data.
 
 ## Running it
 
