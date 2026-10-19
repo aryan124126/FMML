@@ -282,3 +282,53 @@ def account_insights(account: str, analytics: Analytics, store: Store, today: st
         out["by_platform"][platform] = entry
     out["note"] = f"Groups with fewer than {MIN_POSTS} posts are left out; treat small differences as noise."
     return out
+
+
+def hub_analytics(cfg: Config, store: Store, analytics: Analytics, today: str, weeks: int = 12) -> dict:
+    """Weekly series and per-post rows for the hub's Analytics screen.
+
+    The page sums these for whatever account/platform filter and week the viewer picks, so the
+    numbers on screen always add up to the rows in the table.
+    """
+    this_monday = date.fromisoformat(today) - timedelta(days=date.fromisoformat(today).weekday())
+    starts = [this_monday - timedelta(weeks=w) for w in range(weeks - 1, -1, -1)]
+    series = []
+    pairs = sorted({(r["account"], r["platform"]) for r in analytics.posts.values()} |
+                   {(f["account"], f["platform"]) for f in analytics.followers})
+    for ws in starts:
+        start, end = ws.isoformat(), (ws + timedelta(days=6)).isoformat()
+        for account, platform in pairs:
+            recs = analytics.in_range(start, end, account, platform)
+            in_week = [f for f in analytics.followers if f["account"] == account and f["platform"] == platform
+                       and start <= f["date"] <= end]
+            before = analytics.followers_at(account, platform, (ws - timedelta(days=1)).isoformat())
+            after = analytics.followers_at(account, platform, end)
+            change = (after - before) if (in_week and before is not None and after is not None) else None
+            if not recs and change is None:
+                continue
+            with_clicks = [r for r in recs if r.get("link_clicks") is not None]
+            series.append({
+                "week": start, "account": account, "platform": platform, "posts": len(recs),
+                "impressions": sum(exposure(r) or 0 for r in recs),
+                "engagements": sum(engagements(r) for r in recs),
+                "clicks": sum(r["link_clicks"] for r in with_clicks),
+                "click_base": sum(exposure(r) or 0 for r in with_clicks),
+                "follower_change": change,
+            })
+    rows = []
+    for r in sorted(analytics.posts.values(), key=lambda r: r["posted_at"], reverse=True)[:400]:
+        base = exposure(r) or 0
+        planned = store.posts.get(r.get("post_id")) or {}
+        rows.append({
+            "date": r["date"], "time": r["posted_at"][11:16], "account": r["account"],
+            "account_name": cfg.accounts.get(r["account"], {}).get("name", r["account"]),
+            "platform": r["platform"], "format": r["format"], "post_id": r.get("post_id"),
+            "text": (planned.get("hook") or r.get("text") or "")[:140], "permalink": r.get("permalink", ""),
+            "impressions": base, "engagements": engagements(r),
+            "er": engagements(r) / base if base else None,
+            "clicks": r.get("link_clicks"), "ctr": (r["link_clicks"] / base) if base and r.get("link_clicks") is not None else None,
+            "shares": r.get("shares"), "saves": r.get("saves"),
+        })
+    return {"generated_at": datetime.now().isoformat(timespec="seconds"), "has_data": bool(analytics.posts),
+            "weeks": [ws.isoformat() for ws in starts], "series": series, "posts": rows,
+            "note": "Reach is used where the platform reports it; impressions otherwise. CTR only counts posts whose export includes link clicks."}

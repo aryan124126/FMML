@@ -16,7 +16,8 @@ Theme = Literal[
 PostFormat = Literal[
     "text", "single_image", "carousel", "reel", "story", "document", "poll", "channel_message", "thread"
 ]
-STATUSES = ["draft", "needs_changes", "approved", "scheduled", "posted", "rejected"]
+# "shell" = a brief created on the hub (Quick Draft / Convert to Draft) that Claude has not written yet.
+STATUSES = ["shell", "draft", "needs_changes", "approved", "scheduled", "posted", "rejected"]
 
 
 class Slide(BaseModel):

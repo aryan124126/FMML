@@ -199,6 +199,12 @@ def import_plan(cfg: Config, store: Store, data: dict, sample: bool = False) -> 
     start = str(data.get("start") or min(d["date"] for d in drafts))
     end = str(data.get("end") or max(d["date"] for d in drafts))
     campaign = data.get("campaign") or {}
+    replaces = {i: p.get("replaces") for i, p in enumerate(data["posts"]) if p.get("replaces")}
+    for i, shell_id in replaces.items():  # a written post takes the place of a hub brief
+        if shell_id in store.posts:
+            store.remove([shell_id], by="import")
+            store.pending_deletes.append(f"posts/{shell_id}")
+        drafts[i]["replaces"] = shell_id
     for d in drafts:
         d["sample"] = sample
         if campaign.get("id"):

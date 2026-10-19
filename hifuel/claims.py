@@ -211,6 +211,8 @@ def _calendar(post, cfg: Config) -> list[dict]:
 
 def check_post(post: dict, cfg: Config) -> list[dict]:
     """Run every check on one post. Blocks are listed first."""
+    if post.get("status") == "shell":
+        return [_issue("block", 0, "not_written", "Not written yet. Claude writes and checks this brief at the next sync.")]
     texts = public_texts(post)
     sentences = _sentences(texts)
     hashtags = post.get("hashtags") or []

@@ -26,7 +26,7 @@ Phase 2 (results):
 import argparse
 import json
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import yaml
@@ -207,7 +207,14 @@ def main(argv=None) -> int:
             start, end = _range(args)
             ids = [p["id"] for p in store.in_range(start, end)]
         out = Path("data/hub_outbox")
-        files = hub.push(store, out, ids) + hub.push_reports(Analytics(), Path("data/reports"), out)
+        an = Analytics()
+        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        files = (hub.push(store, out, ids) + hub.push_reports(an, Path("data/reports"), out)
+                 + hub.push_meta(store, cfg, an, out, now, date.today().isoformat()))
+        if store.pending_deletes:
+            print(f"Also delete from the hub: {', '.join(store.pending_deletes)} (listed in data/hub_outbox/_delete.json)")
+            store.pending_deletes = []
+            store.save()
         print(f"Wrote {len(files)} files to data/hub_outbox/")
     elif args.cmd == "hub-pull":
         changes = hub.pull(store, cfg, Path(args.folder))

@@ -27,15 +27,20 @@ class Store:
         self.posts: dict[str, dict] = {}
         self.plans: dict[str, dict] = {}
         self.ideas: dict[str, dict] = {}  # from the Team Hub's ideas box
+        self.comments: dict[str, list] = {}  # post id -> comments from the hub, oldest first
+        self.pending_deletes: list[str] = []  # "collection/doc_id" to remove from the hub at the next push
         if self.posts_file.exists():
             saved = json.loads(self.posts_file.read_text(encoding="utf-8"))
             self.posts, self.plans = saved.get("posts", {}), saved.get("plans", {})
             self.ideas = saved.get("ideas", {})
+            self.comments = saved.get("comments", {})
+            self.pending_deletes = saved.get("pending_deletes", [])
 
     def save(self) -> None:
         self.dir.mkdir(parents=True, exist_ok=True)
         tmp = self.posts_file.with_suffix(".tmp")
-        tmp.write_text(json.dumps({"posts": self.posts, "plans": self.plans, "ideas": self.ideas}, indent=2, ensure_ascii=False),
+        tmp.write_text(json.dumps({"posts": self.posts, "plans": self.plans, "ideas": self.ideas, "comments": self.comments,
+                                   "pending_deletes": self.pending_deletes}, indent=2, ensure_ascii=False),
                        encoding="utf-8")
         tmp.replace(self.posts_file)
 
