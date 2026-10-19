@@ -174,6 +174,11 @@ th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; colo
 td.n { font-variant-numeric: tabular-nums; text-align: right; }
 .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
 
+.up { color: var(--ok); }
+.down { color: var(--block); }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.resultbox { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; border-top: 0; }
+@media (max-width: 600px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 9px 16px; border-radius: 8px; z-index: 30; font-size: 0.88rem; max-width: calc(100% - 32px); }
 
 @media (max-width: 900px) {
@@ -235,7 +240,7 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
   };
 
   const state = {
-    posts: new Map(), plans: [], ideas: [], news: [],
+    posts: new Map(), plans: [], ideas: [], news: [], reports: [], experiments: [], results: new Map(), reportId: null,
     tab: "week", week: null, open: null, loaded: false, unavailable: false,
     me: { id: null, canEdit: false, canWrite: null }, names: {}, pendingRender: false
   };
@@ -418,6 +423,7 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
       designBrief(p), notes(p),
       p.review && p.review.at ? el("p", { class: "hint", text: `${STATUS_LABEL[p.status]} by ${nameOf(p.review.by)} on ${new Date(p.review.at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" })}${p.review.comment ? `: “${p.review.comment}”` : ""}` }) : null
     );
+    if (p.account_type === "person" && ["approved", "scheduled", "posted"].includes(p.status)) { const rf = resultForm(p); if (rf) card.append(rf); }
     if (editable) card.append(reviewControls(p, isBlocked));
     return card;
   }
@@ -541,7 +547,8 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
     const wait = notReady(); if (wait) return wait;
     const ps = weekPosts().filter(p => p.status !== "rejected");
     const out = [el("div", { style: "display:grid;gap:4px" }, el("h2", { text: "Growth" }),
-      el("p", { class: "small muted", style: "margin:0", text: "This week's mix from the plan. Reach and engagement reports start once analytics exports are imported (Phase 2)." }))];
+      el("p", { class: "small muted", style: "margin:0", text: "Results from imported analytics, the experiment log, and this week's planned mix." }))];
+    out.push(reportSection(), experimentSection(), el("h3", { text: "This week's planned mix" }));
     if (!ps.length) return [...out, emptyState("No posts this week", "The mix appears once a week is planned.")];
     const themeKeys = Object.keys(THEMES);
     const accounts = [...new Map(ps.map(p => [p.account, p.account_name]))];
@@ -560,6 +567,81 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
       el("tbody", {}, accounts.map(([id, name]) => { const mine = ps.filter(p => p.account === id);
         return el("tr", {}, el("td", { text: name }), statuses.map(s => el("td", { class: "n", text: mine.filter(p => p.status === s).length })), el("td", { class: "n", text: mine.filter(p => blocks(p).length).length })); })))));
     return out;
+  }
+
+  const pct = x => x == null ? "–" : `${(x * 100).toFixed(1)}%`;
+  const change = x => x == null ? null : el("span", { class: `small ${x >= 0 ? "up" : "down"}`, text: ` ${x >= 0 ? "▲" : "▼"}${Math.abs(x * 100).toFixed(0)}%` });
+  function reportLabel(r) {
+    if (r.kind === "monthly") return fmtDay(r.start, { month: "long", year: "numeric" }) + " (monthly)";
+    return `Week of ${fmtDay(r.start, { day: "numeric", month: "short", year: "numeric" })}`;
+  }
+  function bullets(title, items, empty) {
+    return el("div", { style: "display:grid;gap:6px;min-width:0" }, el("div", { class: "label", text: title }),
+      items && items.length ? el("ul", { style: "margin:0;padding-left:1.1rem;display:grid;gap:4px" }, items.map(t => el("li", { text: t }))) : el("p", { class: "small muted", style: "margin:0", text: empty }));
+  }
+  function reportSection() {
+    if (!state.reports.length) return emptyState("No reports yet", "Reports appear here after results are imported. Ask Claude to import this week's Instagram or LinkedIn export.");
+    const r = state.reports.find(x => x.id === state.reportId) || state.reports[0];
+    const sel = el("select", { id: "reportPick", "aria-label": "Report", onchange: e => { state.reportId = e.target.value; render(); } },
+      state.reports.map(x => { const o = el("option", { value: x.id, text: reportLabel(x) }); if (x.id === r.id) o.selected = true; return o; }));
+    const PL = PLATFORMS;
+    const table = el("div", { class: "tablewrap" }, el("table", {},
+      el("thead", {}, el("tr", {}, ["Account", "Platform", "Posts", "Reach / impr.", "Engagement / reach", "Shares / reach", "Saves / reach", "Non-followers", "Follower growth"].map((h, i) => el("th", { style: i > 1 ? "text-align:right" : null, text: h })))),
+      el("tbody", {}, (r.rows || []).map(k => el("tr", {},
+        el("td", { text: k.account_name }), el("td", { text: PL[k.platform] || k.platform }), el("td", { class: "n", text: k.posts }),
+        el("td", { class: "n" }, `${Math.round(k.exposure).toLocaleString("en-IN")} ${k.exposure_label === "impressions" ? "impr." : ""}`, change((k.change || {}).exposure)),
+        el("td", { class: "n" }, pct(k.engagement_rate), change((k.change || {}).engagement_rate)),
+        el("td", { class: "n", text: pct(k.share_rate) }), el("td", { class: "n", text: pct(k.save_rate) }),
+        el("td", { class: "n", text: pct(k.non_follower_share) }),
+        el("td", { class: "n", text: k.follower_growth == null ? "–" : (k.follower_growth >= 0 ? "+" : "") + k.follower_growth.toLocaleString("en-IN") }))))));
+    const enq = Object.entries(r.enquiries || {});
+    return el("section", { class: "notice", style: "gap:14px" },
+      el("div", { class: "row", style: "align-items:center" }, el("h3", { text: r.kind === "monthly" ? "Monthly growth report" : "Weekly performance report" }), sel),
+      (r.priorities || []).length ? el("div", {}, el("div", { class: "label", text: "Next month's three priorities" }), el("ol", { style: "margin:4px 0 0;padding-left:1.2rem;display:grid;gap:4px" }, r.priorities.map(t => el("li", { text: t })))) : null,
+      el("div", { class: "cols" }, bullets("What worked", r.worked, "Not enough data for a clear conclusion yet."), bullets("What didn't", r.didnt, "Nothing clearly underperformed.")),
+      table,
+      enq.length ? el("p", { class: "small", style: "margin:0" }, el("b", { text: "Inbound enquiries from social: " }), enq.map(([a, n]) => `${labelForAccount(a)} ${n}`).join(" · ")) : null,
+      (r.top_posts || []).length ? el("div", {}, el("div", { class: "label", text: "Top posts" }), el("ul", { style: "margin:4px 0 0;padding-left:1.1rem;display:grid;gap:4px" },
+        r.top_posts.map(t => el("li", {}, el("b", { text: `${pct(t.engagement_rate)} ` }), `${t.account_name} · ${PL[t.platform] || t.platform} · ${t.format}: ${t.text}`)))) : null,
+      bullets("Data notes", r.notes, "None."),
+      el("p", { class: "hint", style: "margin:0", text: "Engagement = likes + comments + shares + saves. Comparisons need at least 3 posts on each side." }));
+  }
+  function experimentSection() {
+    const head = el("h3", { text: "Experiments" });
+    if (!state.experiments.length) return el("section", { style: "display:grid;gap:8px" }, head, emptyState("No experiments running", "Ask Claude to start one: change one thing (format, time, theme) for 2-4 weeks and compare."));
+    const verdict = { better: ["ok", "Better"], worse: ["blocked", "Worse"], no_difference: ["draft", "No clear difference"], pending: ["needs_changes", "Collecting data"] };
+    return el("section", { style: "display:grid;gap:8px" }, head, el("div", { class: "list" }, state.experiments.map(e => {
+      const v = verdict[e.verdict] || (e.status === "running" ? verdict.pending : ["draft", e.status]);
+      return el("div", { class: "item" },
+        el("div", { class: "cardhead" }, el("b", { text: e.name }), el("span", { class: `pill ${v[0]}`, text: e.status === "running" ? "Running" : v[1] }),
+          el("span", { class: "small muted", text: `${labelForAccount(e.account)} · ${({ format: "Format", hour_band: "Time of day", theme: "Theme", pillar: "Pillar", slot_source: "Time source" })[e.variable] || e.variable}: ${String(e.value).replace(/_/g, " ")} · ${fmtDay(e.start, { day: "numeric", month: "short" })} – ${fmtDay(e.end, { day: "numeric", month: "short" })}` })),
+        el("p", { class: "small", text: `Hypothesis: ${e.hypothesis}` }),
+        e.result ? el("p", { class: "small", text: e.result }) : null);
+    })));
+  }
+
+  // Advocacy: people log their own LinkedIn results (personal analytics aren't available by API).
+  function resultForm(p) {
+    const r = state.results.get(p.id) || {};
+    if (state.me.canWrite === false) return null;
+    const f = (id, label, type = "number", value = "") => { const i = el("input", { type, id: `${p.id}-r-${id}`, min: type === "number" ? "0" : null }); i.value = value ?? ""; return [i, el("label", { for: i.id }, label, i)]; };
+    const [when, whenL] = f("when", "Posted at (IST)", "datetime-local", r.posted_at || `${p.date}T${p.time || "10:00"}`);
+    const [imp, impL] = f("imp", "Impressions", "number", r.impressions);
+    const [rea, reaL] = f("rea", "Reactions", "number", r.reactions);
+    const [com, comL] = f("com", "Comments", "number", r.comments);
+    const [rep, repL] = f("rep", "Reposts", "number", r.reposts);
+    const [lnk, lnkL] = f("lnk", "Link to your post", "text", r.link);
+    const num = i => i.value === "" ? null : Math.max(0, Number(i.value));
+    return el("details", { class: "resultbox" }, el("summary", { text: r.at ? `Results logged (${(r.impressions ?? 0).toLocaleString("en-IN")} impressions). Update` : "Posted it? Log your results" }),
+      el("form", { class: "edit", style: "margin-top:8px", onsubmit: async e => {
+        e.preventDefault();
+        try {
+          await db.doc(`results/${p.id}`).set({ post_id: p.id, posted_at: when.value, impressions: num(imp), reactions: num(rea), comments: num(com), reposts: num(rep), link: lnk.value.trim(), by: state.me.id, at: new Date().toISOString() });
+          toast("Results saved. Thanks!");
+        } catch (err) { toast(errMsg(err)); }
+      } }, el("div", { class: "grid2" }, whenL, impL, reaL, comL, repL, lnkL),
+        el("p", { class: "hint", style: "margin:0", text: "Check the numbers about 3 days after posting, from the post's analytics on LinkedIn." }),
+        el("div", { class: "actions" }, el("button", { class: "btn primary", type: "submit", text: "Save results" }))));
   }
 
   // ---------- drawer ----------
@@ -629,6 +711,9 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
     db.collection("announcements").orderBy("at", "desc").limit(50).onSnapshot(snap => {
       state.news = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); resolveNames(state.news.map(n => n.by));
     }, () => {});
+    db.collection("reports").orderBy("end", "desc").limit(30).onSnapshot(snap => { state.reports = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); }, () => {});
+    db.collection("experiments").orderBy("start", "desc").limit(50).onSnapshot(snap => { state.experiments = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); }, () => {});
+    db.collection("results").onSnapshot(snap => { state.results = new Map(snap.docs.map(d => [d.id, d.data()])); render(); }, () => {});
   }
   start().catch(() => { state.unavailable = true; render(); });
 })();

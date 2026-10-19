@@ -12,7 +12,18 @@ An AI assistant that **plans, writes and times** social media posts for the Hi F
 | **Team Hub** | A private web page for the team: the week's board, review queue (approve / needs changes / reject / edit), advocacy kits, ideas box, announcements, and the week's content mix. |
 | **Exports** | Approved posts as a spreadsheet (CSV for Google Sheets/Excel), a calendar file with reminders (.ics), and a copy-ready caption document. |
 
-Not built yet (Phase 2): importing analytics exports, performance reports, the experiment log and monthly growth report, and live Instagram/LinkedIn connections.
+**Phase 2 (learning from results)** is also built:
+
+| Part | What you get |
+|---|---|
+| **Results import** | Reads CSV exports from Meta Business Suite / Instagram and LinkedIn Page analytics, or the fill-in template `samples/analytics_template.csv`. Column names are set in `config/analytics_columns.yaml`. Results are matched to the planned posts, so they can be read by theme, format and time. |
+| **Advocacy results** | People log their own LinkedIn numbers in the hub's Advocacy kits tab (personal analytics aren't available through an API). |
+| **Follower counts, audience hours, enquiries** | Recorded with simple commands; used for follower growth, reach normalisation, timing and the business metric that matters most: enquiries. |
+| **Weekly and monthly reports** | KPIs per account, changes since the last period, what worked, what didn't, top posts, and (monthly) the next three priorities. Shown in the hub's Growth tab. |
+| **Experiment log** | Test one change (format, time of day, theme) for 2–4 weeks; the report says whether it did better, worse or no different. |
+| **Learning loop** | Posting times switch from benchmarks to your own data once there's enough of it, and every new plan sees past results, running experiments and the team's ideas. |
+
+Not built: live Instagram/LinkedIn API connections (need Meta and LinkedIn approvals) and Phase 3 (pushing approved posts to a scheduler).
 
 ## How a week works
 
@@ -22,6 +33,7 @@ You can do all of this by chatting with Claude in this project. Claude runs the 
 2. **Review:** your manager and the founder open the Team Hub, approve, edit or send back each post. Blocked posts can't be approved until fixed.
 3. **Sync:** "Pull the approvals from the hub." Claude applies the decisions, re-checks any edited text, and pushes the updated checks back to the hub.
 4. **Export:** "Export the approved posts." You get the spreadsheet, calendar file and caption doc to schedule in Meta Business Suite / LinkedIn.
+5. **Results:** a few days after posting, send Claude the Instagram/LinkedIn CSV exports and this week's follower counts and enquiries. Claude imports them, writes the weekly report and puts it on the hub. Once a month, ask for the monthly growth report.
 
 ## Setup (only needed to run it yourself)
 
@@ -42,6 +54,14 @@ python -m hifuel check                       # re-run the claims check (after ch
 python -m hifuel export --start 2026-10-26   # approved posts -> data/exports/
 python -m hifuel hub-push                    # prepare files for the Team Hub
 python -m hifuel hub-pull <folder>           # apply reviewers' decisions downloaded from the hub
+python -m hifuel analytics import export.csv --account pathvik --platform instagram
+python -m hifuel analytics followers --account pathvik --platform instagram --date 2026-11-02 --count 1840
+python -m hifuel analytics enquiry --account iclc --date 2026-11-02 --count 2 --note "via LinkedIn"
+python -m hifuel report weekly --start 2026-10-26
+python -m hifuel report monthly --month 2026-11
+python -m hifuel experiment add --name "Night posts" --hypothesis "Students engage more after 21:00" \
+    --account pathvik --variable hour_band --value night
+python -m hifuel experiment list
 python -m pytest                             # run the tests
 ```
 

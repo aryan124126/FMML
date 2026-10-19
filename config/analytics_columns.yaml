@@ -1,0 +1,35 @@
+# How to read analytics exports (CSV). Column names are matched case-insensitively; the first
+# alias found in the file wins. If an export uses a name that isn't here, add it to the list.
+# Sources: Meta Business Suite / Instagram Insights content export, LinkedIn Page "All posts"
+# export (save the .xls as CSV), or the manual template in samples/analytics_template.csv.
+
+fields:
+  external_id: ["post id", "id", "post urn", "urn", "media id"]
+  posted_at: ["publish time", "published", "created date", "date posted", "posted at", "post date", "date"]
+  text: ["description", "post title", "post text", "caption", "text", "content"]
+  permalink: ["permalink", "post link", "link", "url"]
+  format: ["post type", "content type", "media type", "type", "format"]
+  reach: ["reach", "accounts reached", "unique impressions", "members reached"]
+  impressions: ["impressions", "views"]
+  likes: ["likes", "reactions"]
+  comments: ["comments"]
+  shares: ["shares", "reposts", "sends", "forwards"]
+  saves: ["saves", "saved"]
+  follows: ["follows", "new followers", "follows from post"]
+  profile_visits: ["profile visits", "profile activity", "page visits"]
+  link_clicks: ["link clicks", "website clicks", "clicks"]
+  avg_watch_seconds: ["average watch time", "avg watch time (sec)", "average watch time (seconds)", "avg. watch time"]
+  completion_rate: ["completion rate", "watched to end (%)"]
+  non_follower_reach: ["reach from non-followers", "non-follower reach", "accounts reached (non-followers)"]
+
+# Export "post type" values -> our formats.
+formats:
+  reel: ["reel", "reels", "ig reel", "video", "short video", "clip"]
+  carousel: ["carousel", "carousel album", "carousel_album", "ig carousel", "album"]
+  single_image: ["image", "photo", "ig image", "single image", "picture"]
+  story: ["story", "stories", "ig story"]
+  document: ["document", "pdf"]
+  text: ["text", "article", "status", "post"]
+  poll: ["poll"]
+  channel_message: ["channel message", "update"]
+  thread: ["thread"]

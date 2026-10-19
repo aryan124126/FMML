@@ -10,9 +10,11 @@ from datetime import date, timedelta
 import anthropic
 import yaml
 
+from .analytics import Analytics
 from .claims import check_post, is_blocked
 from .config import Config, load_prompt
 from .models import WeekPlan
+from .reports import account_insights
 from .slots import assign_slots
 from .store import Store
 
@@ -40,9 +42,11 @@ def _calendar_context(cfg: Config, account_id: str, start: str, end: str) -> dic
 
 
 def build_request(cfg: Config, store: Store, account_id: str, start: str, end: str,
-                  campaigns: list[str], notes: str, planned_ideas: list[dict]) -> str:
+                  campaigns: list[str], notes: str, planned_ideas: list[dict],
+                  analytics: Analytics | None = None) -> str:
     """The user message for one account. Kept separate so it can be tested and inspected."""
     account = cfg.account(account_id)
+    analytics = analytics or Analytics(store.dir)
     existing = store.in_range(start, end, accounts=[account_id])
     context = {
         "planning_period": {"start": start, "end": end, "days": _days(date.fromisoformat(start),
@@ -57,6 +61,13 @@ def build_request(cfg: Config, store: Store, account_id: str, start: str, end: s
             {"date": p["date"], "platform": p["platform"], "hook": p["hook"], "status": p["status"]} for p in existing],
         "ideas_already_planned_for_other_accounts": planned_ideas,
         "recent_human_edits_learn_from_these": store.recent_edits(account_id),
+        "results_so_far": account_insights(account_id, analytics, store, start) or "No results imported yet.",
+        "running_experiments_include_test_posts": [
+            {k: e[k] for k in ("name", "hypothesis", "platform", "variable", "value", "metric")}
+            for e in analytics.experiments.values()
+            if e["account"] == account_id and e["status"] == "running" and e["start"] <= end and e["end"] >= start],
+        "team_ideas": [{"idea": i["text"], "for": i.get("account") or "any account"} for i in store.ideas.values()
+                       if i.get("status", "new") == "new" and i.get("account") in ("", None, account_id)],
     }
     if account.get("parent"):
         context["parent_account"] = {"id": account["parent"], "name": cfg.account(account["parent"])["name"]}
@@ -99,8 +110,10 @@ def estimate_cost(usage) -> float:
             + cache_read * PRICE_CACHE_READ + cache_write * PRICE_CACHE_WRITE) / 1_000_000
 
 
-def finalise_posts(drafts: list[dict], cfg: Config, store: Store, start: str, end: str) -> list[dict]:
+def finalise_posts(drafts: list[dict], cfg: Config, store: Store, start: str, end: str,
+                   analytics: Analytics | None = None) -> list[dict]:
     """Give drafts ids and times, run the claims check, and save them."""
+    analytics = analytics or Analytics(store.dir)
     valid = []
     for d in drafts:
         if not (start <= d["date"] <= end):
@@ -110,7 +123,9 @@ def finalise_posts(drafts: list[dict], cfg: Config, store: Store, start: str, en
         d["id"] = store.new_id(d)
         valid.append(d)
     placed = [p for p in store.posts.values() if start <= p["date"] <= end]
-    for post, slot in zip(valid, assign_slots(valid, cfg, already_placed=placed)):
+    slots = assign_slots(valid, cfg, history=analytics.history(),
+                         audience_data=analytics.audience_data(date.today().isoformat()), already_placed=placed)
+    for post, slot in zip(valid, slots):
         account = cfg.account(post["account"])
         post.update(slot)
         post["account_name"] = account["name"]
@@ -126,6 +141,7 @@ def finalise_posts(drafts: list[dict], cfg: Config, store: Store, start: str, en
 def plan_period(cfg: Config, store: Store, start: date, days: int = 7, accounts: list[str] | None = None,
                 campaigns: list[str] | None = None, notes: str = "", client=None, on_progress=print) -> dict:
     client = client or anthropic.Anthropic()
+    analytics = Analytics(store.dir)
     start_s, end_s = start.isoformat(), (start + timedelta(days=days - 1)).isoformat()
     accounts = accounts or cfg.enabled_accounts()
     accounts = sorted(accounts, key=lambda a: cfg.account(a).get("priority", 9))
@@ -136,11 +152,11 @@ def plan_period(cfg: Config, store: Store, start: date, days: int = 7, accounts:
             on_progress(f"Skipping {account_id}: no platforms configured.")
             continue
         on_progress(f"Planning {cfg.account(account_id)['name']}...")
-        request = build_request(cfg, store, account_id, start_s, end_s, campaigns or [], notes, planned_ideas)
+        request = build_request(cfg, store, account_id, start_s, end_s, campaigns or [], notes, planned_ideas, analytics)
         plan, usage = _call_claude(client, request)
         cost += estimate_cost(usage)
         drafts = [p.model_dump() for p in plan.posts if p.account == account_id]
-        posts = finalise_posts(drafts, cfg, store, start_s, end_s)
+        posts = finalise_posts(drafts, cfg, store, start_s, end_s, analytics)
         store.save()  # save after each account so a later failure doesn't lose work
         created += posts
         summaries[account_id] = plan.summary
