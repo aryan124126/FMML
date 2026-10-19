@@ -60,12 +60,13 @@ rules:
       - '\bno\.?\s*1\b'
       - '\bnumber one\b'
       - '(^|\s)#1\b'
-      - '\bthe best\b'
+      # "the best/largest" only when it describes an organisation or offer, not "the best question to ask"
+      - '\bthe (best|largest|biggest)\b(?=[^.?!\n]{0,30}\b(firm|company|platform|programme|program|consultancy|partner|agency|advisory|provider|network|initiative|in india|in the world)\b)'
+      - "\\b(we're|we are|it's|it is)\\s+(the\\s+)?(best|largest|biggest)\\b"
       - '\bbest[- ]in[- ]class\b'
       - "\\b(a|the|india's)\\s+leading\\b"
       - '\bworld[- ]class\b'
       - '\b(unmatched|unparalleled|unbeatable|revolutionary|game[- ]changing)\b'
-      - '\b(the\s+)?(largest|biggest)\b'
       - '\bthe only (platform|company|programme|program|firm|organisation|organization)\b'
     message: No superlatives ("India's first", "the best", "leading", "largest"...).
 
@@ -98,7 +99,7 @@ rules:
       - '\bassured\s+(jobs?|placements?)\b'
       - '\b(salary|salaries|lpa|ctc|pay hike|package of)\b'
       - '\b(top|guaranteed|better)\s+(ranks?|marks|scores?)\b'
-    downgrade_if: "\\b(no|not|without|never|don't|doesn't|zero)\\b.{0,25}\\bguarantee"
+    downgrade_if: "\\b(no|not|without|never|don't|doesn't|won't|can't|cannot|neither|nor|zero)\\b.{0,25}\\bguarantee"
     message: No placement, job, salary, rank or marks promises (CCPA 2024 coaching guidelines).
 
   - id: pricing_tricks

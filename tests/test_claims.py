@@ -51,6 +51,8 @@ def test_clean_post_has_no_blocks():
     ("tranzent_foundation", "Our plantations have a 95% survival rate.", "programme_numbers"),
     ("hifuel_advisory", "We are India's first growth ecosystem.", "superlatives"),
     ("hifuel_advisory", "We are the best partner for MSMEs.", "superlatives"),
+    ("hifuel_advisory", "The best ESG firm in India.", "superlatives"),
+    ("tranzent_foundation", "We're the largest tree-planting network.", "superlatives"),
     ("tranzent_foundation", "Comment YES to join the drive!", "engagement_bait"),
     ("tranzent_foundation", "Tag 3 friends who love trees.", "engagement_bait"),
     ("pathvik", "Get a guaranteed job after 6 weeks.", "education_guarantees"),
@@ -82,6 +84,9 @@ def test_downgraded_to_flag(account, text, check):
 
 @pytest.mark.parametrize("account,text", [
     ("pathvik", "No job guarantees. Just a real plan."),
+    ("pathvik", "Neither comes with a job guarantee, and we say so up front."),
+    ("pathvik", "What's your biggest doubt right now?"),
+    ("founder_ashish", "What's the best question a field visit ever taught you?"),
     ("hifuel_advisory", "Poor data is leading to weak CSR reports."),
     ("hifuel_advisory", "Hi Fuel Advisory works with MSMEs."),
     ("earth_osai", "Carbon markets reward verified removals, not photo albums."),
@@ -123,6 +128,12 @@ def test_prices():
     confirmed = make_post(account="pathvik", caption="The Graduate Career Accelerator is ₹4,999 incl. GST.")
     assert "price" not in checks(confirmed)
     assert "price" in checks(confirmed, "flag")
+
+
+def test_large_amounts_are_statistics_not_prices():
+    post = make_post(caption="Companies with a CSR obligation of ₹10 crore or more must commission an assessment.")
+    assert "price" not in checks(post)
+    assert "statistic_source" in checks(post)
 
 
 def test_parent_account_may_quote_initiative_prices():

@@ -79,6 +79,14 @@ class Store:
         self.log("edit", post_id=post_id, account=post["account"], by=by, field=field, old=old, new=value)
         return True
 
+    def remove(self, post_ids: list[str], by: str) -> None:
+        for pid in post_ids:
+            post = self.posts.pop(pid)
+            self.log("removed", post_id=pid, account=post["account"], by=by)
+        for plan in self.plans.values():
+            plan["post_ids"] = [i for i in plan.get("post_ids", []) if i not in post_ids]
+        self.plans = {k: v for k, v in self.plans.items() if v.get("post_ids")}
+
     def in_range(self, start: str, end: str, accounts=None, statuses=None) -> list[dict]:
         out = [p for p in self.posts.values() if start <= p["date"] <= end
                and (not accounts or p["account"] in accounts)

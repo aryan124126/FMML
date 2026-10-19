@@ -179,7 +179,8 @@ def import_plan(cfg: Config, store: Store, data: dict, sample: bool = False) -> 
     unknown = sorted({d["account"] for d in drafts} - set(cfg.accounts))
     if unknown:
         raise PlanningError(f"Unknown account(s): {', '.join(unknown)}")
-    start, end = min(d["date"] for d in drafts), max(d["date"] for d in drafts)
+    start = str(data.get("start") or min(d["date"] for d in drafts))
+    end = str(data.get("end") or max(d["date"] for d in drafts))
     for d in drafts:
         d["sample"] = sample
     posts = finalise_posts(drafts, cfg, store, start, end)

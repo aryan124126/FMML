@@ -1,0 +1,659 @@
+# Week of 26 Oct - 1 Nov 2026. Drafted by Claude in chat (no API), following prompts/system.md.
+# Load with:  python -m hifuel import weeks/2026-10-26.yaml
+start: "2026-10-26"
+end: "2026-11-01"
+summary: >-
+  Priorities from the brief: Pathvik (placement season, honesty-first) and Earth.OSAI (proof for CSR
+  plantations) lead; ICLC opens conversations with principals and Eco Club teachers; Hi Fuel Advisory
+  builds authority with ESG/CSR explainers; Tranzent Foundation features Greenpreneur and Born Green.
+  Volumes are below the config targets where confirmed facts are thin (Earth.OSAI, ICLC, Tranzent).
+questions_for_team:
+  - Confirm posts per week for each account; this plan writes 31, the config asks for 41.
+  - Are Earth.OSAI's survival checks and verifier workflow live features we can describe?
+  - ICLC certificate, session length and launch timing, so posts can say more than "we're building it".
+  - Hi Fuel Growth Framework step descriptions on the carousel are drafts; please confirm the wording with the founder.
+  - A link for Tranzent posts ("link in bio") and for the ICLC outline, if we have them.
+  - Which press articles (Hindustan Times, Dainik Jagran, etc.) can we link to for a press post next week?
+
+posts:
+  # ---------------- Pathvik ----------------
+  - idea_id: placement-pulse
+    account: pathvik
+    platform: instagram
+    date: "2026-10-26"
+    theme: engagement
+    pillar: Student doubts answered
+    format: story
+    hook: "Placement season check-in"
+    caption: "How sure are you about the first job you want? Tap an answer. We'll share what most of you said, and what to do about it, later this week."
+    hashtags: ["#Pathvik", "#CareerClarity", "#PlacementSeason"]
+    alt_text: "Story frame with a poll: 'How sure are you about your first job?' Options: very sure, somewhat, no idea."
+    design_brief:
+      format_notes: 3-frame Story with a poll sticker and a question box.
+      slides:
+        - {number: 1, text: "Placement season check-in", visual: "Navy background, violet headline"}
+        - {number: 2, text: "How sure are you about the first job you want?", visual: "Poll sticker: Very sure / Somewhat / No idea"}
+        - {number: 3, text: "What's your biggest doubt right now?", visual: "Question box sticker"}
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    internal_notes: Share real poll results in a Story on Friday; don't publish a percentage unless it comes from this poll.
+
+  - idea_id: career-choice-check
+    account: pathvik
+    platform: instagram
+    date: "2026-10-27"
+    theme: educational
+    pillar: Career-clarity tips
+    format: carousel
+    hook: "Job offer, MBA prep, or a gap year? You don't have to guess."
+    caption: |-
+      If you're in final year, you probably aren't short of options. You're short of a way to compare them.
+
+      Swipe for a 4-question check you can do this week:
+      1. What did you enjoy doing, not just score well in?
+      2. Which roles use that every day?
+      3. What would you need to learn to get there?
+      4. Who could you ask, this month, about what the job is really like?
+
+      Write the answers down. Comparing them on paper beats going round in circles in your head.
+    cta: Save this for the weekend and send it to a friend who's deciding too.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity", "#FinalYear"]
+    alt_text: "Navy carousel cover with violet text: 'Job, MBA or gap year? A 4-question check.'"
+    design_brief:
+      format_notes: 6-slide carousel, 4:5. Cover, one question per slide, closing slide.
+      slides:
+        - {number: 1, text: "Job, MBA or gap year? A 4-question check", visual: "Bold violet type on navy, small orange arrow bottom right"}
+        - {number: 2, text: "1. What did you enjoy doing, not just score well in?", visual: "Question in large type"}
+        - {number: 3, text: "2. Which roles use that every day?", visual: "Same layout"}
+        - {number: 4, text: "3. What would you need to learn to get there?", visual: "Same layout"}
+        - {number: 5, text: "4. Who could you ask this month?", visual: "Same layout"}
+        - {number: 6, text: "Write it down. Compare on paper. Clarity before career.", visual: "Pathvik wordmark, save icon"}
+      layout_notes: Generous margins, one idea per slide, no stock photos.
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+
+  - idea_id: three-roles-first
+    account: pathvik
+    platform: x
+    date: "2026-10-27"
+    theme: educational
+    pillar: Career-clarity tips
+    format: text
+    hook: "Before you apply everywhere, write down the 3 roles you'd actually want to do every day."
+    caption: "Then apply to those. Fewer, better applications beat a spreadsheet of maybes."
+    hashtags: ["#ClarityBeforeCareer"]
+
+  - idea_id: placement-cells
+    account: pathvik
+    platform: linkedin
+    date: "2026-10-28"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: text
+    hook: "Placement officers: what if students arrived at placement season already knowing which roles they want?"
+    caption: |-
+      Pathvik runs live, mentor-led career programmes for undergraduates and graduates, in cohorts of 30:
+
+      • Graduate Career Accelerator: 6 weeks, 12 live classes
+      • Consulting, Strategy & Product Mentorship: 8 weeks, 16 live classes
+
+      Both include placement assistance. Neither comes with a job guarantee, and we say so up front. What students get is a clear plan for the roles they're aiming at, built with mentors over live classes.
+
+      We're looking to work with colleges and placement cells who want their students to apply with more clarity.
+    cta: If you run a placement cell, message us and we'll walk you through the programmes.
+    hashtags: ["#Pathvik", "#PlacementSeason", "#CareerReadiness", "#HigherEducation"]
+    internal_notes: Prices left out because first-cohort pricing isn't decided. Pathvik's Hi Fuel/Tranzent affiliation isn't mentioned until the disclosure is confirmed.
+
+  - idea_id: no-guarantee-promise
+    account: pathvik
+    platform: instagram
+    date: "2026-10-29"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: reel
+    hook: "We won't promise you a job. Here's what we do promise."
+    caption: |-
+      Pathvik runs live, mentor-led career programmes for undergraduates and graduates. The Graduate Career Accelerator is 6 weeks of 12 live classes, in cohorts of 30.
+
+      You get a real plan, live classes and placement assistance. You don't get a job guarantee, because nobody honest can give you one.
+    cta: Follow Pathvik for a career-clarity tip every week.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity"]
+    alt_text: "Reel cover: orange text on navy reading 'We won't promise you a job.'"
+    design_brief:
+      format_notes: 20-second talking-head Reel with on-screen text, 9:16.
+      reel:
+        duration_seconds: 20
+        opening_hook: "On screen: 'We won't promise you a job.' Speaker looks straight at camera."
+        shots:
+          - {seconds: "0-2", shot: "Close-up of a team member, plain background", on_screen_text: "We won't promise you a job.", voiceover: "We won't promise you a job."}
+          - {seconds: "2-8", shot: "Same speaker, slight push-in", on_screen_text: "6 weeks · 12 live classes · cohorts of 30", voiceover: "What we will give you is six weeks of live classes with mentors, in small cohorts."}
+          - {seconds: "8-15", shot: "Screen recording of a live class (no student faces or names)", on_screen_text: "A real plan + placement assistance", voiceover: "You leave with a real plan, and help with placements."}
+          - {seconds: "15-20", shot: "Back to speaker", on_screen_text: "Clarity before career.", voiceover: "No guarantees. Just clarity before career."}
+      layout_notes: Captions burned in, large type inside the safe zone.
+      colours: ["#140F2F", "#FE6A3C", "#8B7BFF"]
+    internal_notes: The person on camera must be a real, confirmed team member; don't name them in the caption until confirmed. Blur any student on the call.
+
+  - idea_id: placement-season-question
+    account: pathvik
+    platform: x
+    date: "2026-10-30"
+    theme: engagement
+    pillar: Student doubts answered
+    format: text
+    hook: "Placement season question for final-year students:"
+    caption: "What's one thing you wish someone had told you about choosing your first job? Reply and we'll answer the most common ones next week."
+    hashtags: ["#CareerClarity"]
+    internal_notes: Add the follow-up post to next week's plan.
+
+  - idea_id: day-in-life-strategy-analyst
+    account: pathvik
+    platform: instagram
+    date: "2026-10-31"
+    theme: educational
+    pillar: '"A day in the life of" industry roles'
+    format: carousel
+    hook: "What does a strategy analyst actually do all day?"
+    caption: |-
+      "Strategy" sounds big. Most days, the work is smaller and more concrete: finding the right numbers, checking them, and turning them into a clear recommendation someone can act on.
+
+      Swipe for what a typical day can involve, and the skills behind each part. If it sounds like you, that's a role worth exploring.
+    cta: Save this, and tell us which role we should break down next.
+    hashtags: ["#Pathvik", "#CareerClarity", "#Consulting", "#StrategyJobs"]
+    alt_text: "Carousel cover: a laptop with a simple chart and the title 'A day as a strategy analyst'."
+    design_brief:
+      format_notes: 7-slide carousel, 4:5, illustrated (no real people).
+      slides:
+        - {number: 1, text: "A day as a strategy analyst", visual: "Flat illustration of a desk with a laptop and chart"}
+        - {number: 2, text: "Morning: understand the question. What decision is the client or team trying to make?", visual: "Question mark icon"}
+        - {number: 3, text: "Find the data: reports, spreadsheets, interviews", visual: "Stack of documents icon"}
+        - {number: 4, text: "Check it: do the numbers add up? What's missing?", visual: "Magnifying glass"}
+        - {number: 5, text: "Build the story: 3-5 slides that answer the question", visual: "Slide thumbnails"}
+        - {number: 6, text: "Skills behind it: structured thinking, Excel, clear writing", visual: "Three skill tags"}
+        - {number: 7, text: "Curious? That's where clarity starts.", visual: "Pathvik wordmark"}
+      layout_notes: Illustrations only; no salary figures, no company names.
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    internal_notes: Ask a confirmed mentor with strategy experience to sanity-check the slide content before approval.
+
+  # ---------------- Earth.OSAI ----------------
+  - idea_id: proof-not-photo-albums
+    account: earth_osai
+    platform: linkedin
+    date: "2026-10-27"
+    theme: educational
+    pillar: Why CSR plantations need proof
+    format: document
+    hook: "A CSR plantation report full of photos tells you trees were planted. It doesn't tell you they're still alive."
+    caption: |-
+      Section 135 of the Companies Act asks qualifying companies to spend on CSR and report on it. Tree planting is a popular choice, and one of the hardest to verify a year later.
+
+      What a useful plantation record shows:
+      • Where each tree is, with a geo-tag
+      • When it was planted, and which species
+      • Whether it made it through the first monsoon and the first summer
+      • Who checked, and how
+
+      That's the difference between proof and a photo album. The document below walks through each step.
+    cta: If you run CSR or ESG reporting, what do you ask your implementing partner for today?
+    hashtags: ["#CSR", "#Reforestation", "#ESG", "#BRSR"]
+    alt_text: "Document cover: a map with geo-tagged pins and the title 'Proof, not photo albums'."
+    design_brief:
+      format_notes: 5-page LinkedIn document (PDF carousel), 4:5.
+      slides:
+        - {number: 1, text: "Proof, not photo albums", visual: "Satellite-style map with tree pins"}
+        - {number: 2, text: "Where: every tree geo-tagged", visual: "Zoomed map pin with coordinates"}
+        - {number: 3, text: "What and when: species and planting date", visual: "Simple record card"}
+        - {number: 4, text: "Still alive? Checks after the first monsoon and summer", visual: "Two-point timeline"}
+        - {number: 5, text: "Who verified it, and how", visual: "Checklist with a verifier field"}
+      layout_notes: Data-led, muted palette, maps over photos, no adjectives on slides.
+    claims_notes:
+      - {claim: "Section 135 asks qualifying companies to spend on CSR and report on it", source: "Companies Act, 2013, Section 135", year: "2013"}
+    internal_notes: "[CONFIRM] Earth.OSAI brand colours, and that survival checks and the verifier field are live features."
+
+  - idea_id: photo-vs-proof
+    account: earth_osai
+    platform: x
+    date: "2026-10-28"
+    theme: educational
+    pillar: Why CSR plantations need proof
+    format: text
+    hook: "A photo shows a tree was planted."
+    caption: "A geo-tag plus a survival check a year later shows it's still there. CSR reports need the second."
+    hashtags: ["#CSR", "#Reforestation"]
+
+  - idea_id: three-questions-for-partners
+    account: earth_osai
+    platform: linkedin
+    date: "2026-10-29"
+    theme: educational
+    pillar: How verification works
+    format: text
+    hook: "Three questions to ask a CSR plantation partner before you sign."
+    caption: |-
+      1. How will we know where each tree is? Ask for geo-tagged locations, not district names.
+
+      2. How and when will survival be checked? A planting-day photo can't answer this. Ask what is checked after the first monsoon and the first summer, and how.
+
+      3. Who verifies, and can we see the underlying records? A summary slide is not evidence. Ask for the records behind it.
+
+      If a partner can answer all three clearly, your CSR report will be much easier to defend.
+    cta: Which of these do your partners find hardest to answer?
+    hashtags: ["#CSR", "#ESG", "#Reforestation", "#ImpactMeasurement"]
+
+  - idea_id: csr-impact-assessment
+    account: earth_osai
+    platform: linkedin
+    date: "2026-10-30"
+    theme: educational
+    pillar: Regulation explainers (Section 135, CSR impact assessment, BRSR)
+    format: text
+    hook: "If your company's CSR obligation is ₹10 crore or more, some projects now need an independent impact assessment."
+    caption: |-
+      India's CSR rules were amended in 2021. Companies with an average CSR obligation of ₹10 crore or more in the three preceding financial years must have an impact assessment done, through an independent agency, for projects with outlays of ₹1 crore or more that were completed at least a year earlier.
+
+      For plantation projects, that assessment is far easier when the evidence was collected from day one: where each tree is, which species, and whether it survived.
+
+      Planning the evidence before planting costs less than reconstructing it a year later.
+    cta: CSR heads, has an impact assessment changed how you plan projects?
+    hashtags: ["#CSR", "#ImpactAssessment", "#ESG", "#Section135"]
+    claims_notes:
+      - {claim: "Impact assessment required for companies with average CSR obligation of ₹10 crore or more, for projects of ₹1 crore or more completed at least one year earlier, through an independent agency", source: "Companies (Corporate Social Responsibility Policy) Amendment Rules, 2021, Rule 8(3)", year: "2021"}
+    internal_notes: Check the rule wording against the current MCA text before approving.
+
+  # ---------------- Hi Fuel Advisory ----------------
+  - idea_id: evidence-before-project
+    account: hifuel_advisory
+    platform: x
+    date: "2026-10-26"
+    theme: educational
+    pillar: CSR law and practice (Section 135)
+    format: text
+    hook: "Section 135 makes CSR spending a legal duty for qualifying companies."
+    caption: "The harder part is showing what the spend changed. Plan the evidence before the project starts, not after."
+    hashtags: ["#CSR", "#ESG"]
+    claims_notes:
+      - {claim: "Section 135 makes CSR spending a legal duty for qualifying companies", source: "Companies Act, 2013, Section 135", year: "2013"}
+
+  - idea_id: growth-framework
+    account: hifuel_advisory
+    platform: linkedin
+    date: "2026-10-27"
+    theme: educational
+    pillar: Frameworks as carousels (HI-FUEL, O.L.I.V.E.R)
+    format: document
+    hook: "Most growth plans fail at the second step, not the fifth."
+    caption: |-
+      We work through every engagement with the Hi Fuel Growth Framework™: Hear → Identify → Fuel → Upgrade → Expand → Lead.
+
+      The step that gets skipped most often is Identify. Teams hear the problem, then jump straight to spending on it. Naming the one constraint that actually limits growth is what makes the rest of the plan work.
+
+      The document walks through all six steps.
+    cta: Which step does your team tend to skip?
+    hashtags: ["#Growth", "#MSME", "#Strategy", "#HiFuelAdvisory"]
+    alt_text: "Document cover in deep emerald: 'The Hi Fuel Growth Framework: Hear, Identify, Fuel, Upgrade, Expand, Lead'."
+    design_brief:
+      format_notes: 8-page LinkedIn document, 4:5. One step per page.
+      slides:
+        - {number: 1, text: "The Hi Fuel Growth Framework™", visual: "Six-step arrow in emerald"}
+        - {number: 2, text: "Hear: listen to customers, teams and numbers before deciding anything", visual: "Step 1 highlighted"}
+        - {number: 3, text: "Identify: name the one constraint that limits growth", visual: "Step 2 highlighted"}
+        - {number: 4, text: "Fuel: put money and people behind that constraint", visual: "Step 3 highlighted"}
+        - {number: 5, text: "Upgrade: fix the systems that will break as you grow", visual: "Step 4 highlighted"}
+        - {number: 6, text: "Expand: new markets, products or partners", visual: "Step 5 highlighted"}
+        - {number: 7, text: "Lead: build the position others follow", visual: "Step 6 highlighted"}
+        - {number: 8, text: "Not reports. Not decks. Outcomes.", visual: "Hi Fuel Advisory wordmark"}
+      layout_notes: Deep emerald with white type, one step per page, generous whitespace.
+      colours: ["#064e3b"]
+    internal_notes: "[CONFIRM] The one-line description of each step is a draft; check the wording with the founder. The opening line is an opinion, not a statistic."
+
+  - idea_id: green-vs-carbon-credits
+    account: hifuel_advisory
+    platform: linkedin
+    date: "2026-10-28"
+    theme: educational
+    pillar: Green credits vs carbon credits, India's carbon market (carefully sourced explainers)
+    format: text
+    hook: "Green credits and carbon credits are not the same thing. Mixing them up is an easy way to lose a CSR committee's trust."
+    caption: |-
+      Carbon credits represent verified emission reductions or removals, issued by a registry such as Verra or Gold Standard.
+
+      India's Green Credit Programme, under rules notified by the central government in 2023, rewards specific environmental actions, such as plantation on degraded land.
+
+      The practical test for a CSR or ESG head: before a project goes into a report, check which of these, if either, has actually been issued for it.
+
+      If nothing has been issued, describe what you can show: plantation impact, survival records, estimated sequestration.
+    cta: "Founders and CSR heads: which one comes up more in your board conversations?"
+    hashtags: ["#ESG", "#CSR", "#CarbonMarkets", "#Sustainability"]
+    claims_notes:
+      - {claim: "Green Credit Programme rules notified by the central government in 2023", source: "Green Credit Rules, 2023 (Gazette of India notification, October 2023)", year: "2023"}
+    internal_notes: Verify the notification date against the gazette before approving.
+
+  - idea_id: brsr-in-60-seconds
+    account: hifuel_advisory
+    platform: instagram
+    date: "2026-10-29"
+    theme: educational
+    pillar: ESG and BRSR explainers
+    format: carousel
+    hook: "BRSR in 60 seconds: what it is and who has to file it."
+    caption: |-
+      BRSR (Business Responsibility and Sustainability Report) is how listed companies in India report on environmental, social and governance performance.
+
+      SEBI made it mandatory for the top 1,000 listed companies by market capitalisation from FY 2022-23.
+
+      Even if you aren't listed, your large customers may start asking you for the same data. Swipe for the basics.
+    cta: Save this for your next ESG conversation.
+    hashtags: ["#BRSR", "#ESG", "#SEBI", "#Sustainability"]
+    alt_text: "Emerald carousel cover reading 'BRSR in 60 seconds'."
+    design_brief:
+      format_notes: 5-slide carousel, 4:5.
+      slides:
+        - {number: 1, text: "BRSR in 60 seconds", visual: "Large emerald title, stopwatch icon"}
+        - {number: 2, text: "What: a report on environmental, social and governance performance", visual: "Three icons: leaf, people, scales"}
+        - {number: 3, text: "Who: the top 1,000 listed companies by market cap (from FY 2022-23)", visual: "Simple bar of 1,000 squares"}
+        - {number: 4, text: "Why it reaches you: big customers ask their suppliers for the data", visual: "Arrow from a large company to small suppliers"}
+        - {number: 5, text: "Start now: know your energy, water, waste and people numbers", visual: "Checklist"}
+      layout_notes: Clean emerald and white, no stock photos.
+      colours: ["#064e3b"]
+    claims_notes:
+      - {claim: "BRSR mandatory for the top 1,000 listed companies by market capitalisation from FY 2022-23", source: "SEBI circular SEBI/HO/CFD/CMD-2/P/CIR/2021/562, 10 May 2021", year: "2021"}
+    internal_notes: Slide 4 is a general observation about supply chains, not a statistic. Check that the SEBI threshold hasn't changed since.
+
+  - idea_id: green-vs-carbon-credits
+    account: hifuel_advisory
+    platform: x
+    date: "2026-10-29"
+    theme: educational
+    pillar: Green credits vs carbon credits, India's carbon market (carefully sourced explainers)
+    format: text
+    hook: "Green credit ≠ carbon credit."
+    caption: "One rewards specific environmental actions under India's Green Credit Programme. The other is a registry-issued unit for verified emission reductions. Check which one, if either, a project actually has before you report it."
+    hashtags: ["#ESG", "#CSR"]
+
+  - idea_id: outcomes-not-decks
+    account: hifuel_advisory
+    platform: linkedin
+    date: "2026-10-30"
+    theme: behind_the_scenes
+    pillar: Founder point of view
+    format: text
+    hook: "Not reports. Not decks. Outcomes."
+    caption: |-
+      That line is how we decide what work to take on.
+
+      Every engagement follows the same five stages: Discover → Diagnose → Design → Deliver → Drive Growth. The last two are where most advisory work stops and where ours keeps going. A good diagnosis is only worth something if it changes what the business does next.
+
+      We work with startups, MSMEs, enterprises, government, NGOs, CSR leaders and investors across 10 practices, including Sustainability & ESG and CSR & Social Impact.
+    cta: If you've had a strategy deck that never left the drive, tell us what happened next.
+    hashtags: ["#Strategy", "#MSME", "#Growth", "#HiFuelAdvisory"]
+
+  - idea_id: green-vs-carbon-credits
+    account: hifuel_advisory
+    platform: facebook
+    date: "2026-10-30"
+    theme: educational
+    pillar: Green credits vs carbon credits, India's carbon market (carefully sourced explainers)
+    format: text
+    hook: "Two terms that get mixed up in CSR reports: green credits and carbon credits."
+    caption: |-
+      Carbon credits are registry-issued units for verified emission reductions or removals. Green credits come from India's Green Credit Programme and reward specific environmental actions.
+
+      If a project has neither, describe what it can actually show: plantation impact, survival records, estimated sequestration.
+    hashtags: ["#CSR", "#ESG"]
+
+  # ---------------- Tranzent Foundation ----------------
+  - idea_id: crop-waste-isnt-waste
+    account: tranzent_foundation
+    platform: instagram
+    date: "2026-10-27"
+    theme: impact_story
+    pillar: Movement updates (Born Green, Greenpreneur, S.H.I.N.E)
+    format: carousel
+    hook: "Crop waste isn't waste. It can become a small business."
+    caption: |-
+      Greenpreneur, a Tranzent Foundation movement, helps people turn agri-waste into micro-enterprises, with NSDC-certified training.
+
+      Swipe for four things leftover crop residue can become: biochar, vermicompost, biogas and pellets.
+    cta: Know someone in farming who'd want to learn this? Send this to them.
+    hashtags: ["#Greenpreneur", "#TranzentFoundation", "#AgriWaste", "#RuralEntrepreneurs"]
+    alt_text: "Carousel cover: a pile of crop residue beside four icons for biochar, compost, biogas and pellets."
+    design_brief:
+      format_notes: 6-slide carousel, 4:5.
+      slides:
+        - {number: 1, text: "Crop waste isn't waste", visual: "Photo of crop residue in a field (no people's faces)"}
+        - {number: 2, text: "Biochar: charred residue that can be used to improve soil", visual: "Biochar in hands"}
+        - {number: 3, text: "Vermicompost: worms turn waste into compost", visual: "Compost bed"}
+        - {number: 4, text: "Biogas: fuel from organic waste", visual: "Small biogas unit"}
+        - {number: 5, text: "Pellets: compressed residue used as fuel", visual: "Pellets close-up"}
+        - {number: 6, text: "Greenpreneur: NSDC-certified training to start", visual: "Tranzent Foundation mark"}
+      layout_notes: Real photos where available; warm, earthy treatment.
+      colours: []
+    internal_notes: Don't mention the MNNIT partnership (claimed, not confirmed). "[CONFIRM]" Tranzent brand colours.
+
+  - idea_id: what-impact-consultancy-does
+    account: tranzent_foundation
+    platform: linkedin
+    date: "2026-10-28"
+    theme: behind_the_scenes
+    pillar: Behind-the-scenes
+    format: text
+    hook: "What does an impact consultancy actually do?"
+    caption: |-
+      Tranzent Foundation works with nonprofits, philanthropies and companies. The work sits across seven verticals:
+
+      • Advisors
+      • Compound
+      • Data Insights
+      • Media (Impact Sandesh)
+      • Research
+      • Design & Implement
+      • Waste Management
+
+      In practice, that means helping organisations design programmes, run them, measure what changed and tell that story honestly.
+
+      Navigating Change, Creating Impact.
+    cta: Nonprofits and CSR teams, which of these do you look for most in a partner?
+    hashtags: ["#TranzentFoundation", "#SocialImpact", "#CSR", "#Nonprofits"]
+    internal_notes: '"Compound" vertical needs a one-line explanation from the team if we want to describe it.'
+
+  - idea_id: greenpreneur-channel
+    account: tranzent_foundation
+    platform: whatsapp_channel
+    date: "2026-10-30"
+    theme: impact_story
+    pillar: Movement updates (Born Green, Greenpreneur, S.H.I.N.E)
+    format: channel_message
+    hook: "This week from Tranzent Foundation 🌱"
+    caption: "Crop residue can become biochar, compost, biogas or pellets, and a small business. Our Greenpreneur movement offers NSDC-certified training to get started. See the full post on our Instagram."
+    internal_notes: Add the Instagram post link once it's live.
+
+  - idea_id: born-green-child-tree
+    account: tranzent_foundation
+    platform: instagram
+    date: "2026-10-31"
+    theme: impact_story
+    pillar: Movement updates (Born Green, Greenpreneur, S.H.I.N.E)
+    format: single_image
+    hook: "A tree planted in your child's name grows up alongside them."
+    caption: |-
+      Born Green plants a native tree in a child's name and geo-tags it, so the family can always find where it is growing.
+
+      Estimated sequestration: about 22 kg of CO2 per tree per year. Small on its own, and it adds up when a whole RWA or school plants together.
+
+      Plant one from ₹460 per tree. An initiative of Tranzent Foundation.
+    cta: Tap the link in bio to plant one.
+    hashtags: ["#BornGreen", "#TranzentFoundation", "#Sustainability", "#NativeTrees"]
+    alt_text: "An adult's hands pressing soil around a young native sapling, with a small name tag on a stake."
+    design_brief:
+      format_notes: Single 4:5 photo, real (not AI).
+      layout_notes: Hands and sapling only; no child in frame. Small Tranzent Foundation mark bottom left.
+    claims_notes:
+      - {claim: "about 22 kg of CO2 per tree per year (estimated sequestration)", source: "Hi Fuel group content standard (CLAUDE.md rule 1); add the underlying scientific source", year: "2026"}
+
+  - idea_id: born-green-child-tree
+    account: tranzent_foundation
+    platform: facebook
+    date: "2026-11-01"
+    theme: impact_story
+    pillar: Movement updates (Born Green, Greenpreneur, S.H.I.N.E)
+    format: single_image
+    hook: "Plant a tree in your child's name this weekend."
+    caption: |-
+      With Born Green, a native tree is planted in your child's name and geo-tagged, so your family can see where it's growing as your child grows up.
+
+      From ₹460 per tree. RWAs and schools can plant together too.
+    cta: Message us to plant one, or to plan a planting with your RWA.
+    hashtags: ["#BornGreen", "#TranzentFoundation"]
+    alt_text: "A young native sapling with a small wooden name tag in fresh soil."
+    design_brief:
+      format_notes: Single photo, a different shot from the Instagram post.
+      layout_notes: No children in frame.
+
+  # ---------------- ICLC ----------------
+  - idea_id: eco-club-question
+    account: iclc
+    platform: linkedin
+    date: "2026-10-27"
+    theme: engagement
+    pillar: For principals and Eco Club teachers
+    format: text
+    hook: "A question for Eco Club teachers."
+    caption: |-
+      What takes most of your time: planning activities, getting students involved, or reporting what the club did?
+
+      We're designing a sustainability championship for students in Classes 6–9, and we want it to make your work easier, not add to it. Your answers will shape it.
+    cta: Tell us in the comments, or message us if you'd rather answer privately.
+    hashtags: ["#EcoClub", "#SustainabilityEducation", "#Teachers"]
+
+  - idea_id: principals-championship
+    account: iclc
+    platform: linkedin
+    date: "2026-10-29"
+    theme: initiative_promo
+    pillar: For principals and Eco Club teachers
+    format: text
+    hook: "Principals: what if your Eco Club had a championship to work towards?"
+    caption: |-
+      We're building a sustainability championship for students in Classes 6–9. Students work on real environmental problems from their own surroundings, in a format designed around the school day.
+
+      We've designed it with teachers in mind: ready content for Eco Club teachers, a simple process for the school, and a safe format where no student names or faces are shared publicly.
+
+      Before the first edition, we'd like to hear from principals and Eco Club teachers about what would make this easy to run.
+    cta: If you lead a school, message us and we'll share the outline.
+    hashtags: ["#ICLC", "#SustainabilityEducation", "#EcoClub"]
+    internal_notes: "[CONFIRM] certificate, session length and launch timing before mentioning any of them. October is exam season in many schools: this is a conversation starter, not a launch."
+
+  - idea_id: textbook-vs-street
+    account: iclc
+    platform: instagram
+    date: "2026-10-31"
+    theme: educational
+    pillar: Why real-world sustainability learning matters
+    format: carousel
+    hook: "Your child has read about pollution in a textbook. Have they ever measured it on their own street?"
+    caption: |-
+      Real-world learning means starting with something students can see: the waste outside the school gate, the water in the colony tank, the trees on their road.
+
+      We're building a sustainability championship for Classes 6–9 around exactly that. Swipe for what real-world learning can look like.
+    cta: Parents, would your child enjoy this? Tell us below.
+    hashtags: ["#ICLC", "#SustainabilityEducation", "#RealWorldLearning"]
+    alt_text: "Illustrated carousel cover: a textbook on one side, a street with trees and a bin on the other."
+    design_brief:
+      format_notes: 5-slide illustrated carousel, 4:5. Illustrations only, no photos of children.
+      slides:
+        - {number: 1, text: "Textbook or street?", visual: "Split illustration: textbook vs neighbourhood street"}
+        - {number: 2, text: "Count the bins on your road. Where does the waste go?", visual: "Illustrated street with bins"}
+        - {number: 3, text: "Check the water: where does your colony's water come from?", visual: "Illustrated water tank"}
+        - {number: 4, text: "Look up: which trees grow near you?", visual: "Illustrated trees"}
+        - {number: 5, text: "Learning that starts outside the classroom", visual: "Simple title card"}
+      layout_notes: Bright, playful illustrations; never childish.
+    internal_notes: "[CONFIRM] ICLC brand colours."
+
+  # ---------------- Founder (Ashish) ----------------
+  - idea_id: outcomes-founder
+    account: founder_ashish
+    platform: linkedin
+    date: "2026-10-26"
+    theme: founder_team_voice
+    pillar: Lessons from building
+    format: text
+    hook: "I've stopped judging advice by how good the deck looks."
+    caption: |-
+      The test I use now is simpler: six months later, what's different in the business?
+
+      It's why we built Hi Fuel Advisory around execution, not just diagnosis. Advice that doesn't change what a team does on Monday morning isn't finished.
+    cta: What's the most useful piece of advice your business ever acted on?
+    hashtags: ["#Leadership", "#MSME", "#Growth"]
+    personalise_prompt: >-
+      Add one real example: a plan you saw (or wrote) that looked great and changed nothing, or one that
+      was simple and worked. Keep it in your own words.
+
+  - idea_id: proof-in-a-year
+    account: founder_ashish
+    platform: linkedin
+    date: "2026-10-28"
+    theme: founder_team_voice
+    pillar: Opinions on ESG/CSR and growth
+    format: text
+    hook: "The question I now ask before every CSR conversation: what will we be able to prove in a year?"
+    caption: |-
+      In our work with companies and NGOs, the hardest part is rarely the budget or the intent. It's the evidence. A year on, can anyone show what changed, where, and for whom?
+
+      So we're building our programmes around proof from day one: geo-tagged trees, checks on whether they survived, and records a CSR committee can actually audit.
+
+      I'd rather report a smaller number we can stand behind than a big one we can't.
+    cta: "CSR and ESG leaders: what evidence do you ask for today?"
+    hashtags: ["#CSR", "#ESG", "#Impact"]
+    personalise_prompt: >-
+      Open with a real moment when a project looked good on paper but couldn't show results a year later.
+      Add one detail only you would know: a place, a conversation, a number you can source.
+
+  - idea_id: field-visits
+    account: founder_ashish
+    platform: linkedin
+    date: "2026-10-30"
+    theme: founder_team_voice
+    pillar: Field visits
+    format: text
+    hook: "Field visits teach you things a report never will."
+    caption: |-
+      On paper, a programme is a budget, a timeline and a set of targets. On the ground, it's people deciding whether it's worth their time.
+
+      Every time I visit a project, I come back with one question I hadn't thought to ask in the office. That question usually matters more than anything in the report.
+    cta: What's the best question a field visit ever taught you to ask?
+    hashtags: ["#SocialImpact", "#CSR", "#Leadership"]
+    personalise_prompt: >-
+      Name a real visit (place and month) and the question it taught you. Add a photo only if everyone in it
+      has agreed, and no children are identifiable.
+
+  # ---------------- Aryan ----------------
+  - idea_id: building-the-assistant
+    account: team_aryan
+    platform: linkedin
+    date: "2026-10-27"
+    theme: founder_team_voice
+    pillar: What I'm working on
+    format: text
+    hook: "I'm building an AI assistant for our social media. The first thing it learned was what not to say."
+    caption: |-
+      Every draft is checked against our own rules: no boasting about ourselves, no statistics without a source and year, no job guarantees, no children's faces without consent, and an "AI-assisted" label on AI images.
+
+      It doesn't publish anything. Every post goes to a person for approval.
+
+      The surprising part: writing the rules down taught our team more about our brand than writing the posts did.
+    hashtags: ["#AI", "#SocialMedia", "#LearningInPublic"]
+    personalise_prompt: Add one rule you were surprised we needed, and why.
+
+  - idea_id: record-keeping-lesson
+    account: team_aryan
+    platform: linkedin
+    date: "2026-10-30"
+    theme: founder_team_voice
+    pillar: What I learned this week
+    format: text
+    hook: "This week I learned how much of sustainability work is just good record-keeping."
+    caption: |-
+      I'm an analyst in R&D at Hi Fuel Advisory. This week I looked at how a tree-planting project should be documented so a CSR team can check it a year later.
+
+      The short version: location, date, species, a survival check, and who verified it. None of it is glamorous. All of it decides whether a report can be trusted.
+
+      Still learning, so pointers from people who audit these programmes are very welcome.
+    hashtags: ["#Sustainability", "#CSR", "#LearningInPublic"]
+    personalise_prompt: Swap in the exact thing you worked on this week and one thing that surprised you.

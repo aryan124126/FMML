@@ -9,6 +9,7 @@
   python -m hifuel hub-push [--start ... --days ...]
   python -m hifuel hub-pull <folder>
   python -m hifuel import <plan.yaml|plan.json> [--sample]   load drafts written outside the API
+  python -m hifuel remove-samples                delete sample posts
   python -m hifuel request <account> --start ...   show what would be sent to Claude
 """
 
@@ -88,6 +89,8 @@ def main(argv=None) -> int:
     p.add_argument("file")
     p.add_argument("--sample", action="store_true", help="mark the posts as samples")
 
+    p = sub.add_parser("remove-samples", help="delete all sample posts")
+
     p = sub.add_parser("request", help="show what would be sent to Claude for one account")
     p.add_argument("account")
     with_range(p)
@@ -160,6 +163,13 @@ def main(argv=None) -> int:
             return 1
         for pid in plan["post_ids"]:
             print(_summary_line(store.posts[pid]))
+    elif args.cmd == "remove-samples":
+        ids = [pid for pid, p in store.posts.items() if p.get("sample")]
+        plan_ids = set(store.plans)
+        store.remove(ids, by="cli")
+        store.save()
+        print(f"Removed {len(ids)} sample posts. Delete these from the Team Hub too:")
+        print("\n".join([f"posts/{i}" for i in ids] + [f"plans/{p}" for p in plan_ids - set(store.plans)]))
     elif args.cmd == "request":
         start = date.fromisoformat(args.start) if args.start else _next_monday()
         print(dump_request(cfg, store, args.account, start, args.days))

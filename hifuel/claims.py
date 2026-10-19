@@ -11,7 +11,11 @@ import re
 from .config import Config
 from .models import publish_text
 
-PRICE_RE = re.compile(r"(?:₹|\brs\.?|\binr)\s*([\d,]+(?:\.\d+)?)|([\d,]+)\s*(?:/-|rupees)", re.I)
+# Amounts followed by lakh/crore/million are figures (checked as statistics), not prices.
+PRICE_RE = re.compile(
+    r"(?:₹|\brs\.?|\binr)\s*(\d+(?:,\d+)*(?:\.\d+)?)(?!\d|,\d|\.\d)(?!\s*(?:lakh|crore|cr\b|mn\b|million|billion))|([\d,]+)\s*(?:/-|rupees)",
+    re.I,
+)
 NUMBER_RE = re.compile(r"\d[\d,.]*")
 CO2_PER_TREE_RE = re.compile(
     r"(\d+(?:\.\d+)?)\s*(kg|kgs|kilograms?|t|tonnes?|tons?)\b[^.\n]{0,40}?\b(?:per|each|every|a|/)\s*(\d+\s+)?trees?\b",
