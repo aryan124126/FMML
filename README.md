@@ -56,6 +56,8 @@ python -m hifuel check                       # re-run the claims check (after ch
 python -m hifuel export --start 2026-10-26   # approved posts -> data/exports/
 python -m hifuel hub-push                    # prepare files for the Team Hub
 python -m hifuel hub-pull <folder>           # apply reviewers' decisions downloaded from the hub
+python -m hifuel review-pack --campaign pathvik-launch --title "..." --name pathvik-launch-review
+                                             # phone-sized PDF + WhatsApp message for team review (codes P01, P02...)
 python -m hifuel analytics import export.csv --account pathvik --platform instagram
 python -m hifuel analytics followers --account pathvik --platform instagram --date 2026-11-02 --count 1840
 python -m hifuel analytics enquiry --account iclc --date 2026-11-02 --count 2 --note "via LinkedIn"

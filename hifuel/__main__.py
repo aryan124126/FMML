@@ -38,6 +38,7 @@ from .config import load_config
 from .models import publish_text
 from .planner import PlanningError, dump_request, import_plan, plan_period, recheck_all
 from .store import Store
+from . import review_pack
 
 
 def _next_monday() -> date:
@@ -102,6 +103,19 @@ def main(argv=None) -> int:
     p.add_argument("--sample", action="store_true", help="mark the posts as samples")
 
     p = sub.add_parser("remove-samples", help="delete all sample posts")
+
+    p = sub.add_parser("review-pack", help="a phone-friendly PDF of posts to review over WhatsApp")
+    p.add_argument("--campaign", help="only this campaign's posts")
+    p.add_argument("--start", help="YYYY-MM-DD; with --days, posts in this range")
+    p.add_argument("--days", type=int, default=7)
+    p.add_argument("--without-campaigns", action="store_true", help="leave out posts that belong to a campaign")
+    p.add_argument("--status", default="draft,needs_changes,shell", help="comma-separated statuses to include")
+    p.add_argument("--prefix", default="P", help="letter for the post codes (P01, P02, ...)")
+    p.add_argument("--title", required=True)
+    p.add_argument("--subtitle", default="")
+    p.add_argument("--intro", default="")
+    p.add_argument("--deadline", default="", help="a line for the WhatsApp message, e.g. 'Replies by Monday 6 pm please.'")
+    p.add_argument("--name", required=True, help="file name, e.g. pathvik-launch-review")
 
     an = sub.add_parser("analytics", help="import and record results").add_subparsers(dest="sub", required=True)
     p = an.add_parser("import", help="import a CSV export of post results")
@@ -243,6 +257,26 @@ def main(argv=None) -> int:
         store.save()
         print(f"Removed {len(ids)} sample posts. Delete these from the Team Hub too:")
         print("\n".join([f"posts/{i}" for i in ids] + [f"plans/{p}" for p in plan_ids - set(store.plans)]))
+    elif args.cmd == "review-pack":
+        statuses = set(args.status.split(","))
+        posts = [p for p in store.posts.values() if p["status"] in statuses]
+        if args.campaign:
+            posts = [p for p in posts if p.get("campaign") == args.campaign]
+        if args.start:
+            start, end = _range(args)
+            posts = [p for p in posts if start <= p["date"] <= end]
+        if args.without_campaigns:
+            posts = [p for p in posts if not p.get("campaign")]
+        if not posts:
+            print("No posts match.")
+            return 1
+        files = review_pack.write_pack(posts, Path("data/exports/review-packs"), args.name, args.title, args.subtitle,
+                                       args.intro, args.prefix, args.deadline)
+        print(f"{len(posts)} posts")
+        for kind, path in files.items():
+            print(f"{kind}: {path}")
+        if "pdf" not in files:
+            print("No PDF: install Playwright to print one, or open the HTML file and print it to PDF.")
     elif args.cmd == "request":
         start = date.fromisoformat(args.start) if args.start else _next_monday()
         print(dump_request(cfg, store, args.account, start, args.days))
