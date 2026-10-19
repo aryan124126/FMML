@@ -9,7 +9,7 @@ An AI assistant that **plans, writes and times** social media posts for the Hi F
 | **Planner** | Drafts a week of posts per account and platform (Instagram, LinkedIn, Facebook, WhatsApp Channel, X): hook, caption, CTA, hashtags, alt text, and a design brief (slides, Reel script, layout, colours). |
 | **Claims check** | Every draft is checked against the hard content rules (CO2 figures, carbon-credit wording, superlatives, unsourced stats, job guarantees, prices, partner names, children, AI media, internal terms). "Must fix" items block approval; "Check" items are listed for the reviewer. |
 | **Best time to post** | Each post gets a time in IST, and it says where the time came from: your own audience data, your own past posts, or a benchmark (a starting guess until real data exists). About 20% of posts test new time slots. It also spaces posts out so the same account doesn't post too close together. |
-| **Team Hub** | A private dashboard for the team: an overview of the week, a calendar (board or list), a review queue with platform-style previews (approve / needs changes / reject / edit), campaign tracking, advocacy kits, an ideas box, announcements, and results. Works on phone and desktop. |
+| **Team Hub** | A private dashboard for the team: an overview, a calendar (month, week timeline or status pipeline; drag a post to reschedule), a review screen with platform-style previews, comments and a request-changes checklist, analytics with export, an idea board with votes that turns ideas into briefs, campaign tracking, advocacy kits, announcements and reports. Light and dark mode; works on phone and desktop. Source in `hub/src/`, built with `python hub/build.py`. |
 | **Campaigns** | A campaign file (e.g. `campaigns/pathvik-launch.yaml`) holds the goal, dates, calls to action and every post; the hub tracks its progress. |
 | **Exports** | Approved posts as a spreadsheet (CSV for Google Sheets/Excel), a calendar file with reminders (.ics), and a copy-ready caption document. |
 
@@ -18,9 +18,9 @@ An AI assistant that **plans, writes and times** social media posts for the Hi F
 | Part | What you get |
 |---|---|
 | **Results import** | Reads CSV exports from Meta Business Suite / Instagram and LinkedIn Page analytics, or the fill-in template `samples/analytics_template.csv`. Column names are set in `config/analytics_columns.yaml`. Results are matched to the planned posts, so they can be read by theme, format and time. |
-| **Advocacy results** | People log their own LinkedIn numbers in the hub's Advocacy kits tab (personal analytics aren't available through an API). |
+| **Advocacy results** | People log their own LinkedIn numbers in the hub's Advocacy screen (personal analytics aren't available through an API). |
 | **Follower counts, audience hours, enquiries** | Recorded with simple commands; used for follower growth, reach normalisation, timing and the business metric that matters most: enquiries. |
-| **Weekly and monthly reports** | KPIs per account, changes since the last period, what worked, what didn't, top posts, and (monthly) the next three priorities. Shown in the hub's Growth tab. |
+| **Weekly and monthly reports** | KPIs per account, changes since the last period, what worked, what didn't, top posts, and (monthly) the next three priorities. Shown in the hub's Reports screen. |
 | **Experiment log** | Test one change (format, time of day, theme) for 2–4 weeks; the report says whether it did better, worse or no different. |
 | **Learning loop** | Posting times switch from benchmarks to your own data once there's enough of it, and every new plan sees past results, running experiments and the team's ideas. |
 

@@ -1,0 +1,41 @@
+<title>Hi Fuel Team Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/*STYLES*/
+</style>
+
+<div class="app" id="app">
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="brand"><div class="mark" aria-hidden="true">HF</div><div class="brand-text"><b>Team Hub</b><span>Hi Fuel group · social</span></div></div>
+    <nav class="nav" id="sideNav"></nav>
+    <div class="collapse"><button class="nav-item" id="collapseBtn" data-tip="Expand sidebar"><span id="collapseIcon"></span><span class="txt">Collapse</span></button></div>
+    <div class="me" id="meBox" hidden></div>
+  </aside>
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="mobilebar"><div class="mark" aria-hidden="true">HF</div><b style="font-family:var(--font-display)">Team Hub</b></div>
+        <nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
+        <span class="sync connecting" id="syncPill" role="status" aria-live="polite"><i></i><span>Connecting…</span></span>
+        <button class="iconbtn" id="themeBtn" data-tip="Theme"></button>
+        <button class="btn primary" id="quickBtn" hidden></button>
+      </div>
+    </header>
+    <div class="page-head" id="pageHead"></div>
+    <main id="main"></main>
+  </div>
+</div>
+<nav class="tabbar" id="tabBar" aria-label="Sections"></nav>
+<div id="modalRoot"></div>
+<div class="toastbox" id="toastRoot" aria-live="polite"></div>
+<div id="menuRoot"></div>
+
+<script>
+(() => {
+"use strict";
+/*APP*/
+})();
+</script>
