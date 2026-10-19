@@ -2,233 +2,459 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a compact operations board. Sticky header with week + counts, tabbed views below,
-   a side drawer for one post. Emerald from Hi Fuel Advisory's brand is the only accent. */
+/* Layout: an operations console. Sidebar navigation on desktop, bottom tab bar on phones.
+   Overview dashboard first; every post can be opened as a platform-styled preview.
+   Deep emerald from Hi Fuel Advisory is the single accent; platform colours only mark platforms. */
 :root {
-  --bg: #f5f7f5;
+  --bg: #f3f6f4;
   --surface: #ffffff;
-  --surface-2: #eef2ef;
-  --line: #d9e1dc;
-  --fg: #142019;
-  --muted: #5b6b62;
+  --surface-2: #edf2ef;
+  --surface-3: #e3eae6;
+  --line: #d7e0db;
+  --line-strong: #bfccc5;
+  --fg: #12201a;
+  --fg-2: #33443b;
+  --muted: #5d6e65;
   --accent: #064e3b;
+  --accent-2: #0b6b52;
   --accent-fg: #ffffff;
-  --accent-soft: #dcefe6;
-  --block: #b42318;
-  --block-soft: #fde8e6;
-  --flag: #946200;
-  --flag-soft: #fdf3d7;
-  --ok: #18794e;
-  --ok-soft: #ddf3e6;
-  --info-soft: #e6ecf7;
-  --info: #2c4f8c;
+  --accent-soft: #dceee6;
+  --block: #b42318; --block-soft: #fde8e6;
+  --flag: #8a5a00; --flag-soft: #fcf1d6;
+  --ok: #157347; --ok-soft: #dcf2e6;
+  --info: #2a4f8f; --info-soft: #e5ecf8;
+  --shadow: 0 1px 2px rgb(18 32 26 / 0.05), 0 2px 8px rgb(18 32 26 / 0.05);
+  --shadow-lg: 0 10px 40px rgb(18 32 26 / 0.18);
+  --a-hifuel_advisory: #064e3b; --a-tranzent_foundation: #2f7d4f; --a-pathvik: #6d5ce8;
+  --a-earth_osai: #1f6f8b; --a-iclc: #c2571a; --a-person: #7a6450; --a-other: #7a8a80;
+  --p-instagram: #c72767; --p-linkedin: #0a66c2; --p-facebook: #1877f2; --p-x: #12201a; --p-whatsapp_channel: #178a46;
+  --st-draft: #9aa9a1; --st-needs_changes: #d49a1c; --st-approved: #2f9e66; --st-scheduled: #2a6fdb; --st-posted: #064e3b; --st-rejected: #c8d1cc;
   --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
   --font-body: "Public Sans", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --a-hifuel_advisory: #064e3b; --a-tranzent_foundation: #2f7d4f; --a-pathvik: #6d5ce8;
-  --a-earth_osai: #1f6f8b; --a-iclc: #c2571a; --a-person: #6b5b4b; --a-other: #7a8a80;
-  --radius: 10px;
+  --radius: 14px; --radius-sm: 9px;
+  --sidebar: 248px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f1512; --surface: #161e1a; --surface-2: #1d2722; --line: #2b3832; --fg: #e4ece7; --muted: #9aaba1;
-    --accent: #5cc79c; --accent-fg: #06261c; --accent-soft: #1b3a2e;
-    --block: #ff8a80; --block-soft: #3a1c1a; --flag: #f0c45a; --flag-soft: #3a3016; --ok: #6fd6a0; --ok-soft: #173426;
-    --info-soft: #1c2840; --info: #9db9ec;
-    --a-hifuel_advisory: #5cc79c; --a-tranzent_foundation: #7fcf94; --a-pathvik: #a89cff;
-    --a-earth_osai: #6ec1dd; --a-iclc: #f29a5e; --a-person: #c9b29a; --a-other: #9aaba1;
+    --bg: #0d1310; --surface: #141c18; --surface-2: #1a241f; --surface-3: #22302a; --line: #26332d; --line-strong: #34453d;
+    --fg: #e5ede8; --fg-2: #c3d0c9; --muted: #92a49a; --accent: #5cc79c; --accent-2: #7ad6b0; --accent-fg: #052119; --accent-soft: #183a2d;
+    --block: #ff8f86; --block-soft: #3a1b19; --flag: #f1c661; --flag-soft: #382e15; --ok: #6fd6a0; --ok-soft: #163426; --info: #9dbaf0; --info-soft: #1b273f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.25); --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.5);
+    --a-hifuel_advisory: #5cc79c; --a-tranzent_foundation: #7fcf94; --a-pathvik: #a99dff; --a-earth_osai: #6ec1dd; --a-iclc: #f29a5e; --a-person: #cdb69c; --a-other: #92a49a;
+    --p-instagram: #ff6ea4; --p-linkedin: #5aa7f0; --p-facebook: #6aa5ff; --p-x: #e5ede8; --p-whatsapp_channel: #42d98a;
+    --st-draft: #6c7c73; --st-needs_changes: #e0ac35; --st-approved: #4cc287; --st-scheduled: #5d9bff; --st-posted: #5cc79c; --st-rejected: #34453d;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0f1512; --surface: #161e1a; --surface-2: #1d2722; --line: #2b3832; --fg: #e4ece7; --muted: #9aaba1;
-  --accent: #5cc79c; --accent-fg: #06261c; --accent-soft: #1b3a2e;
-  --block: #ff8a80; --block-soft: #3a1c1a; --flag: #f0c45a; --flag-soft: #3a3016; --ok: #6fd6a0; --ok-soft: #173426;
-  --info-soft: #1c2840; --info: #9db9ec;
-  --a-hifuel_advisory: #5cc79c; --a-tranzent_foundation: #7fcf94; --a-pathvik: #a89cff;
-  --a-earth_osai: #6ec1dd; --a-iclc: #f29a5e; --a-person: #c9b29a; --a-other: #9aaba1;
+  --bg: #0d1310; --surface: #141c18; --surface-2: #1a241f; --surface-3: #22302a; --line: #26332d; --line-strong: #34453d;
+  --fg: #e5ede8; --fg-2: #c3d0c9; --muted: #92a49a; --accent: #5cc79c; --accent-2: #7ad6b0; --accent-fg: #052119; --accent-soft: #183a2d;
+  --block: #ff8f86; --block-soft: #3a1b19; --flag: #f1c661; --flag-soft: #382e15; --ok: #6fd6a0; --ok-soft: #163426; --info: #9dbaf0; --info-soft: #1b273f;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.25); --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.5);
+  --a-hifuel_advisory: #5cc79c; --a-tranzent_foundation: #7fcf94; --a-pathvik: #a99dff; --a-earth_osai: #6ec1dd; --a-iclc: #f29a5e; --a-person: #cdb69c; --a-other: #92a49a;
+  --p-instagram: #ff6ea4; --p-linkedin: #5aa7f0; --p-facebook: #6aa5ff; --p-x: #e5ede8; --p-whatsapp_channel: #42d98a;
+  --st-draft: #6c7c73; --st-needs_changes: #e0ac35; --st-approved: #4cc287; --st-scheduled: #5d9bff; --st-posted: #5cc79c; --st-rejected: #34453d;
   color-scheme: dark;
 }
+
 * { box-sizing: border-box; }
 html, body { background: var(--bg); }
-body { color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+body { color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
 button, input, textarea, select { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.wrap { max-width: 1200px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+svg { flex: none; }
+.icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
-.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding-block: 12px; }
-.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
-.brand h1 { font-family: var(--font-display); font-size: 1.35rem; margin: 0; letter-spacing: -0.01em; }
-.brand span { color: var(--muted); font-size: 0.85rem; }
-.week { display: flex; align-items: center; gap: 6px; }
-.week strong { font-variant-numeric: tabular-nums; min-width: 12ch; text-align: center; font-weight: 600; }
-.iconbtn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; width: 34px; height: 34px; cursor: pointer; }
-.iconbtn:hover { background: var(--surface-2); }
-.counts { display: flex; flex-wrap: wrap; gap: 6px; }
-.count { font-size: 0.8rem; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); white-space: nowrap; }
-.count b { font-variant-numeric: tabular-nums; }
-.count.block { background: var(--block-soft); color: var(--block); }
-.count.review { background: var(--flag-soft); color: var(--flag); }
-.count.ok { background: var(--ok-soft); color: var(--ok); }
-nav.tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
-nav.tabs button { border: 0; background: none; padding: 10px 14px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; white-space: nowrap; font-weight: 500; }
-nav.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+/* ---------- shell ---------- */
+.app { display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); min-height: 100vh; }
+.sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; background: var(--surface); border-right: 1px solid var(--line);
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 14px 18px max(14px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 18px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 2px 8px; }
+.mark { width: 34px; height: 34px; border-radius: 10px; background: var(--accent); color: var(--accent-fg); display: grid; place-items: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; letter-spacing: -0.02em; }
+.brand b { font-family: var(--font-display); font-size: 1.08rem; display: block; line-height: 1.1; }
+.brand span { color: var(--muted); font-size: 0.78rem; }
+.nav { display: grid; gap: 2px; }
+.nav-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; padding: 10px 10px 4px; }
+.nav button { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; background: none; padding: 9px 10px; border-radius: 9px; color: var(--fg-2); font-weight: 500; text-align: left; }
+.nav button:hover { background: var(--surface-2); }
+.nav button[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.nav .count { margin-left: auto; font-size: 0.72rem; font-weight: 700; min-width: 22px; padding: 1px 7px; border-radius: 999px; background: var(--surface-3); color: var(--fg-2); text-align: center; font-variant-numeric: tabular-nums; }
+.nav .count.hot { background: var(--accent); color: var(--accent-fg); }
+.me { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 12px; background: var(--surface-2); font-size: 0.85rem; }
+.me img { width: 30px; height: 30px; border-radius: 50%; }
+.me small { display: block; color: var(--muted); font-size: 0.74rem; }
 
-main { padding-block: 20px 60px; display: grid; gap: 20px; }
-h2 { font-family: var(--font-display); font-size: 1.15rem; margin: 0; text-wrap: balance; }
-h3 { font-size: 0.95rem; margin: 0; }
+.shell { min-width: 0; display: flex; flex-direction: column; }
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 6; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line); padding-block: 14px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+.topbar-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.page-title { margin-right: auto; min-width: 0; }
+.page-title h1 { font-family: var(--font-display); font-size: 1.45rem; margin: 0; letter-spacing: -0.015em; line-height: 1.15; text-wrap: balance; }
+.page-title p { margin: 2px 0 0; color: var(--muted); font-size: 0.86rem; }
+.weekpick { display: flex; align-items: center; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 3px; box-shadow: var(--shadow); }
+.weekpick button { border: 0; background: none; border-radius: 8px; height: 32px; min-width: 32px; padding: 0 8px; color: var(--fg-2); font-weight: 600; font-size: 0.85rem; }
+.weekpick button:hover { background: var(--surface-2); }
+.weekpick strong { font-variant-numeric: tabular-nums; min-width: 12.5ch; text-align: center; font-size: 0.9rem; font-weight: 600; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+.filters select, .filters input { height: 34px; border: 1px solid var(--line); background: var(--surface); border-radius: 9px; padding: 0 10px; font-size: 0.86rem; min-width: 0; width: auto; }
+.filters input[type="search"] { width: 220px; max-width: 100%; }
+.pchips { display: flex; gap: 4px; flex-wrap: wrap; }
+.pchip { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 10px 0 6px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); font-size: 0.82rem; color: var(--fg-2); }
+.pchip[aria-pressed="true"] { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 12%, var(--surface)); color: var(--fg); font-weight: 600; }
+.clear { border: 0; background: none; color: var(--accent); font-weight: 600; font-size: 0.85rem; padding: 0 6px; }
+
+main { padding-block: 24px 80px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; align-content: start; max-width: 1360px; width: 100%; }
+
+.tabbar { display: none; }
+.mobilebar { display: none; }
+
+/* ---------- type & atoms ---------- */
+h2 { font-family: var(--font-display); font-size: 1.12rem; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h3 { font-size: 0.95rem; margin: 0; font-weight: 650; }
+p { margin: 0; }
 .muted { color: var(--muted); }
 .small { font-size: 0.85rem; }
-.label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
-.mono { font-family: var(--font-mono); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+.xs { font-size: 0.78rem; }
+.label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 650; }
+.mono { font-family: var(--font-mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.linkbtn { border: 0; background: none; color: var(--accent); font-weight: 600; font-size: 0.86rem; padding: 0; text-align: left; }
+.linkbtn:hover { text-decoration: underline; }
 
-.notice { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 8px; }
-.notice ul { margin: 0; padding-left: 1.1rem; }
-.empty { border: 1px dashed var(--line); border-radius: var(--radius); padding: 28px 20px; text-align: center; color: var(--muted); }
-.empty strong { display: block; color: var(--fg); font-size: 1rem; margin-bottom: 4px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; display: grid; gap: 14px; min-width: 0; align-content: start; }
+.grid { display: grid; gap: 16px; min-width: 0; align-content: start; }
+.g-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.g-main { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
 
-/* Week board */
-.board { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
-.day { display: grid; align-content: start; gap: 8px; min-width: 0; }
-.dayhead { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 2px; border-bottom: 1px solid var(--line); }
-.dayhead b { font-weight: 600; }
-.daytag { font-size: 0.7rem; color: var(--info); background: var(--info-soft); border-radius: 6px; padding: 1px 6px; }
-.daytag.sensitive { color: var(--block); background: var(--block-soft); }
-.chip { text-align: left; width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 8px 9px 8px 11px; cursor: pointer; display: grid; gap: 4px; position: relative; min-width: 0; }
-.chip::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; border-radius: 3px; background: var(--acct, var(--a-other)); }
-.chip:hover { border-color: var(--muted); }
-.chip .top { display: flex; gap: 6px; align-items: center; font-size: 0.75rem; color: var(--muted); }
-.chip .hook { font-size: 0.85rem; line-height: 1.35; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.pill { font-size: 0.7rem; font-weight: 600; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
-.pill.draft { background: var(--surface-2); color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 650; padding: 2px 9px; border-radius: 999px; white-space: nowrap; line-height: 1.5; }
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill.draft { background: var(--surface-3); color: var(--fg-2); }
 .pill.needs_changes { background: var(--flag-soft); color: var(--flag); }
-.pill.approved, .pill.scheduled { background: var(--ok-soft); color: var(--ok); }
+.pill.approved { background: var(--ok-soft); color: var(--ok); }
+.pill.scheduled { background: var(--info-soft); color: var(--info); }
 .pill.posted { background: var(--accent-soft); color: var(--accent); }
-.pill.rejected { background: var(--surface-2); color: var(--muted); text-decoration: line-through; }
+.pill.rejected { background: var(--surface-3); color: var(--muted); }
 .pill.blocked { background: var(--block-soft); color: var(--block); }
-.pill.sample { background: var(--info-soft); color: var(--info); }
+.pill.sample, .pill.campaign { background: var(--info-soft); color: var(--info); }
+.pill.campaign::before { display: none; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
 
-/* Post cards */
-.cards { display: grid; gap: 14px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: grid; gap: 12px; min-width: 0; }
-.card.is-blocked { border-color: color-mix(in srgb, var(--block) 45%, var(--line)); }
-.cardhead { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
-.acct { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
-.acct i { width: 9px; height: 9px; border-radius: 50%; background: var(--acct, var(--a-other)); display: inline-block; }
-.meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 0.82rem; color: var(--muted); }
-.cols { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; }
-.posttext { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface-2); border-radius: 8px; padding: 12px 14px; font-size: 0.92rem; max-width: 70ch; }
-.issues { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.issue { font-size: 0.84rem; border-radius: 8px; padding: 7px 10px; display: grid; gap: 2px; }
-.issue.block { background: var(--block-soft); color: var(--block); }
-.issue.flag { background: var(--flag-soft); color: var(--flag); }
-.issue q { color: var(--fg); font-size: 0.8rem; opacity: 0.85; }
-details { border-top: 1px solid var(--line); padding-top: 10px; }
-summary { cursor: pointer; font-weight: 600; font-size: 0.88rem; }
-.brief { display: grid; gap: 8px; font-size: 0.86rem; margin-top: 8px; }
-.brief ol, .brief ul { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
-.swatches { display: flex; gap: 6px; flex-wrap: wrap; }
-.swatch { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 0.75rem; }
-.swatch i { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line); display: inline-block; }
-.edit { display: grid; gap: 8px; }
-.edit label { display: grid; gap: 3px; font-size: 0.8rem; color: var(--muted); }
-textarea, input[type="text"], select { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 8px 10px; font-size: 0.9rem; }
-textarea { resize: vertical; min-height: 2.6em; }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 7px 14px; cursor: pointer; font-weight: 500; font-size: 0.88rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-sm); padding: 8px 14px; font-weight: 600; font-size: 0.86rem; color: var(--fg); line-height: 1.2; }
 .btn:hover:not(:disabled) { background: var(--surface-2); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
-.btn.primary:hover:not(:disabled) { background: var(--accent); filter: brightness(1.08); }
+.btn.primary:hover:not(:disabled) { background: var(--accent-2); border-color: var(--accent-2); }
 .btn.danger { color: var(--block); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.hint { font-size: 0.8rem; color: var(--muted); }
+.btn.ghost { border-color: transparent; background: transparent; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn .icon { width: 16px; height: 16px; }
 
-/* Drawer */
-.scrim { position: fixed; inset: 0; background: rgb(0 0 0 / 0.35); z-index: 20; }
-.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(640px, 100%); background: var(--bg); z-index: 21; overflow-y: auto; border-left: 1px solid var(--line);
-  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) 16px; display: grid; align-content: start; gap: 12px; }
-.drawer .close { justify-self: end; }
+.empty { border: 1.5px dashed var(--line-strong); border-radius: var(--radius); padding: 30px 20px; text-align: center; color: var(--muted); display: grid; gap: 6px; justify-items: center; }
+.empty strong { color: var(--fg); font-size: 1rem; }
 
-/* Lists */
+/* platform badge */
+.pf { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; color: var(--pc); background: color-mix(in srgb, var(--pc) 13%, transparent); flex: none; }
+.pf svg { width: 14px; height: 14px; }
+.pf.lg { width: 30px; height: 30px; border-radius: 8px; }
+.pf.lg svg { width: 18px; height: 18px; }
+
+/* ---------- overview ---------- */
+.hello { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+.hello h2 { font-size: 1.6rem; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; display: grid; gap: 6px; min-width: 0; text-align: left; align-content: start; }
+button.kpi:hover { border-color: var(--line-strong); }
+.kpi .v { font-family: var(--font-display); font-size: 2rem; font-weight: 650; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.kpi .k { color: var(--muted); font-size: 0.82rem; font-weight: 550; }
+.kpi .s { font-size: 0.78rem; color: var(--muted); }
+.kpi.accent { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.kpi.accent .k, .kpi.accent .s { color: color-mix(in srgb, var(--accent-fg) 80%, transparent); }
+.kpi.alert .v { color: var(--block); }
+.stack { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: var(--surface-3); gap: 2px; }
+.stack span { display: block; height: 100%; }
+.stack.lg { height: 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.78rem; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+.spotlight { position: relative; overflow: hidden; }
+.spotlight::after { content: ""; position: absolute; inset: 0 0 auto auto; width: 240px; height: 240px; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--a-pathvik) 20%, transparent), transparent 70%); transform: translate(30%, -40%); pointer-events: none; }
+.spot-head { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; position: relative; z-index: 1; }
+.spot-head > div:nth-child(2) { flex: 1 1 260px; }
+.spot-badge { width: 46px; height: 46px; border-radius: 13px; background: var(--a-pathvik); color: #fff; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; flex: none; }
+.progress { display: grid; gap: 6px; }
+.progress .bar { height: 8px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+.progress .bar span { display: block; height: 100%; background: var(--a-pathvik); border-radius: 999px; }
+.pcounts { display: flex; flex-wrap: wrap; gap: 8px; }
+.pcount { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px; border-radius: 10px; background: var(--surface-2); font-size: 0.84rem; }
+.pcount b { font-variant-numeric: tabular-nums; }
+.ctas { display: flex; flex-wrap: wrap; gap: 6px; }
+.ctas span { font-size: 0.78rem; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg-2); }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+
+.timeline { display: grid; gap: 2px; }
+.tl-day { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 650; padding: 10px 10px 4px; }
+.tl-row { display: grid; grid-template-columns: 48px 22px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; border: 0; background: none; text-align: left; width: 100%; }
+.tl-row:hover { background: var(--surface-2); }
+.tl-row .hook { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.88rem; }
+.tl-row .who { color: var(--muted); font-size: 0.76rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.approver { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.approver:last-child { border-bottom: 0; }
+.approver .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-3); font-weight: 700; font-size: 0.85rem; color: var(--fg-2); flex: none; }
+.approver .n { margin-left: auto; font-family: var(--font-display); font-size: 1.3rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.activity { display: grid; gap: 12px; }
+.activity > div { font-size: 0.85rem; display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 10px; align-items: baseline; }
+.activity p { overflow-wrap: anywhere; }
+
+/* ---------- calendar ---------- */
+.viewtoggle { display: inline-flex; background: var(--surface-3); border-radius: 10px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.viewtoggle button { border: 0; background: none; padding: 6px 12px; border-radius: 8px; font-size: 0.84rem; font-weight: 600; color: var(--muted); }
+.viewtoggle button[aria-pressed="true"] { background: var(--surface); color: var(--fg); box-shadow: var(--shadow); }
+.board { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; align-items: start; }
+.day { display: grid; gap: 8px; min-width: 0; background: var(--surface-2); border-radius: var(--radius); padding: 8px; min-height: 160px; align-content: start; }
+.day.today { background: color-mix(in srgb, var(--accent) 9%, var(--surface-2)); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 45%, transparent); }
+.dayhead { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 4px 4px 2px; min-width: 0; }
+.dayhead .dnum { font-family: var(--font-display); font-size: 1.25rem; font-weight: 650; }
+.daytag { font-size: 0.66rem; color: var(--info); background: var(--info-soft); border-radius: 6px; padding: 1px 6px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.daytag.sensitive { color: var(--block); background: var(--block-soft); }
+.chip { text-align: left; width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 11px; padding: 9px 10px 9px 12px; display: grid; gap: 5px; position: relative; min-width: 0; box-shadow: var(--shadow); }
+.chip::before { content: ""; position: absolute; left: 0; top: 9px; bottom: 9px; width: 3px; border-radius: 0 3px 3px 0; background: var(--acct, var(--a-other)); }
+.chip:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.chip .top { display: flex; gap: 6px; align-items: center; font-size: 0.72rem; color: var(--muted); min-width: 0; }
+.chip .top .mono { color: var(--fg); font-weight: 500; font-size: 0.76rem; }
+.chip .hook { font-size: 0.84rem; line-height: 1.35; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.chip .bottom { display: flex; gap: 6px; align-items: center; justify-content: space-between; font-size: 0.72rem; color: var(--muted); min-width: 0; }
+.chip .bottom span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--sc); flex: none; }
+.agenda { display: grid; gap: 16px; }
+.agenda-day { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; }
+.agenda-date { padding-top: 6px; display: grid; align-content: start; justify-items: start; gap: 2px; }
+.agenda-date b { font-family: var(--font-display); font-size: 1.6rem; line-height: 1; }
+.agenda-rows { display: grid; gap: 6px; min-width: 0; }
+.arow { display: grid; grid-template-columns: 52px 30px minmax(0, 1fr) auto; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; text-align: left; width: 100%; box-shadow: var(--shadow); }
+.arow:hover { border-color: var(--line-strong); }
+.arow .t { min-width: 0; }
+.arow .t div:first-child { font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.arow .t div:last-child { font-size: 0.76rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- post review ---------- */
+.cards { display: grid; gap: 18px; }
+.post { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 0; padding: 0; overflow: hidden; }
+.post.is-blocked { border-color: color-mix(in srgb, var(--block) 45%, var(--line)); }
+.post-preview { background: var(--surface-2); padding: 18px; border-right: 1px solid var(--line); display: grid; align-content: start; gap: 10px; min-width: 0; }
+.post-body { padding: 18px 20px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.post-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.acct { display: inline-flex; align-items: center; gap: 7px; font-weight: 650; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--muted); }
+.meta span { display: inline-flex; align-items: center; gap: 6px; }
+.make-yours { background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; font-size: 0.86rem; }
+.issues { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.issue { font-size: 0.83rem; border-radius: 10px; padding: 8px 11px; display: grid; gap: 2px; border: 1px solid transparent; }
+.issue.block { background: var(--block-soft); color: var(--block); border-color: color-mix(in srgb, var(--block) 25%, transparent); }
+.issue.flag { background: var(--flag-soft); color: var(--flag); }
+.issue q { color: var(--fg-2); font-size: 0.78rem; }
+.ok-line { display: flex; gap: 8px; align-items: center; color: var(--ok); font-size: 0.86rem; font-weight: 600; }
+details.fold { border-top: 1px solid var(--line); padding-top: 12px; }
+details.fold > summary { cursor: pointer; font-weight: 650; font-size: 0.88rem; list-style: none; display: flex; align-items: center; gap: 8px; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary::before { content: "›"; display: inline-block; transition: transform 0.15s; font-size: 1.1rem; line-height: 1; color: var(--muted); width: 10px; }
+details.fold[open] > summary::before { transform: rotate(90deg); }
+.brief { display: grid; gap: 10px; font-size: 0.85rem; margin-top: 10px; }
+.brief ol, .brief ul { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
+.swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.swatch { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.74rem; }
+.swatch i { width: 16px; height: 16px; border-radius: 5px; border: 1px solid var(--line); display: inline-block; }
+.edit { display: grid; gap: 10px; }
+.edit label { display: grid; gap: 4px; font-size: 0.8rem; color: var(--muted); font-weight: 550; }
+textarea, input[type="text"], input[type="number"], input[type="datetime-local"], input[type="search"], select { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-sm); padding: 9px 11px; font-size: 0.9rem; }
+textarea { resize: vertical; min-height: 2.8em; line-height: 1.45; }
+textarea:focus, input:focus, select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+.decide { background: var(--surface-2); border-radius: 12px; padding: 14px; display: grid; gap: 10px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.hint { font-size: 0.79rem; color: var(--muted); }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+details.resultbox { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; border-top: 0; }
+
+/* ---------- platform previews ---------- */
+.pv { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; font-size: 0.86rem; color: var(--fg); box-shadow: var(--shadow); }
+.pv-head { display: flex; align-items: center; gap: 9px; padding: 10px 12px; min-width: 0; }
+.pv-ava { width: 32px; height: 32px; border-radius: 50%; background: var(--acct); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 0.74rem; flex: none; }
+.pv-head b { font-size: 0.84rem; display: block; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pv-head small { color: var(--muted); font-size: 0.72rem; }
+.pv-head .pf { margin-left: auto; }
+.pv-media { aspect-ratio: 4 / 5; width: 100%; display: grid; place-items: center; padding: 22px; text-align: center; color: #fff; position: relative; max-width: 100%;
+  background: linear-gradient(150deg, var(--c1), var(--c2)); }
+.pv-media.reel { aspect-ratio: 9 / 13; }
+.pv-media.doc { aspect-ratio: 4 / 3; }
+.pv-media p { font-family: var(--font-display); font-weight: 650; font-size: 1.22rem; line-height: 1.2; text-wrap: balance; text-shadow: 0 1px 12px rgb(0 0 0 / 0.25); max-width: 92%; }
+.pv-media .tag { position: absolute; top: 10px; right: 10px; font-size: 0.68rem; font-weight: 700; background: rgb(0 0 0 / 0.45); padding: 3px 8px; border-radius: 999px; letter-spacing: 0.03em; }
+.pv-media .dots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 4px; }
+.pv-media .dots i { width: 6px; height: 6px; border-radius: 50%; background: rgb(255 255 255 / 0.5); }
+.pv-media .dots i:first-child { background: #fff; }
+.pv-media .play { position: absolute; width: 42px; height: 42px; border-radius: 50%; background: rgb(0 0 0 / 0.35); display: grid; place-items: center; bottom: 14px; left: 14px; }
+.pv-icons { display: flex; gap: 14px; padding: 10px 12px 2px; color: var(--fg-2); }
+.pv-icons .icon { width: 21px; height: 21px; }
+.pv-icons .spacer { margin-left: auto; }
+.pv-text { padding: 8px 12px 12px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }
+.pv-text.clamp { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; padding-bottom: 0; margin-bottom: 4px; }
+.pv-more { border: 0; background: none; color: var(--muted); font-size: 0.8rem; padding: 0 12px 10px; font-weight: 600; }
+.pv-tags { color: var(--p-linkedin); }
+.pv-actions { display: flex; justify-content: space-around; border-top: 1px solid var(--line); padding: 8px 6px; color: var(--muted); font-size: 0.78rem; font-weight: 600; }
+.pv-actions span { display: inline-flex; align-items: center; gap: 5px; }
+.pv-actions .icon { width: 16px; height: 16px; }
+.pv-x { padding: 12px; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 10px; }
+.pv-x + .pv-x { border-top: 1px solid var(--line); }
+.pv-x .pv-ava { width: 36px; height: 36px; }
+.pv-x .count { justify-self: end; }
+.pv-story { aspect-ratio: 9 / 16; margin: 0 auto; border-radius: 14px; overflow: hidden; position: relative; color: #fff; background: linear-gradient(170deg, var(--c1), var(--c2));
+  display: grid; align-content: center; justify-items: center; gap: 14px; padding: 44px 18px 24px; text-align: center; width: 100%; max-width: 230px; box-shadow: var(--shadow); }
+.pv-story .bars { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; gap: 3px; }
+.pv-story .bars i { flex: 1; height: 3px; border-radius: 3px; background: rgb(255 255 255 / 0.4); }
+.pv-story .bars i:first-child { background: #fff; }
+.pv-story p { font-family: var(--font-display); font-weight: 650; font-size: 1.1rem; line-height: 1.25; text-wrap: balance; }
+.pv-story .sticker { background: #fff; color: #12201a; border-radius: 10px; padding: 8px 12px; font-size: 0.76rem; font-weight: 650; max-width: 100%; }
+.pv-story .who { position: absolute; top: 20px; left: 12px; display: flex; gap: 6px; align-items: center; font-size: 0.72rem; font-weight: 650; }
+.pv-story .who .pv-ava { width: 22px; height: 22px; font-size: 0.56rem; box-shadow: 0 0 0 1.5px #fff; }
+.pv-wa { background: color-mix(in srgb, var(--p-whatsapp_channel) 10%, var(--surface-2)); padding: 16px; }
+.pv-wa .bubble { background: var(--surface); border-radius: 4px 14px 14px 14px; padding: 10px 12px; box-shadow: var(--shadow); white-space: pre-wrap; overflow-wrap: anywhere; display: grid; gap: 6px; }
+.pv-wa .bubble small { justify-self: end; color: var(--muted); font-size: 0.7rem; }
+.chars { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+.chars.over { color: var(--block); font-weight: 600; }
+
+/* ---------- drawer / sheet ---------- */
+.scrim { position: fixed; inset: 0; background: rgb(8 14 11 / 0.42); z-index: 20; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(1000px, 100%); background: var(--bg); z-index: 21; overflow-y: auto; box-shadow: var(--shadow-lg);
+  padding: calc(12px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) 20px; display: grid; align-content: start; gap: 12px; }
+.drawer-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 21; background: var(--surface); border-radius: 18px 18px 0 0; box-shadow: var(--shadow-lg);
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 4px; }
+.sheet .grab { width: 40px; height: 4px; border-radius: 4px; background: var(--line-strong); justify-self: center; margin-bottom: 8px; }
+
+/* ---------- lists, forms, tables ---------- */
 .list { display: grid; gap: 10px; }
-.item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 4px; }
-.item .who { font-size: 0.8rem; color: var(--muted); }
-.item p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-form.inline { display: grid; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
-.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
-
-/* Growth */
-.mix { display: grid; gap: 8px; }
-.mixrow { display: grid; grid-template-columns: 11rem minmax(0, 1fr) 3rem; gap: 10px; align-items: center; font-size: 0.85rem; }
-.track { height: 12px; background: var(--surface-2); border-radius: 6px; overflow: hidden; display: flex; }
-.track span { display: block; height: 100%; }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--muted); }
-.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 6px; box-shadow: var(--shadow); }
+.item .who { font-size: 0.78rem; color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.item p { white-space: pre-wrap; overflow-wrap: anywhere; }
+form.inline { display: grid; gap: 10px; }
+.formrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
-th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
-th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
-td.n { font-variant-numeric: tabular-nums; text-align: right; }
-.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
-
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 650; background: var(--surface-2); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
 .up { color: var(--ok); }
 .down { color: var(--block); }
-.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.resultbox { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; border-top: 0; }
-@media (max-width: 600px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
-.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 9px 16px; border-radius: 8px; z-index: 30; font-size: 0.88rem; max-width: calc(100% - 32px); }
+.mixrow { display: grid; grid-template-columns: 11rem minmax(0, 1fr) 2.5rem; gap: 12px; align-items: center; font-size: 0.85rem; }
+.bullets { margin: 0; padding-left: 1.1rem; display: grid; gap: 5px; font-size: 0.88rem; }
 
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 10px 18px; border-radius: 10px; z-index: 30; font-size: 0.88rem; font-weight: 550; max-width: calc(100% - 32px); box-shadow: var(--shadow-lg); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1180px) {
+  .g-main { grid-template-columns: minmax(0, 1fr); }
+  .post { grid-template-columns: minmax(0, 1fr); }
+  .post-preview { border-right: 0; border-bottom: 1px solid var(--line); justify-items: center; }
+  .post-preview > * { width: 100%; max-width: 400px; }
+  .board { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
 @media (max-width: 900px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { display: none; }
+  .mobilebar { display: flex; align-items: center; gap: 10px; padding-block: 10px 0; }
+  .mobilebar .mark { width: 28px; height: 28px; font-size: 0.78rem; border-radius: 8px; }
+  .topbar { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 12px; }
+  .topbar-row { margin-top: 8px; }
+  main { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 18px calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .page-title h1 { font-size: 1.25rem; }
+  .page-title p { display: none; }
+  .tabbar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; background: var(--surface); border-top: 1px solid var(--line);
+    padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px)); }
+  .tabbar button { border: 0; background: none; display: grid; justify-items: center; gap: 2px; font-size: 0.68rem; font-weight: 600; color: var(--muted); padding: 6px 2px; border-radius: 10px; position: relative; min-width: 0; }
+  .tabbar button[aria-current="page"] { color: var(--accent); }
+  .tabbar .icon { width: 22px; height: 22px; }
+  .tabbar .badge { position: absolute; top: 2px; left: calc(50% + 6px); background: var(--accent); color: var(--accent-fg); font-size: 0.62rem; font-weight: 700; border-radius: 999px; padding: 0 5px; min-width: 16px; }
   .board { grid-template-columns: minmax(0, 1fr); }
-  .day { border-bottom: 1px solid var(--line); padding-bottom: 10px; }
-  .cols { grid-template-columns: minmax(0, 1fr); }
-  .mixrow { grid-template-columns: 7rem minmax(0, 1fr) 2.5rem; }
+  .day { min-height: 0; }
+  .g-2, .g-3 { grid-template-columns: minmax(0, 1fr); }
+  .g-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .agenda-day { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .agenda-date { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .agenda-date b { font-size: 1.2rem; }
+  .mixrow { grid-template-columns: 7.5rem minmax(0, 1fr) 2rem; }
+  .filters input[type="search"] { width: 100%; }
+  .pchip > span:not(.pf) { display: none; }
+  .pchip { padding: 0 6px; }
+  .weekpick strong { min-width: 10.5ch; }
+}
+@media (max-width: 520px) {
+  .g-4 { gap: 10px; }
+  .kpi { padding: 13px 14px; }
+  .kpi .v { font-size: 1.6rem; }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .arow { grid-template-columns: 44px 30px minmax(0, 1fr); }
+  .arow > :last-child { display: none; }
+  .tl-row { grid-template-columns: 44px 22px minmax(0, 1fr); }
+  .tl-row > :last-child { display: none; }
+  .post-body, .post-preview { padding: 14px; }
+  .hello h2 { font-size: 1.35rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .drawer { animation: slide 0.18s ease-out; }
-  @keyframes slide { from { transform: translateX(24px); opacity: 0.6; } }
+  .drawer { animation: slide 0.22s cubic-bezier(.2,.8,.2,1); }
+  .sheet { animation: rise 0.22s cubic-bezier(.2,.8,.2,1); }
+  .chip { transition: transform 0.12s, border-color 0.12s; }
+  @keyframes slide { from { transform: translateX(40px); opacity: 0.5; } }
+  @keyframes rise { from { transform: translateY(40px); opacity: 0.5; } }
 }
 </style>
 
-<header>
-  <div class="wrap">
-    <div class="bar">
-      <div class="brand"><h1>Hi Fuel Team Hub</h1><span>Plan · review · post</span></div>
-      <div class="week" aria-label="Week">
-        <button class="iconbtn" id="prevWeek" aria-label="Previous week">‹</button>
-        <strong id="weekLabel">This week</strong>
-        <button class="iconbtn" id="nextWeek" aria-label="Next week">›</button>
+<div class="app">
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="brand"><div class="mark" aria-hidden="true">HF</div><div><b>Team Hub</b><span>Hi Fuel group · social</span></div></div>
+    <nav class="nav" id="sideNav"></nav>
+    <div class="me" id="meBox" hidden></div>
+  </aside>
+  <div class="shell">
+    <header class="topbar">
+      <div class="mobilebar"><div class="mark" aria-hidden="true">HF</div><b style="font-family:var(--font-display)">Team Hub</b></div>
+      <div class="topbar-row">
+        <div class="page-title"><h1 id="pageTitle">Overview</h1><p id="pageSub"></p></div>
+        <div class="weekpick" id="weekPick" aria-label="Week">
+          <button id="prevWeek" aria-label="Previous week">‹</button>
+          <strong id="weekLabel">This week</strong>
+          <button id="nextWeek" aria-label="Next week">›</button>
+          <button id="thisWeek">Today</button>
+        </div>
       </div>
-      <div class="counts" id="counts"></div>
-    </div>
-    <nav class="tabs" role="tablist" id="tabs">
-      <button role="tab" data-tab="week" aria-selected="true">Week</button>
-      <button role="tab" data-tab="review" aria-selected="false">Review queue</button>
-      <button role="tab" data-tab="kits" aria-selected="false">Advocacy kits</button>
-      <button role="tab" data-tab="ideas" aria-selected="false">Ideas</button>
-      <button role="tab" data-tab="news" aria-selected="false">Announcements</button>
-      <button role="tab" data-tab="growth" aria-selected="false">Growth</button>
-    </nav>
+      <div class="filters" id="filters" hidden></div>
+    </header>
+    <main id="main"><div class="empty"><strong>Loading the team's plan…</strong>One moment.</div></main>
   </div>
-</header>
-
-<main class="wrap" id="main">
-  <div class="empty"><strong>Loading the team's plan…</strong>Posts appear here once Claude loads a week's drafts.</div>
-</main>
-
+</div>
+<nav class="tabbar" id="tabBar" aria-label="Sections"></nav>
 <div id="drawerRoot"></div>
+<div id="sheetRoot"></div>
 <div id="toastRoot"></div>
 
 <script>
 (() => {
   "use strict";
+  // ---------- constants ----------
   const PLATFORMS = { instagram: "Instagram", linkedin: "LinkedIn", facebook: "Facebook", whatsapp_channel: "WhatsApp Channel", x: "X" };
+  const LIMITS = { instagram: 2200, linkedin: 3000, facebook: 63206, whatsapp_channel: 1000, x: 280 };
   const STATUS_LABEL = { draft: "Draft", needs_changes: "Needs changes", approved: "Approved", scheduled: "Scheduled", posted: "Posted", rejected: "Rejected" };
+  const STATUS_ORDER = ["draft", "needs_changes", "approved", "scheduled", "posted", "rejected"];
   const THEMES = { educational: "Educational", impact_story: "Impact story", initiative_promo: "Initiative / promo", behind_the_scenes: "Behind the scenes", founder_team_voice: "Founder / team voice", engagement: "Engagement" };
   const THEME_COLORS = ["var(--a-earth_osai)", "var(--a-tranzent_foundation)", "var(--a-iclc)", "var(--a-other)", "var(--a-pathvik)", "var(--a-person)"];
+  const FORMAT_LABEL = { text: "Text", single_image: "Image", carousel: "Carousel", reel: "Reel", story: "Story", document: "Document", poll: "Poll", channel_message: "Channel message", thread: "Thread" };
+  const APPROVER = { founder: "Founder", manager: "Manager", self: "Post author" };
   const KNOWN_ACCOUNTS = ["hifuel_advisory", "tranzent_foundation", "pathvik", "earth_osai", "iclc"];
   const KEY_DATES = {
     "2026-11-08": ["Diwali", ""], "2026-11-14": ["Children's Day", ""], "2026-11-24": ["Guru Nanak Jayanti", ""],
@@ -238,12 +464,55 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
     "2027-04-22": ["Earth Day", ""], "2027-06-05": ["World Environment Day", ""], "2027-06-16": ["Muharram", "sensitive"],
     "2027-07-01": ["Van Mahotsav", ""], "2027-08-15": ["Independence Day", ""], "2027-10-02": ["Gandhi Jayanti", ""], "2027-10-29": ["Diwali", ""]
   };
-
-  const state = {
-    posts: new Map(), plans: [], ideas: [], news: [], reports: [], experiments: [], results: new Map(), reportId: null,
-    tab: "week", week: null, open: null, loaded: false, unavailable: false,
-    me: { id: null, canEdit: false, canWrite: null }, names: {}, pendingRender: false
+  const ICONS = {
+    overview: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    review: '<circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+    campaigns: '<path d="M4 10v4a1 1 0 0 0 1 1h2l6 4V5L7 9H5a1 1 0 0 0-1 1z"/><path d="M17 9.5a3.5 3.5 0 0 1 0 5M19.5 7a7 7 0 0 1 0 10"/>',
+    kits: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3a6.5 6.5 0 0 1 3.5 5.7"/>',
+    ideas: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1V16h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z"/>',
+    news: '<path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+    growth: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+    more: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
+    copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    x: '<path d="M6 6l12 12M18 6L6 18"/>',
+    heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+    comment: '<path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/>',
+    send: '<path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/>',
+    save: '<path d="M6 3h12v18l-6-4.5L6 21z"/>',
+    repost: '<path d="M17 2l3 3-3 3M20 5H8a4 4 0 0 0-4 4v1M7 22l-3-3 3-3M4 19h12a4 4 0 0 0 4-4v-1"/>',
+    like: '<path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v4h6a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.8 20H7"/>',
+    play: '<path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
   };
+  const PF_SVG = {
+    instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg>',
+    linkedin: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="4" fill="currentColor"/><path d="M7.5 10.5v6.5M7.5 7.3v.1M11.2 17v-6.5M11.2 13.4c0-1.7 1-2.9 2.6-2.9s2.6 1.1 2.6 2.9V17" stroke="var(--surface)" stroke-width="2" stroke-linecap="round" fill="none"/></svg>',
+    facebook: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M13.4 21.5v-7.2h2.3l.4-2.8h-2.7V9.8c0-.8.3-1.4 1.4-1.4h1.4V5.9a17 17 0 0 0-2-.1c-2 0-3.4 1.2-3.4 3.5v2.2H8.6v2.8h2.2v7.2" fill="var(--surface)"/></svg>',
+    x: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 4h4.2l10.8 16h-4.2z" fill="currentColor"/><path d="M19 4l-6 6.9M5 20l6-6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+    whatsapp_channel: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 8.2c0 3.6 3 6.8 6.8 6.8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'
+  };
+  const VIEWS = [
+    { id: "overview", label: "Overview", sub: "What's happening across the group this week" },
+    { id: "calendar", label: "Calendar", sub: "Every planned post, by day. Times are IST" },
+    { id: "review", label: "Review", sub: "Every post needs a human yes before anyone schedules it" },
+    { id: "campaigns", label: "Campaigns", sub: "Launches and pushes, tracked end to end" },
+    { id: "kits", label: "Advocacy", sub: "Drafts for founder and team LinkedIn posts" },
+    { id: "ideas", label: "Ideas", sub: "Post ideas from anyone on the team" },
+    { id: "news", label: "Announcements", sub: "Updates for the whole team" },
+    { id: "growth", label: "Growth", sub: "Results, experiments and the content mix" }
+  ];
+  const TAB_VIEWS = ["overview", "calendar", "review", "growth"];
+
+  // ---------- state ----------
+  const state = {
+    posts: new Map(), plans: [], ideas: [], news: [], reports: [], experiments: [], results: new Map(),
+    view: "overview", week: null, open: null, loaded: false, unavailable: false, reportId: null, calMode: "board", campaignId: null,
+    me: { id: null, name: "", avatar: "", canEdit: false, canWrite: null }, names: {}, pendingRender: false,
+    filter: { account: "", platform: "", status: "", q: "" }
+  };
+  try { const saved = JSON.parse(localStorage.getItem("hub-prefs") || "{}"); if (saved.calMode) state.calMode = saved.calMode; } catch {}
   let db = null, user = null;
   const $ = (sel, root = document) => root.querySelector(sel);
   const main = $("#main");
@@ -259,28 +528,55 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
       else if (k === "text") n.textContent = v;
       else n.setAttribute(k, v === true ? "" : v);
     }
-    for (const kid of kids.flat()) if (kid != null && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+    for (const kid of kids.flat(Infinity)) if (kid != null && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
     return n;
   }
+  function svg(markup, cls = "icon") { const t = document.createElement("template"); t.innerHTML = `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${markup}</svg>`; return t.content.firstChild; }
+  function pfBadge(platform, lg = false) { const s = el("span", { class: `pf${lg ? " lg" : ""}`, style: `--pc:var(--p-${platform})`, title: PLATFORMS[platform] }); s.innerHTML = PF_SVG[platform] || ""; return s; }
   const iso = d => d.toISOString().slice(0, 10);
-  function mondayOf(dateStr) { const d = new Date(dateStr + "T00:00:00Z"); const wd = (d.getUTCDay() + 6) % 7; d.setUTCDate(d.getUTCDate() - wd); return iso(d); }
+  function mondayOf(dateStr) { const d = new Date(dateStr + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() - (d.getUTCDay() + 6) % 7); return iso(d); }
   function addDays(dateStr, n) { const d = new Date(dateStr + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return iso(d); }
+  function daysBetween(a, b) { return Math.round((new Date(b + "T00:00:00Z") - new Date(a + "T00:00:00Z")) / 864e5); }
   function fmtDay(dateStr, opts) { return new Date(dateStr + "T00:00:00Z").toLocaleDateString("en-IN", { timeZone: "UTC", ...opts }); }
-  function todayIST() { return new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 10); }
+  function nowIST() { return new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 16); }
+  const todayIST = () => nowIST().slice(0, 10);
+  function ago(isoStr) {
+    const m = Math.round((Date.now() - new Date(isoStr).getTime()) / 6e4);
+    if (m < 1) return "just now"; if (m < 60) return `${m} min ago`; const h = Math.round(m / 60); if (h < 24) return `${h} h ago`;
+    const d = Math.round(h / 24); return d < 7 ? `${d} d ago` : new Date(isoStr).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  }
   const acctVar = p => p.account_type === "person" ? "var(--a-person)" : (KNOWN_ACCOUNTS.includes(p.account) ? `var(--a-${p.account})` : "var(--a-other)");
+  const initials = name => (name || "?").replace(/\(.*?\)/g, "").split(/[\s.]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
   function publishText(p) { return [p.hook, p.caption, p.cta, (p.hashtags || []).join(" ")].map(s => (s || "").trim()).filter(Boolean).join("\n\n"); }
   const blocks = p => (p.issues || []).filter(i => i.severity === "block");
-  const flags = p => (p.issues || []).filter(i => i.severity === "flag");
-  const weekPosts = () => [...state.posts.values()].filter(p => p.date >= state.week && p.date <= addDays(state.week, 6)).sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")));
-  const nameOf = id => (id && state.names[id]) || (id === state.me.id ? "you" : "a teammate");
-
+  const isBlocked = p => blocks(p).length > 0 && !["rejected", "posted"].includes(p.status);
+  const allPosts = () => [...state.posts.values()].sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")));
+  const weekEnd = () => addDays(state.week, 6);
+  const inWeek = p => p.date >= state.week && p.date <= weekEnd();
+  const matchesActive = () => { const f = state.filter; return !!(f.account || f.platform || f.status || f.q); };
+  function matches(p) {
+    const f = state.filter;
+    if (f.account && p.account !== f.account) return false;
+    if (f.platform && p.platform !== f.platform) return false;
+    if (f.status === "blocked" ? !isBlocked(p) : (f.status && p.status !== f.status)) return false;
+    if (f.q) { const q = f.q.toLowerCase(); if (![p.hook, p.caption, p.account_name, p.pillar].join(" ").toLowerCase().includes(q)) return false; }
+    return true;
+  }
+  const weekPosts = (filtered = true) => allPosts().filter(p => inWeek(p) && (!filtered || matches(p)));
+  const nameOf = id => (id && state.names[id]) || (id && id === state.me.id ? "You" : "A teammate");
+  const accountsIn = list => [...new Map(list.map(p => [p.account, p.account_name]))];
+  const accountName = id => (accountsIn(allPosts()).find(([a]) => a === id) || [0, id])[1];
+  function statusPill(p) {
+    if (isBlocked(p)) return el("span", { class: "pill blocked", text: "Blocked" });
+    return el("span", { class: `pill ${p.status}`, text: STATUS_LABEL[p.status] || p.status });
+  }
   function toast(msg) {
     const root = $("#toastRoot"); root.replaceChildren(el("div", { class: "toast", role: "status", text: msg }));
     clearTimeout(toast.t); toast.t = setTimeout(() => root.replaceChildren(), 3200);
   }
   async function copy(text, btn) {
-    try { await navigator.clipboard.writeText(text); toast("Copied"); }
-    catch { const ta = el("textarea", { "aria-label": "Text to copy" }); ta.value = text; btn.after(ta); ta.select(); toast("Select-all is ready: press copy on your keyboard"); }
+    try { await navigator.clipboard.writeText(text); toast("Copied to clipboard"); }
+    catch { const ta = el("textarea", { "aria-label": "Text to copy", rows: 4 }); ta.value = text; btn.after(ta); ta.select(); toast("Text selected: press copy on your keyboard"); }
   }
   function errMsg(e) {
     if (e && e.code === "invalid_argument") return "You don't have permission to change this. Ask Aryan for Editor access.";
@@ -288,193 +584,445 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
     return "That didn't save. Check your connection and try again.";
   }
   async function resolveNames(ids) {
-    const need = [...new Set(ids.filter(Boolean))];
+    const need = [...new Set(ids.filter(Boolean))].filter(id => !state.names[id]);
     if (!user || !need.length) return;
     const ps = await user.profiles(need);
     let changed = false;
-    for (const id of need) { const n = ps[id] && ps[id].name; if (n && state.names[id] !== n) { state.names[id] = n; changed = true; } }
+    for (const id of need) { const n = ps[id] && ps[id].name; if (n) { state.names[id] = n; changed = true; } }
     if (changed) render();
   }
+  function countBy(list, key) { const c = {}; for (const p of list) { const k = typeof key === "function" ? key(p) : p[key]; c[k] = (c[k] || 0) + 1; } return c; }
+  const statusKey = p => isBlocked(p) && ["draft", "needs_changes"].includes(p.status) ? "needs_changes" : p.status;
+  function stackBar(counts, total, lg = false) {
+    return el("div", { class: `stack${lg ? " lg" : ""}`, role: "img", "aria-label": STATUS_ORDER.filter(s => counts[s]).map(s => `${counts[s]} ${STATUS_LABEL[s].toLowerCase()}`).join(", ") },
+      STATUS_ORDER.filter(s => counts[s]).map(s => el("span", { style: `width:${(counts[s] / total) * 100}%;background:var(--st-${s})` })));
+  }
+  function statusLegend(counts) {
+    return el("div", { class: "legend" }, STATUS_ORDER.filter(s => counts[s]).map(s => el("span", {}, el("i", { style: `background:var(--st-${s})` }), `${STATUS_LABEL[s]} ${counts[s]}`)));
+  }
 
-  // ---------- rendering ----------
+  // ---------- chrome ----------
+  function navCounts() {
+    const wk = weekPosts(false);
+    return {
+      review: wk.filter(p => ["draft", "needs_changes"].includes(p.status)).length,
+      ideas: state.ideas.filter(i => (i.status || "new") === "new").length,
+      campaigns: campaigns().filter(c => c.active).length
+    };
+  }
+  function renderChrome() {
+    const counts = navCounts();
+    const navBtn = v => el("button", { "aria-current": state.view === v.id ? "page" : null, onclick: () => go(v.id) },
+      svg(ICONS[v.id]), v.label, counts[v.id] ? el("span", { class: `count${v.id === "review" ? " hot" : ""}`, text: counts[v.id] }) : null);
+    $("#sideNav").replaceChildren(
+      el("div", { class: "nav-label", text: "Plan" }), ...VIEWS.slice(0, 4).map(navBtn),
+      el("div", { class: "nav-label", text: "Team" }), ...VIEWS.slice(4, 7).map(navBtn),
+      el("div", { class: "nav-label", text: "Results" }), navBtn(VIEWS[7]));
+    const tab = id => { const v = VIEWS.find(x => x.id === id); return el("button", { "aria-current": state.view === id ? "page" : null, onclick: () => go(id) }, svg(ICONS[id]), v.label, counts[id] ? el("span", { class: "badge", text: counts[id] }) : null); };
+    const moreActive = !TAB_VIEWS.includes(state.view);
+    $("#tabBar").replaceChildren(...TAB_VIEWS.map(tab), el("button", { "aria-current": moreActive ? "page" : null, onclick: openMore }, svg(ICONS.more), moreActive ? VIEWS.find(v => v.id === state.view).label : "More"));
+    const v = VIEWS.find(x => x.id === state.view);
+    $("#pageTitle").textContent = v.label;
+    $("#pageSub").textContent = v.sub;
+    $("#weekLabel").textContent = `${fmtDay(state.week, { day: "numeric", month: "short" })} – ${fmtDay(weekEnd(), { day: "numeric", month: "short" })}`;
+    $("#weekPick").hidden = ["ideas", "news", "campaigns"].includes(state.view);
+    renderFilters();
+    if (state.me.id) {
+      const box = $("#meBox"); box.hidden = false;
+      box.replaceChildren(...[state.me.avatar ? el("img", { src: state.me.avatar, alt: "" }) : null,
+        el("div", {}, el("b", { text: state.me.name || "You" }), el("small", { text: state.me.canEdit ? "Editor · can approve" : "Contributor" }))].filter(Boolean));
+    }
+  }
+  function renderFilters() {
+    const box = $("#filters");
+    const show = ["calendar", "review", "campaigns"].includes(state.view) && state.loaded && state.posts.size > 0;
+    box.hidden = !show; if (!show) return;
+    if (box.contains(document.activeElement)) return;
+    const f = state.filter;
+    const acc = el("select", { id: "fAccount", "aria-label": "Account", onchange: e => { f.account = e.target.value; render(); } },
+      el("option", { value: "", text: "All accounts" }), accountsIn(allPosts()).map(([id, n]) => el("option", { value: id, text: n })));
+    acc.value = f.account;
+    const st = el("select", { id: "fStatus", "aria-label": "Status", onchange: e => { f.status = e.target.value; render(); } },
+      el("option", { value: "", text: "Any status" }), el("option", { value: "blocked", text: "Blocked" }), STATUS_ORDER.map(s => el("option", { value: s, text: STATUS_LABEL[s] })));
+    st.value = f.status;
+    const plats = el("div", { class: "pchips", role: "group", "aria-label": "Platform" }, Object.keys(PLATFORMS).map(pl =>
+      el("button", { class: "pchip", style: `--pc:var(--p-${pl})`, "aria-pressed": String(f.platform === pl), title: PLATFORMS[pl], "aria-label": PLATFORMS[pl], onclick: () => { f.platform = f.platform === pl ? "" : pl; render(); } },
+        pfBadge(pl), el("span", { text: pl === "whatsapp_channel" ? "WhatsApp" : PLATFORMS[pl] }))));
+    const q = el("input", { type: "search", id: "fSearch", placeholder: "Search posts", "aria-label": "Search posts" });
+    q.value = f.q;
+    let t; q.addEventListener("input", () => { clearTimeout(t); t = setTimeout(() => { f.q = q.value.trim(); renderMain(); }, 200); });
+    box.replaceChildren(...[acc, plats, st, q, matchesActive() ? el("button", { class: "clear", onclick: () => { state.filter = { account: "", platform: "", status: "", q: "" }; render(); }, text: "Clear filters" }) : null].filter(Boolean));
+  }
+  function openMore() {
+    const root = $("#sheetRoot");
+    const close = () => root.replaceChildren();
+    root.replaceChildren(el("div", { class: "scrim", onclick: close }), el("div", { class: "sheet", role: "dialog", "aria-label": "More sections" },
+      el("div", { class: "grab" }), VIEWS.filter(v => !TAB_VIEWS.includes(v.id)).map(v =>
+        el("button", { class: "btn ghost", style: "justify-content:flex-start;padding:12px", onclick: () => { close(); go(v.id); } }, svg(ICONS[v.id]), v.label))));
+  }
+  function go(view) {
+    state.view = view; state.open = null;
+    try { history.replaceState(null, "", "#" + view); } catch {}
+    window.scrollTo({ top: 0 });
+    render();
+  }
+
+  // ---------- render loop ----------
+  function editingNow() { const a = document.activeElement; return !!a && a.matches("textarea, input:not([type=search]), select") && (main.contains(a) || $("#drawerRoot").contains(a)); }
   function render() {
-    if (main.contains(document.activeElement) && document.activeElement.matches("textarea, input, select")) { state.pendingRender = true; return; }
-    if (state.drawerFocus) { state.pendingRender = true; return; }
+    if (editingNow()) { state.pendingRender = true; return; }
     state.pendingRender = false;
-    renderHeader();
-    const view = { week: viewWeek, review: viewReview, kits: viewKits, ideas: viewIdeas, news: viewNews, growth: viewGrowth }[state.tab];
-    main.replaceChildren(...[].concat(view()));
+    renderChrome();
+    renderMain();
     renderDrawer();
   }
-
-  function renderHeader() {
-    $("#weekLabel").textContent = `${fmtDay(state.week, { day: "numeric", month: "short" })} – ${fmtDay(addDays(state.week, 6), { day: "numeric", month: "short" })}`;
-    const ps = weekPosts();
-    const count = (cls, n, label) => el("span", { class: `count ${cls}` }, el("b", { text: n }), " ", label);
-    const review = ps.filter(p => ["draft", "needs_changes"].includes(p.status) && !blocks(p).length).length;
-    $("#counts").replaceChildren(
-      count("", ps.length, "posts"),
-      count("review", review, "to review"),
-      count("block", ps.filter(p => blocks(p).length && !["rejected", "posted"].includes(p.status)).length, "blocked"),
-      count("ok", ps.filter(p => ["approved", "scheduled", "posted"].includes(p.status)).length, "approved")
-    );
-    for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", String(b.dataset.tab === state.tab));
+  function renderMain() {
+    const views = { overview: viewOverview, calendar: viewCalendar, review: viewReview, campaigns: viewCampaigns, kits: viewKits, ideas: viewIdeas, news: viewNews, growth: viewGrowth };
+    main.replaceChildren(...[].concat(views[state.view]()).filter(Boolean));
   }
-
-  function emptyState(title, body) { return el("div", { class: "empty" }, el("strong", { text: title }), body); }
+  function emptyState(title, body, action) { return el("div", { class: "empty" }, el("strong", { text: title }), el("span", { text: body }), action || null); }
   function notReady() {
     if (state.unavailable) return emptyState("The hub can't load here", "Open this page from claude.ai while signed in to see the team's plan.");
     if (!state.loaded) return emptyState("Loading the team's plan…", "One moment.");
     return null;
   }
 
-  function planNotice() {
-    const plans = state.plans.filter(pl => pl.start <= addDays(state.week, 6) && pl.end >= state.week);
-    if (!plans.length) return null;
-    const qs = plans.flatMap(pl => pl.questions_for_team || []);
-    const sums = plans.flatMap(pl => Object.entries(pl.summaries || {}));
-    return el("section", { class: "notice" },
-      el("h2", { text: "This week's plan" }),
-      sums.length ? el("ul", {}, sums.map(([a, s]) => el("li", {}, a.startsWith("_") ? null : el("b", { text: labelForAccount(a) + ": " }), s))) : null,
-      qs.length ? el("div", {}, el("div", { class: "label", text: "Questions for the team" }), el("ul", {}, qs.map(q => el("li", { text: q })))) : null
-    );
+  // ---------- campaigns ----------
+  function campaigns() {
+    const out = [];
+    for (const pl of state.plans) {
+      if (!pl.campaign) continue;
+      const c = pl.campaign;
+      const today = todayIST();
+      out.push({ ...c, posts: allPosts().filter(p => p.campaign === c.id), active: today >= c.start && today <= c.end, upcoming: today < c.start,
+        summary: pl.summaries && pl.summaries._overview, questions: pl.questions_for_team || [] });
+    }
+    return out.sort((a, b) => b.start.localeCompare(a.start));
   }
-  function labelForAccount(a) { const p = [...state.posts.values()].find(x => x.account === a); return p ? p.account_name : a; }
+  function campaignProgress(c) {
+    const days = daysBetween(c.start, c.end) + 1;
+    const dayN = Math.min(days, Math.max(0, daysBetween(c.start, todayIST()) + 1));
+    const label = c.active ? `Day ${dayN} of ${days}` : c.upcoming ? `Starts ${fmtDay(c.start, { weekday: "long", day: "numeric", month: "short" })}` : `Ended ${fmtDay(c.end, { day: "numeric", month: "short" })}`;
+    return el("div", { class: "progress" },
+      el("div", { class: "row" }, el("span", { class: "small", text: label }), el("span", { class: "mono", text: `${fmtDay(c.start, { day: "numeric", month: "short" })} – ${fmtDay(c.end, { day: "numeric", month: "short" })}` })),
+      el("div", { class: "bar" }, el("span", { style: `width:${(dayN / days) * 100}%` })));
+  }
 
+  // ---------- overview ----------
+  function viewOverview() {
+    const wait = notReady(); if (wait) return wait;
+    const wk = weekPosts(false);
+    const counts = countBy(wk, statusKey);
+    const toReview = wk.filter(p => ["draft", "needs_changes"].includes(p.status));
+    const blocked = wk.filter(isBlocked);
+    const ready = wk.filter(p => ["approved", "scheduled"].includes(p.status));
+    const hour = Number(nowIST().slice(11, 13));
+    const greet = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+    const first = (state.me.name || "").split(" ")[0];
+    const out = [el("section", { class: "hello" },
+      el("div", { style: "display:grid;gap:4px" }, el("h2", { text: `${greet}${first ? ", " + first : ""}` }),
+        el("p", { class: "muted small", text: `${fmtDay(todayIST(), { weekday: "long", day: "numeric", month: "long" })} · ${toReview.length ? `${toReview.length} post${toReview.length === 1 ? "" : "s"} waiting for review this week` : "Nothing waiting for review this week"}` })),
+      el("div", { class: "actions" },
+        toReview.length && state.me.canEdit ? el("button", { class: "btn primary", onclick: () => go("review") }, svg(ICONS.review), `Review ${toReview.length} post${toReview.length === 1 ? "" : "s"}`) : null,
+        el("button", { class: "btn", onclick: () => go("calendar") }, svg(ICONS.calendar), "Open calendar")))];
+
+    const kpi = (cls, v, k, s, onclick, extra) => el("button", { class: `kpi ${cls}`, onclick }, el("span", { class: "k", text: k }), el("span", { class: "v", text: v }), extra || null, s ? el("span", { class: "s", text: s }) : null);
+    out.push(el("section", { class: "grid g-4", "aria-label": "This week at a glance" },
+      kpi("", wk.length, "Posts this week", `${accountsIn(wk).length} accounts · ${new Set(wk.map(p => p.platform)).size} platforms`, () => go("calendar"), wk.length ? stackBar(counts, wk.length) : null),
+      kpi("accent", toReview.length, "Waiting for review", "Every post needs a human yes", () => go("review")),
+      kpi(blocked.length ? "alert" : "", blocked.length, "Blocked by checks", blocked.length ? "Fix before approving" : "All drafts pass the rules", () => { state.filter.status = "blocked"; go("review"); }),
+      kpi("", ready.length, "Ready to post", "Approved or scheduled", () => { state.filter.status = "approved"; go("calendar"); })));
+
+    const all = campaigns();
+    const camp = all.find(c => c.active) || all.find(c => c.upcoming) || all[0];
+    const left = [], right = [];
+    if (camp) left.push(campaignSpotlight(camp));
+    left.push(upNext());
+    right.push(waitingOn(wk), recentActivity());
+    if (state.reports[0]) right.push(reportSnapshot(state.reports[0]));
+    if (state.news[0]) right.push(el("section", { class: "card" }, el("div", { class: "section-head" }, el("h2", { text: "Latest announcement" }), el("button", { class: "linkbtn", onclick: () => go("news"), text: "See all" })),
+      el("h3", { text: state.news[0].title }), state.news[0].body ? el("p", { class: "small muted", text: state.news[0].body }) : null));
+    out.push(el("div", { class: "grid g-main" }, el("div", { class: "grid" }, left), el("div", { class: "grid" }, right)));
+    if (!state.posts.size) out.push(emptyState("No posts yet", "Ask Claude in chat to plan a week, and the drafts will appear here."));
+    return out;
+  }
+
+  function campaignSpotlight(c) {
+    const counts = countBy(c.posts, statusKey);
+    const plats = countBy(c.posts, "platform");
+    const next = c.posts.filter(p => (p.date + "T" + (p.time || "00:00")) >= nowIST() && p.status !== "rejected").slice(0, 3);
+    return el("section", { class: "card spotlight" },
+      el("div", { class: "spot-head" }, el("div", { class: "spot-badge", text: (c.name || "C")[0] }),
+        el("div", { style: "min-width:0;flex:1;display:grid;gap:2px" }, el("div", { class: "label", text: c.active ? "Live campaign" : c.upcoming ? "Starts soon" : "Campaign" }),
+          el("h2", { style: "font-size:1.3rem", text: c.name }), el("p", { class: "small muted", text: c.goal || "" })),
+        el("button", { class: "btn", onclick: () => { state.campaignId = c.id; go("campaigns"); } }, "Open campaign")),
+      campaignProgress(c),
+      el("div", { style: "display:grid;gap:8px" }, el("span", { class: "label", text: `${c.posts.length} posts by status` }), stackBar(counts, c.posts.length || 1, true), statusLegend(counts)),
+      el("div", { class: "pcounts" }, Object.entries(plats).sort((a, b) => b[1] - a[1]).map(([pl, n]) => el("span", { class: "pcount" }, pfBadge(pl), el("b", { text: n }), PLATFORMS[pl]))),
+      next.length ? el("div", { style: "display:grid;gap:2px" }, el("div", { class: "label", text: "Next up" }), next.map(tlRow)) : null);
+  }
+
+  function tlRow(p) {
+    return el("button", { class: "tl-row", onclick: () => openPost(p.id) },
+      el("span", { class: "mono", text: p.time || "--:--" }), pfBadge(p.platform),
+      el("span", { style: "min-width:0" }, el("div", { class: "hook", text: p.hook }), el("div", { class: "who", text: `${p.account_name} · ${FORMAT_LABEL[p.format] || p.format} · ${fmtDay(p.date, { weekday: "short", day: "numeric", month: "short" })}` })),
+      statusPill(p));
+  }
+
+  function upNext() {
+    const now = nowIST();
+    const list = allPosts().filter(p => (p.date + "T" + (p.time || "00:00")) >= now && p.status !== "rejected").slice(0, 8);
+    const card = el("section", { class: "card" }, el("div", { class: "section-head" }, el("h2", { text: "Up next" }), el("button", { class: "linkbtn", onclick: () => go("calendar"), text: "Open calendar" })));
+    if (!list.length) { card.append(el("p", { class: "small muted", text: "Nothing scheduled ahead. Ask Claude to plan the next week." })); return card; }
+    const tl = el("div", { class: "timeline" });
+    let day = null;
+    const today = todayIST(), tomorrow = addDays(today, 1);
+    for (const p of list) {
+      if (p.date !== day) { day = p.date; tl.append(el("div", { class: "tl-day", text: day === today ? "Today" : day === tomorrow ? "Tomorrow" : fmtDay(day, { weekday: "long", day: "numeric", month: "short" }) })); }
+      tl.append(tlRow(p));
+    }
+    card.append(tl);
+    return card;
+  }
+
+  function waitingOn(wk) {
+    const pending = wk.filter(p => ["draft", "needs_changes"].includes(p.status));
+    const by = countBy(pending, p => p.approver || "manager");
+    const card = el("section", { class: "card" }, el("div", { class: "section-head" }, el("h2", { text: "Waiting on" }), el("span", { class: "xs muted", text: "This week" })));
+    const keys = Object.keys(by);
+    if (!keys.length) { card.append(el("div", { class: "ok-line" }, svg(ICONS.check), "Everyone is up to date")); return card; }
+    const desc = { founder: "Pathvik, ICLC and his own posts", manager: "Company and initiative posts", self: "Their own advocacy drafts" };
+    card.append(el("div", {}, keys.sort((a, b) => by[b] - by[a]).map(k => el("div", { class: "approver" },
+      el("span", { class: "avatar", text: (APPROVER[k] || k)[0] }), el("div", { style: "min-width:0" }, el("b", { text: APPROVER[k] || k }), el("div", { class: "xs muted", text: desc[k] || "" })),
+      el("span", { class: "n", text: by[k] })))));
+    return card;
+  }
+
+  function recentActivity() {
+    const items = allPosts().filter(p => p.review && p.review.at).sort((a, b) => b.review.at.localeCompare(a.review.at)).slice(0, 6);
+    const card = el("section", { class: "card" }, el("h2", { text: "Recent activity" }));
+    if (!items.length) { card.append(el("p", { class: "small muted", text: "Approvals and comments will show up here." })); return card; }
+    card.append(el("div", { class: "activity" }, items.map(p => el("div", {},
+      el("i", { class: "dot", style: `background:var(--st-${p.status})` }),
+      el("p", {}, el("b", { text: nameOf(p.review.by) }), ` marked `, el("button", { class: "linkbtn", onclick: () => openPost(p.id), text: `“${p.hook.slice(0, 60)}${p.hook.length > 60 ? "…" : ""}”` }),
+        ` ${STATUS_LABEL[p.status].toLowerCase()} · `, el("span", { class: "muted", text: ago(p.review.at) }))))));
+    return card;
+  }
+
+  function reportSnapshot(r) {
+    const rows = r.rows || [];
+    const exp = rows.reduce((a, k) => a + (k.exposure || 0), 0);
+    const posts = rows.reduce((a, k) => a + (k.posts || 0), 0);
+    const enq = Object.values(r.enquiries || {}).reduce((a, n) => a + n, 0);
+    return el("section", { class: "card" }, el("div", { class: "section-head" }, el("h2", { text: "Latest results" }), el("button", { class: "linkbtn", onclick: () => go("growth"), text: "Full report" })),
+      el("p", { class: "xs muted", text: reportLabel(r) }),
+      el("div", { class: "grid g-3", style: "gap:10px" }, [["Posts", posts], ["Reach", Math.round(exp).toLocaleString("en-IN")], ["Enquiries", enq]].map(([k, v]) =>
+        el("div", {}, el("div", { class: "xs muted", text: k }), el("div", { style: "font-family:var(--font-display);font-size:1.35rem;font-weight:650", text: v })))),
+      (r.worked || [])[0] ? el("p", { class: "small", text: r.worked[0] }) : null);
+  }
+
+  // ---------- calendar ----------
   function chip(p) {
-    const st = blocks(p).length && !["rejected", "posted"].includes(p.status) ? el("span", { class: "pill blocked", text: "Blocked" }) : el("span", { class: `pill ${p.status}`, text: STATUS_LABEL[p.status] || p.status });
-    return el("button", { class: "chip", style: `--acct:${acctVar(p)}`, onclick: () => openPost(p.id), "aria-label": `${p.account_name} ${PLATFORMS[p.platform]} at ${p.time}: ${p.hook}` },
-      el("div", { class: "top" }, el("span", { class: "mono", text: p.time || "--:--" }), el("span", { text: `${PLATFORMS[p.platform]} · ${p.format}` })),
+    const st = isBlocked(p) ? "needs_changes" : p.status;
+    return el("button", { class: "chip", style: `--acct:${acctVar(p)}`, onclick: () => openPost(p.id), "aria-label": `${p.account_name}, ${PLATFORMS[p.platform]} at ${p.time}: ${p.hook}` },
+      el("div", { class: "top" }, pfBadge(p.platform), el("span", { class: "mono", text: p.time || "--:--" }), el("span", { text: FORMAT_LABEL[p.format] || p.format })),
       el("div", { class: "hook", text: p.hook }),
-      el("div", { class: "top" }, el("span", { text: p.account_name }), st, p.sample ? el("span", { class: "pill sample", text: "Sample" }) : null)
-    );
+      el("div", { class: "bottom" }, el("span", { text: p.account_name }), el("span", { class: "sdot", style: `--sc:var(--st-${st})`, title: isBlocked(p) ? "Blocked" : STATUS_LABEL[p.status] })));
   }
-
-  function viewWeek() {
+  function arow(p) {
+    return el("button", { class: "arow", onclick: () => openPost(p.id) },
+      el("span", { class: "mono", text: p.time || "--:--" }), pfBadge(p.platform, true),
+      el("div", { class: "t" }, el("div", { text: p.hook }), el("div", { text: `${p.account_name} · ${FORMAT_LABEL[p.format] || p.format}` })),
+      statusPill(p));
+  }
+  function viewCalendar() {
     const wait = notReady(); if (wait) return wait;
     const ps = weekPosts();
-    const out = [planNotice()];
-    if (!ps.length) {
-      out.push(emptyState("No posts planned for this week", "Ask Claude in chat to plan this week, or use the arrows to see another week."));
-      return out.filter(Boolean);
-    }
+    const toggle = el("div", { class: "viewtoggle", role: "group", "aria-label": "Calendar view" }, [["board", "Board"], ["list", "List"]].map(([m, l]) =>
+      el("button", { "aria-pressed": String(state.calMode === m), onclick: () => { state.calMode = m; try { localStorage.setItem("hub-prefs", JSON.stringify({ calMode: m })); } catch {} render(); }, text: l })));
+    const head = el("div", { class: "section-head" },
+      el("p", { class: "small muted", text: `${ps.length} post${ps.length === 1 ? "" : "s"}${matchesActive() ? " match your filters" : " this week"}` }),
+      el("div", { class: "legend" }, ["draft", "needs_changes", "approved", "scheduled", "posted"].map(s => el("span", {}, el("i", { style: `background:var(--st-${s});border-radius:50%` }), STATUS_LABEL[s]))),
+      toggle);
+    if (!ps.length) return [head, emptyState(matchesActive() ? "No posts match these filters" : "No posts planned for this week", matchesActive() ? "Clear the filters to see everything." : "Ask Claude in chat to plan this week, or use the arrows to see another week.")];
     const days = [...Array(7)].map((_, i) => addDays(state.week, i));
-    out.push(el("section", { class: "board", "aria-label": "Posts by day" }, days.map(d => {
+    const today = todayIST();
+    if (state.calMode === "list") {
+      return [head, el("div", { class: "agenda" }, days.filter(d => ps.some(p => p.date === d)).map(d => {
+        const kd = KEY_DATES[d];
+        return el("section", { class: "agenda-day" },
+          el("div", { class: "agenda-date" }, el("b", { text: fmtDay(d, { day: "numeric" }) }), el("span", { class: "small muted", text: `${fmtDay(d, { weekday: "long" })} · ${fmtDay(d, { month: "short" })}` }),
+            d === today ? el("span", { class: "pill posted", text: "Today" }) : null, kd ? el("span", { class: `daytag ${kd[1]}`, text: kd[0] }) : null),
+          el("div", { class: "agenda-rows" }, ps.filter(p => p.date === d).map(arow)));
+      }))];
+    }
+    return [head, el("section", { class: "board", "aria-label": "Posts by day" }, days.map(d => {
       const kd = KEY_DATES[d];
-      return el("div", { class: "day" },
-        el("div", { class: "dayhead" }, el("b", { text: fmtDay(d, { weekday: "short", day: "numeric" }) }), kd ? el("span", { class: `daytag ${kd[1]}`, text: kd[0] }) : null),
-        ps.filter(p => p.date === d).map(chip));
-    })));
-    out.push(el("p", { class: "hint", text: "Times are IST. Click a post to see the full text, design brief and checks." }));
-    return out.filter(Boolean);
+      const mine = ps.filter(p => p.date === d);
+      return el("div", { class: `day${d === today ? " today" : ""}` },
+        el("div", { class: "dayhead" }, el("div", {}, el("span", { class: "xs muted", text: fmtDay(d, { weekday: "short" }) + " " }), el("span", { class: "dnum", text: fmtDay(d, { day: "numeric" }) })),
+          kd ? el("span", { class: `daytag ${kd[1]}`, text: kd[0] }) : (d === today ? el("span", { class: "pill posted", text: "Today" }) : null)),
+        mine.length ? mine.map(chip) : el("p", { class: "xs muted", style: "padding:4px", text: "Nothing planned" }));
+    }))];
   }
 
+  // ---------- platform previews ----------
+  function brandColors(p) {
+    const cs = ((p.design_brief || {}).colours || []).filter(c => /^#[0-9a-f]{3,8}$/i.test(c));
+    if (cs.length >= 2) return [cs[0], cs[1]];
+    const base = cs[0] || acctVar(p);
+    return [base, `color-mix(in srgb, ${base} 45%, #000)`];
+  }
+  function mediaText(p) {
+    const b = p.design_brief || {};
+    if ((b.slides || []).length) return b.slides[0].text;
+    const reel = b.reel || {};
+    if ((reel.shots || []).length && reel.shots[0].on_screen_text) return reel.shots[0].on_screen_text;
+    return p.hook;
+  }
+  function clampBlock(nodes) {
+    const box = el("div", { class: "pv-text clamp" }, nodes);
+    const more = el("button", { class: "pv-more", text: "…see more", onclick: () => { box.classList.remove("clamp"); more.remove(); } });
+    return [box, more];
+  }
+  function media(p, kind) {
+    const [c1, c2] = brandColors(p);
+    const m = el("div", { class: `pv-media ${kind}`, style: `--c1:${c1};--c2:${c2}` }, el("p", { text: mediaText(p) }));
+    if (p.format === "reel") m.append(el("span", { class: "tag", text: `REEL${(p.design_brief || {}).reel && p.design_brief.reel.duration_seconds ? " · " + p.design_brief.reel.duration_seconds + "s" : ""}` }), el("span", { class: "play" }, svg(ICONS.play)));
+    if (p.format === "carousel" || p.format === "document") { const k = Math.min(((p.design_brief || {}).slides || []).length || 1, 8); m.append(el("span", { class: "tag", text: `1 / ${k}` }), el("span", { class: "dots" }, [...Array(k)].map(() => el("i")))); }
+    return m;
+  }
+  function preview(p) {
+    const [c1, c2] = brandColors(p);
+    const ava = () => el("span", { class: "pv-ava", style: `--acct:${acctVar(p)}`, text: initials(p.account_name) });
+    const head = sub => el("div", { class: "pv-head" }, ava(), el("div", { style: "min-width:0" }, el("b", { text: p.account_name }), el("small", { text: sub })), pfBadge(p.platform));
+    const text = publishText(p);
+    const parts = p.thread_parts || [];
+    const n = parts.length ? Math.max(...parts.map(t => t.length)) : text.length;
+    const lim = LIMITS[p.platform] || 2200;
+    const counter = el("span", { class: `chars${n > lim ? " over" : ""}`, text: `${n.toLocaleString("en-IN")} / ${lim.toLocaleString("en-IN")} characters${parts.length ? " (longest part)" : ""}` });
+    const tags = (p.hashtags || []).join(" ");
+    const bodyText = () => [[p.hook, p.caption, p.cta].filter(Boolean).join("\n\n"), tags ? "\n\n" : "", tags ? el("span", { class: "pv-tags", text: tags }) : null];
+    let body;
+    if (p.platform === "instagram" && p.format === "story") {
+      const slides = (p.design_brief || {}).slides || [];
+      const sticker = slides.find(s => /sticker/i.test(s.visual || ""));
+      body = el("div", { class: "pv-story", style: `--c1:${c1};--c2:${c2}` },
+        el("div", { class: "bars" }, [...Array(Math.max(1, slides.length))].map(() => el("i"))),
+        el("div", { class: "who" }, ava(), p.account_name),
+        el("p", { text: slides[0] ? slides[0].text : p.hook }),
+        sticker ? el("div", { class: "sticker", text: sticker.visual }) : null);
+    } else if (p.platform === "instagram") {
+      const handle = p.account_name.toLowerCase().replace(/\(.*?\)/g, "").replace(/[^a-z0-9.]+/g, "");
+      body = el("div", { class: "pv" }, head(FORMAT_LABEL[p.format] || p.format), media(p, p.format === "reel" ? "reel" : ""),
+        el("div", { class: "pv-icons" }, svg(ICONS.heart), svg(ICONS.comment), svg(ICONS.send), el("span", { class: "spacer" }), svg(ICONS.save)),
+        clampBlock([el("b", { text: handle + " " }), bodyText()]));
+    } else if (p.platform === "linkedin" || p.platform === "facebook") {
+      const showMedia = ["single_image", "document", "carousel", "reel"].includes(p.format);
+      const acts = p.platform === "linkedin" ? [["like", "Like"], ["comment", "Comment"], ["repost", "Repost"], ["send", "Send"]] : [["like", "Like"], ["comment", "Comment"], ["send", "Share"]];
+      body = el("div", { class: "pv" }, head(`${p.account_type === "person" ? "Personal profile" : "Page"} · ${fmtDay(p.date, { day: "numeric", month: "short" })}`),
+        clampBlock(bodyText()), showMedia ? media(p, "doc") : null,
+        el("div", { class: "pv-actions" }, acts.map(([i, l]) => el("span", {}, svg(ICONS[i]), l))));
+    } else if (p.platform === "x") {
+      const list = parts.length ? parts : [text];
+      body = el("div", { class: "pv" }, list.map(t => el("div", { class: "pv-x" }, ava(),
+        el("div", { style: "min-width:0;display:grid;gap:4px" }, el("div", { class: "xs" }, el("b", { text: p.account_name }), el("span", { class: "muted", text: ` · ${fmtDay(p.date, { day: "numeric", month: "short" })}` })),
+          el("div", { style: "white-space:pre-wrap;overflow-wrap:anywhere", text: t }), el("span", { class: `chars count${t.length > 280 ? " over" : ""}`, text: `${t.length}/280` })))));
+    } else {
+      body = el("div", { class: "pv" }, head("WhatsApp Channel"), el("div", { class: "pv-wa" }, el("div", { class: "bubble" }, el("span", { text }), el("small", { text: p.time || "" }))));
+    }
+    return el("div", { style: "display:grid;gap:8px;min-width:0" }, body,
+      el("div", { class: "row" }, el("span", { class: "xs muted", text: p.format === "story" ? `Story · ${((p.design_brief || {}).slides || []).length || 1} frames · preview` : "Preview, not exact" }), counter));
+  }
+
+  // ---------- post card ----------
   function issueList(p) {
     const is = p.issues || [];
-    if (!is.length) return el("p", { class: "small muted", text: "No issues found by the claims check." });
+    if (!is.length) return el("div", { class: "ok-line" }, svg(ICONS.check), "Passes every content rule");
     return el("ul", { class: "issues" }, is.map(i => el("li", { class: `issue ${i.severity}` },
       el("span", {}, el("b", { text: i.severity === "block" ? "Must fix" : "Check" }), i.rule ? ` · rule ${i.rule}` : "", ` · ${i.message}`),
       i.excerpt ? el("q", { text: i.excerpt }) : null)));
   }
-
   function designBrief(p) {
     const b = p.design_brief || {};
     const reel = b.reel || {};
     const parts = [];
-    if (b.format_notes) parts.push(el("p", { class: "small", style: "margin:0", text: b.format_notes }));
-    if ((b.slides || []).length) parts.push(el("div", {}, el("div", { class: "label", text: "Slides" }), el("ol", {}, b.slides.map(s => el("li", {}, s.text, el("span", { class: "muted", text: ` (visual: ${s.visual})` }))))));
-    if ((reel.shots || []).length) parts.push(el("div", {}, el("div", { class: "label", text: `Reel · ${reel.duration_seconds}s · opening: ${reel.opening_hook}` }),
-      el("ul", {}, reel.shots.map(s => el("li", {}, el("span", { class: "mono", text: `${s.seconds}s ` }), s.shot, s.on_screen_text ? ` · on screen: “${s.on_screen_text}”` : "", s.voiceover ? ` · VO: “${s.voiceover}”` : "")))));
-    if (b.layout_notes) parts.push(el("p", { class: "small", style: "margin:0" }, el("b", { text: "Layout: " }), b.layout_notes));
+    if (b.format_notes) parts.push(el("p", { class: "small", text: b.format_notes }));
+    if ((b.slides || []).length) parts.push(el("div", {}, el("div", { class: "label", text: p.format === "story" ? "Frames" : "Slides" }), el("ol", {}, b.slides.map(s => el("li", {}, s.text, el("span", { class: "muted", text: ` · ${s.visual}` }))))));
+    if ((reel.shots || []).length) parts.push(el("div", { style: "display:grid;gap:6px" }, el("div", { class: "label", text: `Reel script · ${reel.duration_seconds}s` }), el("p", { class: "small" }, el("b", { text: "Opening: " }), reel.opening_hook),
+      el("div", { class: "tablewrap" }, el("table", {}, el("thead", {}, el("tr", {}, ["Time", "Shot", "On screen", "Voiceover"].map(h => el("th", { text: h })))),
+        el("tbody", {}, reel.shots.map(s => el("tr", {}, el("td", { class: "mono", text: `${s.seconds}s` }), el("td", { style: "white-space:normal;min-width:150px", text: s.shot }), el("td", { style: "white-space:normal;min-width:140px", text: s.on_screen_text }), el("td", { style: "white-space:normal;min-width:140px", text: s.voiceover || "–" }))))))));
+    if (b.layout_notes) parts.push(el("p", { class: "small" }, el("b", { text: "Layout: " }), b.layout_notes));
     if ((b.colours || []).length) parts.push(el("div", { class: "swatches" }, b.colours.map(c => el("span", { class: "swatch" }, el("i", { style: `background:${/^#[0-9a-f]{3,8}$/i.test(c) ? c : "transparent"}` }), c))));
-    if (b.image_prompt) parts.push(el("p", { class: "small", style: "margin:0" }, el("b", { text: "AI image prompt: " }), b.image_prompt));
-    if (p.alt_text) parts.push(el("p", { class: "small", style: "margin:0" }, el("b", { text: "Alt text: " }), p.alt_text));
+    if (b.image_prompt) parts.push(el("p", { class: "small" }, el("b", { text: "AI image prompt: " }), b.image_prompt));
+    if (p.alt_text) parts.push(el("p", { class: "small" }, el("b", { text: "Alt text: " }), p.alt_text));
     if (!parts.length) return null;
-    return el("details", {}, el("summary", { text: "Design brief" }), el("div", { class: "brief" }, parts));
+    return el("details", { class: "fold" }, el("summary", { text: "Design brief" }), el("div", { class: "brief" }, parts));
   }
-
   function notes(p) {
+    const needs = p.internal_notes && /CONFIRM/.test(p.internal_notes);
     const items = [];
-    if (p.internal_notes) items.push(el("p", { class: "small", style: "margin:0" }, el("b", { text: "Notes for reviewer: " }), p.internal_notes));
-    if ((p.claims_notes || []).length) items.push(el("div", { class: "small" }, el("b", { text: "Sources: " }), el("ul", { style: "margin:4px 0 0;padding-left:1.1rem" }, p.claims_notes.map(c => el("li", { text: `${c.claim} — ${c.source} (${c.year})` })))));
-    items.push(el("p", { class: "small muted", style: "margin:0", text: `Time: ${p.slot_reason || "not set"}` }));
-    return el("details", {}, el("summary", { text: "Notes, sources and timing" }), el("div", { class: "brief" }, items));
+    if (p.internal_notes) items.push(el("p", { class: "small" }, el("b", { text: "Notes for reviewer: " }), p.internal_notes));
+    if ((p.claims_notes || []).length) items.push(el("div", { class: "small" }, el("b", { text: "Sources" }), el("ul", { style: "margin:4px 0 0" }, p.claims_notes.map(c => el("li", { text: `${c.claim}: ${c.source} (${c.year})` })))));
+    items.push(el("p", { class: "small" }, el("b", { text: "Why this time: " }), p.slot_reason || "not set"));
+    return el("details", { class: "fold", open: needs ? true : null }, el("summary", { text: needs ? "Notes, sources and timing · needs confirmation" : "Notes, sources and timing" }), el("div", { class: "brief" }, items));
   }
-
-  function postCard(p, { editable }) {
-    const isBlocked = blocks(p).length > 0;
-    const text = (p.thread_parts || []).length ? p.thread_parts.map((t, i) => `${i + 1}/${p.thread_parts.length} ${t}`).join("\n\n") : publishText(p);
-    const card = el("article", { class: `card${isBlocked ? " is-blocked" : ""}`, style: `--acct:${acctVar(p)}` },
-      el("div", { class: "cardhead" },
-        el("span", { class: "acct" }, el("i"), p.account_name),
-        el("span", { class: `pill ${isBlocked && !["rejected", "posted"].includes(p.status) ? "blocked" : p.status}`, text: isBlocked && !["rejected", "posted"].includes(p.status) ? "Blocked" : (STATUS_LABEL[p.status] || p.status) }),
-        p.sample ? el("span", { class: "pill sample", text: "Sample" }) : null,
-        el("div", { class: "meta" },
-          el("span", { class: "mono", text: `${fmtDay(p.date, { weekday: "short", day: "numeric", month: "short" })} · ${p.time || "--:--"} IST` }),
-          el("span", { text: `${PLATFORMS[p.platform]} · ${p.format}` }), el("span", { text: THEMES[p.theme] || p.theme }),
-          el("span", { text: p.pillar }))),
-      p.personalise_prompt ? el("div", { class: "notice small" }, el("b", { text: "Make it yours: " }), p.personalise_prompt) : null,
-      el("div", { class: "cols" },
-        el("div", { style: "display:grid;gap:8px;min-width:0" }, el("div", { class: "posttext", text: text }),
-          el("div", { class: "actions" }, el("button", { class: "btn", onclick: e => copy(text, e.currentTarget), text: "Copy text" }),
-            p.collab_with ? el("span", { class: "hint", text: `Collab with ${p.collab_with}: post manually` }) : null)),
-        el("div", { style: "display:grid;gap:8px;align-content:start;min-width:0" }, el("div", { class: "label", text: "Claims check" }), issueList(p),
-          p.edited_since_check ? el("p", { class: "hint", text: "Edited since the last check. Claude re-checks it at the next sync." }) : null)),
+  function postCard(p) {
+    const blocked = isBlocked(p);
+    const text = (p.thread_parts || []).length ? p.thread_parts.join("\n\n") : publishText(p);
+    const camp = p.campaign ? campaigns().find(c => c.id === p.campaign) : null;
+    const body = el("div", { class: "post-body" },
+      el("div", { class: "post-head" }, el("span", { class: "acct" }, el("span", { class: "dot", style: `background:${acctVar(p)}` }), p.account_name), statusPill(p),
+        camp ? el("span", { class: "pill campaign", text: camp.name }) : null, p.sample ? el("span", { class: "pill sample", text: "Sample" }) : null),
+      el("div", { class: "meta" }, el("span", {}, svg(ICONS.clock), el("span", { class: "mono", text: `${fmtDay(p.date, { weekday: "short", day: "numeric", month: "short" })} · ${p.time || "--:--"} IST` })),
+        el("span", {}, pfBadge(p.platform), `${PLATFORMS[p.platform]} · ${FORMAT_LABEL[p.format] || p.format}`), el("span", { text: THEMES[p.theme] || p.theme }), el("span", { text: p.pillar })),
+      p.personalise_prompt ? el("div", { class: "make-yours" }, el("b", { text: "Make it yours: " }), p.personalise_prompt) : null,
+      el("div", { style: "display:grid;gap:8px" }, el("div", { class: "label", text: "Content checks" }), issueList(p),
+        p.edited_since_check ? el("p", { class: "hint", text: "Edited since the last check. Claude re-checks it at the next sync." }) : null),
+      el("div", { class: "actions" }, el("button", { class: "btn", onclick: e => copy(text, e.currentTarget) }, svg(ICONS.copy), "Copy post text"),
+        p.collab_with ? el("span", { class: "hint", text: `Collab with ${p.collab_with}: post manually` }) : null),
       designBrief(p), notes(p),
-      p.review && p.review.at ? el("p", { class: "hint", text: `${STATUS_LABEL[p.status]} by ${nameOf(p.review.by)} on ${new Date(p.review.at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" })}${p.review.comment ? `: “${p.review.comment}”` : ""}` }) : null
-    );
-    if (p.account_type === "person" && ["approved", "scheduled", "posted"].includes(p.status)) { const rf = resultForm(p); if (rf) card.append(rf); }
-    if (editable) card.append(reviewControls(p, isBlocked));
-    return card;
+      p.review && p.review.at ? el("p", { class: "hint", text: `${STATUS_LABEL[p.status]} by ${nameOf(p.review.by)}, ${ago(p.review.at)}${p.review.comment ? `: “${p.review.comment}”` : ""}` }) : null);
+    if (p.account_type === "person" && ["approved", "scheduled", "posted"].includes(p.status)) { const rf = resultForm(p); if (rf) body.append(rf); }
+    body.append(reviewControls(p, blocked));
+    return el("article", { class: `card post${blocked ? " is-blocked" : ""}` }, el("div", { class: "post-preview" }, preview(p)), body);
   }
 
-  function reviewControls(p, isBlocked) {
-    const wrap = el("div", { class: "edit" });
+  function reviewControls(p, blocked) {
+    const wrap = el("div", { class: "decide" });
     if (!state.me.canEdit) { wrap.append(el("p", { class: "hint", text: "Only editors (Aryan, the manager, the founder) can approve or edit posts." })); return wrap; }
-    const fields = [["hook", "Hook (first line)", 1], ["caption", "Caption", 5], ["cta", "Call to action", 1]];
     const inputs = {};
-    const ed = el("details", {}, el("summary", { text: "Edit text" }));
-    const box = el("div", { class: "edit", style: "margin-top:8px" });
-    for (const [f, label, rows] of fields) { const t = el("textarea", { id: `${p.id}-${f}`, rows }); t.value = p[f] || ""; inputs[f] = t; box.append(el("label", { for: `${p.id}-${f}` }, label, t)); }
+    const ed = el("details", { class: "fold", style: "border-top:0;padding-top:0" }, el("summary", { text: "Edit text" }));
+    const box = el("div", { class: "edit", style: "margin-top:10px" });
+    for (const [f, label, rows] of [["hook", "Hook (first line)", 2], ["caption", "Caption", 7], ["cta", "Call to action", 2]]) {
+      const t = el("textarea", { id: `${p.id}-${f}`, rows }); t.value = p[f] || ""; inputs[f] = t; box.append(el("label", { for: `${p.id}-${f}` }, label, t));
+    }
     const tags = el("input", { type: "text", id: `${p.id}-hashtags` }); tags.value = (p.hashtags || []).join(" "); inputs.hashtags = tags;
-    box.append(el("label", { for: `${p.id}-hashtags` }, "Hashtags (space-separated)", tags));
-    box.append(el("div", { class: "actions" }, el("button", { class: "btn", onclick: () => saveEdits(p, inputs), text: "Save text" })));
+    box.append(el("label", { for: `${p.id}-hashtags` }, "Hashtags (space-separated)", tags), el("div", { class: "actions" }, el("button", { class: "btn", onclick: () => saveEdits(p, inputs), text: "Save text" })));
     ed.append(box);
     wrap.append(ed);
-
     if (p.shows_children) {
       const cb = el("input", { type: "checkbox", id: `${p.id}-consent` }); cb.checked = !!p.consent_confirmed;
       cb.addEventListener("change", () => write(p, { consent_confirmed: cb.checked, edited_since_check: true }, cb.checked ? "Consent recorded" : "Consent removed"));
       wrap.append(el("label", { for: `${p.id}-consent`, style: "display:flex;gap:8px;align-items:center;font-size:0.85rem" }, cb, "Verifiable parental consent is on file for the children shown"));
     }
-
-    const comment = el("input", { type: "text", id: `${p.id}-comment`, placeholder: "Comment for the team (optional)" });
-    const act = (status, label, cls = "btn", disabled = false) => el("button", { class: cls, disabled, onclick: () => setStatus(p, status, comment.value.trim()), text: label });
+    const comment = el("input", { type: "text", id: `${p.id}-comment`, placeholder: "Add a comment for the team (optional)", "aria-label": "Comment" });
+    const act = (status, label, cls = "btn", disabled = false, icon) => el("button", { class: cls, disabled, onclick: () => setStatus(p, status, comment.value.trim()) }, icon ? svg(ICONS[icon]) : null, label);
     const buttons = el("div", { class: "actions" });
-    if (["draft", "needs_changes", "rejected"].includes(p.status)) {
-      buttons.append(act("approved", "Approve", "btn primary", isBlocked), act("needs_changes", "Needs changes"), act("rejected", "Reject", "btn danger"));
-    } else if (p.status === "approved") {
-      buttons.append(act("scheduled", "Mark scheduled", "btn primary"), act("needs_changes", "Send back"));
-    } else if (p.status === "scheduled") {
-      buttons.append(act("posted", "Mark posted", "btn primary"), act("approved", "Unschedule"));
-    }
-    wrap.append(el("label", { for: `${p.id}-comment` }, "Comment", comment), buttons);
-    if (isBlocked) wrap.append(el("p", { class: "hint", text: "Fix the “Must fix” items before approving. Edit the text above; Claude re-checks it at the next sync." }));
+    if (["draft", "needs_changes", "rejected"].includes(p.status)) buttons.append(act("approved", "Approve", "btn primary", blocked, "check"), act("needs_changes", "Needs changes"), act("rejected", "Reject", "btn danger"));
+    else if (p.status === "approved") buttons.append(act("scheduled", "Mark scheduled", "btn primary", false, "clock"), act("needs_changes", "Send back"));
+    else if (p.status === "scheduled") buttons.append(act("posted", "Mark posted", "btn primary", false, "check"), act("approved", "Unschedule"));
+    wrap.append(comment, buttons);
+    if (blocked) wrap.append(el("p", { class: "hint", text: "Fix the “Must fix” items before approving. Edit the text above; Claude re-checks it at the next sync." }));
     return wrap;
   }
-
   async function write(p, fields, okMsg) {
-    try {
-      await db.doc(`posts/${p.id}`).update({ ...fields, updated_at: new Date().toISOString() });
-      toast(okMsg);
-    } catch (e) { toast(errMsg(e)); }
+    try { await db.doc(`posts/${p.id}`).update({ ...fields, updated_at: new Date().toISOString() }); toast(okMsg); }
+    catch (e) { toast(errMsg(e)); }
   }
-  function setStatus(p, status, comment) {
-    write(p, { status, review: { by: state.me.id, at: new Date().toISOString(), comment } }, `${STATUS_LABEL[status]}`);
-  }
+  function setStatus(p, status, comment) { write(p, { status, review: { by: state.me.id, at: new Date().toISOString(), comment } }, STATUS_LABEL[status]); }
   function saveEdits(p, inputs) {
-    const next = { hook: inputs.hook.value.trim(), caption: inputs.caption.value.trim(), cta: inputs.cta.value.trim(),
-      hashtags: inputs.hashtags.value.split(/\s+/).filter(Boolean) };
+    const next = { hook: inputs.hook.value.trim(), caption: inputs.caption.value.trim(), cta: inputs.cta.value.trim(), hashtags: inputs.hashtags.value.split(/\s+/).filter(Boolean) };
     const at = new Date().toISOString();
     const changes = Object.entries(next).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify(p[k] || (k === "hashtags" ? [] : "")))
       .map(([field, v]) => ({ field, old: p[field] ?? null, new: v, by: state.me.id, at }));
@@ -482,145 +1030,51 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
     write(p, { ...next, edits: [...(p.edits || []), ...changes], edited_since_check: true }, "Saved. Claude re-checks it at the next sync");
   }
 
+  // ---------- review ----------
   function viewReview() {
     const wait = notReady(); if (wait) return wait;
-    const queue = weekPosts().filter(p => ["draft", "needs_changes"].includes(p.status));
-    const head = el("div", { style: "display:grid;gap:4px" }, el("h2", { text: "Review queue" }),
-      el("p", { class: "small muted", style: "margin:0", text: "Every post needs a human yes before anyone schedules it. Blocked posts can't be approved until fixed." }));
-    if (!queue.length) return [head, emptyState("Nothing waiting for review this week", "Approved posts are on the Week tab.")];
-    queue.sort((a, b) => (blocks(b).length > 0) - (blocks(a).length > 0) || (a.date + a.time).localeCompare(b.date + b.time));
-    return [head, el("div", { class: "cards" }, queue.map(p => postCard(p, { editable: true })))];
+    const queue = weekPosts().filter(p => state.filter.status ? true : ["draft", "needs_changes"].includes(p.status));
+    queue.sort((a, b) => (isBlocked(b) - isBlocked(a)) || (a.date + a.time).localeCompare(b.date + b.time));
+    const blockedN = queue.filter(isBlocked).length;
+    const head = el("div", { class: "section-head" }, el("p", { class: "small muted", text: `${queue.length} post${queue.length === 1 ? "" : "s"}${state.filter.status ? "" : " to review"}${blockedN ? `, ${blockedN} blocked (shown first)` : ""}` }));
+    if (!queue.length) return [head, emptyState("Nothing waiting for review", matchesActive() ? "Nothing matches these filters this week." : "Approved posts are on the calendar.", el("button", { class: "btn", onclick: () => go("calendar"), text: "Open calendar" }))];
+    return [head, el("div", { class: "cards" }, queue.map(postCard))];
   }
 
-  function viewKits() {
+  // ---------- campaigns view ----------
+  function viewCampaigns() {
     const wait = notReady(); if (wait) return wait;
-    const kits = weekPosts().filter(p => p.account_type === "person");
-    const head = el("div", { style: "display:grid;gap:4px" }, el("h2", { text: "Advocacy kits" }),
-      el("p", { class: "small muted", style: "margin:0", text: "Drafts for founder and team LinkedIn posts. Edit them in your own words and post from your own profile; the hub never posts for you." }));
-    if (!kits.length) return [head, emptyState("No kit drafts this week", "Ask Claude to include the founder and team in this week's plan.")];
-    const byPerson = new Map();
-    for (const p of kits) { if (!byPerson.has(p.account_name)) byPerson.set(p.account_name, []); byPerson.get(p.account_name).push(p); }
-    return [head, ...[...byPerson].map(([name, ps]) => el("section", { class: "cards" }, el("h3", { text: name }), ps.map(p => postCard(p, { editable: true }))))];
-  }
-
-  function viewIdeas() {
-    const wait = notReady(); if (wait) return wait;
-    const ta = el("textarea", { id: "ideaText", rows: 3, placeholder: "A post idea, a story from the field, a question students keep asking…" });
-    const sel = el("select", { id: "ideaAccount" }, el("option", { value: "", text: "Any account" }),
-      [...new Map([...state.posts.values()].map(p => [p.account, p.account_name]))].map(([id, n]) => el("option", { value: id, text: n })));
-    const canAdd = state.me.canWrite !== false;
-    const form = el("form", { class: "inline", onsubmit: async e => {
-      e.preventDefault();
-      const text = ta.value.trim(); if (!text) return;
-      try { await db.collection("ideas").add({ text, account: sel.value, by: state.me.id, at: new Date().toISOString(), status: "new" }); ta.value = ""; toast("Idea added"); }
-      catch (err) { toast(errMsg(err)); }
-    } }, el("label", { class: "label", for: "ideaText", text: "Add an idea" }), ta,
-      el("div", { class: "row" }, sel, el("button", { class: "btn primary", type: "submit", disabled: !canAdd, text: "Add idea" })),
-      canAdd ? el("p", { class: "hint", style: "margin:0", text: "Claude reads new ideas when it plans the next week." }) : el("p", { class: "hint", style: "margin:0", text: "You have view-only access, so you can't add ideas." }));
-    const list = state.ideas.length ? el("div", { class: "list" }, state.ideas.map(i => el("div", { class: "item" },
-      el("div", { class: "who", text: `${nameOf(i.by)} · ${i.account ? labelForAccount(i.account) : "Any account"} · ${new Date(i.at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}${i.status === "used" ? " · used in a plan" : ""}` }),
-      el("p", { text: i.text }))))
-      : emptyState("No ideas yet", "Add the first one above.");
-    return [el("h2", { text: "Ideas" }), form, list];
-  }
-
-  function viewNews() {
-    const wait = notReady(); if (wait) return wait;
-    const out = [el("h2", { text: "Announcements" })];
-    if (state.me.canEdit) {
-      const t = el("input", { type: "text", id: "newsTitle", placeholder: "Title" });
-      const b = el("textarea", { id: "newsBody", rows: 3, placeholder: "What the team needs to know" });
-      out.push(el("form", { class: "inline", onsubmit: async e => {
-        e.preventDefault(); if (!t.value.trim()) return;
-        try { await db.collection("announcements").add({ title: t.value.trim(), body: b.value.trim(), by: state.me.id, at: new Date().toISOString() }); t.value = ""; b.value = ""; toast("Posted to the team"); }
-        catch (err) { toast(errMsg(err)); }
-      } }, el("label", { class: "label", for: "newsTitle", text: "New announcement" }), t, b, el("div", { class: "actions" }, el("button", { class: "btn primary", type: "submit", text: "Post announcement" }))));
-    }
-    out.push(state.news.length ? el("div", { class: "list" }, state.news.map(n => el("div", { class: "item" },
-      el("h3", { text: n.title }), n.body ? el("p", { text: n.body }) : null,
-      el("div", { class: "who", text: `${nameOf(n.by)} · ${new Date(n.at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}` }))))
-      : emptyState("No announcements yet", state.me.canEdit ? "Post the first one above." : "Editors post updates here."));
+    const list = campaigns();
+    if (!list.length) return emptyState("No campaigns yet", "Ask Claude to plan a campaign, such as a launch or a seasonal push.");
+    const c = list.find(x => x.id === state.campaignId) || list[0];
+    const posts = c.posts.filter(matches);
+    const counts = countBy(c.posts, statusKey);
+    const out = [];
+    if (list.length > 1) out.push(el("div", { class: "viewtoggle" }, list.map(x => el("button", { "aria-pressed": String(x.id === c.id), onclick: () => { state.campaignId = x.id; render(); }, text: x.name }))));
+    out.push(el("section", { class: "card spotlight" },
+      el("div", { class: "spot-head" }, el("div", { class: "spot-badge", text: (c.name || "C")[0] }),
+        el("div", { style: "min-width:0;flex:1;display:grid;gap:4px" }, el("div", { class: "label", text: c.active ? "Live campaign" : c.upcoming ? "Starts soon" : "Finished" }), el("h2", { style: "font-size:1.5rem", text: c.name }),
+          el("p", { class: "small", text: c.goal || "" }))),
+      campaignProgress(c),
+      c.summary ? el("p", { class: "small muted", text: c.summary }) : null,
+      el("div", { class: "grid g-3" },
+        el("div", { style: "display:grid;gap:6px;align-content:start" }, el("div", { class: "label", text: "Where people go" }), el("div", { class: "ctas" }, (c.ctas || []).map(t => el("span", { text: t })))),
+        el("div", { style: "display:grid;gap:6px;align-content:start" }, el("div", { class: "label", text: "What we measure" }), el("div", { class: "ctas" }, (c.kpis || []).map(t => el("span", { text: t })))),
+        el("div", { style: "display:grid;gap:6px;align-content:start" }, el("div", { class: "label", text: `${c.posts.length} posts` }), stackBar(counts, c.posts.length || 1, true), statusLegend(counts)))));
+    const plats = countBy(c.posts, "platform"), fmts = countBy(c.posts, "format");
+    out.push(el("div", { class: "grid g-2" },
+      el("section", { class: "card" }, el("h2", { text: "By platform" }), el("div", { class: "pcounts" }, Object.entries(plats).sort((a, b) => b[1] - a[1]).map(([pl, n]) => el("span", { class: "pcount" }, pfBadge(pl), el("b", { text: n }), PLATFORMS[pl])))),
+      el("section", { class: "card" }, el("h2", { text: "By format" }), el("div", { class: "pcounts" }, Object.entries(fmts).sort((a, b) => b[1] - a[1]).map(([f, n]) => el("span", { class: "pcount", style: "padding-left:10px" }, el("b", { text: n }), FORMAT_LABEL[f] || f))))));
+    if (c.questions.length) out.push(el("section", { class: "card", style: "border-color:color-mix(in srgb, var(--flag) 40%, var(--line))" }, el("h2", { text: "Open questions for the team" }), el("ul", { class: "bullets" }, c.questions.map(q => el("li", { text: q })))));
+    const dates = [...new Set(posts.map(p => p.date))];
+    out.push(el("section", { style: "display:grid;gap:12px" }, el("div", { class: "section-head" }, el("h2", { text: "Day by day" }), matchesActive() ? el("span", { class: "small muted", text: `${posts.length} match your filters` }) : null),
+      dates.length ? el("div", { class: "agenda" }, dates.map(d => el("section", { class: "agenda-day" },
+        el("div", { class: "agenda-date" }, el("b", { text: fmtDay(d, { day: "numeric" }) }), el("span", { class: "small muted", text: `${fmtDay(d, { weekday: "long" })} · ${fmtDay(d, { month: "short" })}` }), d === todayIST() ? el("span", { class: "pill posted", text: "Today" }) : null),
+        el("div", { class: "agenda-rows" }, posts.filter(p => p.date === d).map(arow))))) : emptyState("No posts match these filters", "Clear the filters to see the whole campaign.")));
     return out;
   }
 
-  function viewGrowth() {
-    const wait = notReady(); if (wait) return wait;
-    const ps = weekPosts().filter(p => p.status !== "rejected");
-    const out = [el("div", { style: "display:grid;gap:4px" }, el("h2", { text: "Growth" }),
-      el("p", { class: "small muted", style: "margin:0", text: "Results from imported analytics, the experiment log, and this week's planned mix." }))];
-    out.push(reportSection(), experimentSection(), el("h3", { text: "This week's planned mix" }));
-    if (!ps.length) return [...out, emptyState("No posts this week", "The mix appears once a week is planned.")];
-    const themeKeys = Object.keys(THEMES);
-    const accounts = [...new Map(ps.map(p => [p.account, p.account_name]))];
-    const legend = el("div", { class: "legend" }, themeKeys.map((t, i) => el("span", {}, el("i", { style: `background:${THEME_COLORS[i]}` }), THEMES[t])));
-    const rows = accounts.map(([id, name]) => {
-      const mine = ps.filter(p => p.account === id);
-      return el("div", { class: "mixrow" }, el("span", { text: name }),
-        el("div", { class: "track", role: "img", "aria-label": `${name}: ` + themeKeys.map(t => `${mine.filter(p => p.theme === t).length} ${THEMES[t]}`).join(", ") },
-          themeKeys.map((t, i) => { const n = mine.filter(p => p.theme === t).length; return n ? el("span", { style: `width:${(n / mine.length) * 100}%;background:${THEME_COLORS[i]}` }) : null; })),
-        el("span", { class: "mono", text: mine.length }));
-    });
-    out.push(el("section", { class: "notice" }, el("h3", { text: "Theme mix by account" }), legend, el("div", { class: "mix" }, rows)));
-    const statuses = ["draft", "needs_changes", "approved", "scheduled", "posted"];
-    out.push(el("div", { class: "tablewrap" }, el("table", {},
-      el("thead", {}, el("tr", {}, el("th", { text: "Account" }), statuses.map(s => el("th", { style: "text-align:right", text: STATUS_LABEL[s] })), el("th", { style: "text-align:right", text: "Blocked" }))),
-      el("tbody", {}, accounts.map(([id, name]) => { const mine = ps.filter(p => p.account === id);
-        return el("tr", {}, el("td", { text: name }), statuses.map(s => el("td", { class: "n", text: mine.filter(p => p.status === s).length })), el("td", { class: "n", text: mine.filter(p => blocks(p).length).length })); })))));
-    return out;
-  }
-
-  const pct = x => x == null ? "–" : `${(x * 100).toFixed(1)}%`;
-  const change = x => x == null ? null : el("span", { class: `small ${x >= 0 ? "up" : "down"}`, text: ` ${x >= 0 ? "▲" : "▼"}${Math.abs(x * 100).toFixed(0)}%` });
-  function reportLabel(r) {
-    if (r.kind === "monthly") return fmtDay(r.start, { month: "long", year: "numeric" }) + " (monthly)";
-    return `Week of ${fmtDay(r.start, { day: "numeric", month: "short", year: "numeric" })}`;
-  }
-  function bullets(title, items, empty) {
-    return el("div", { style: "display:grid;gap:6px;min-width:0" }, el("div", { class: "label", text: title }),
-      items && items.length ? el("ul", { style: "margin:0;padding-left:1.1rem;display:grid;gap:4px" }, items.map(t => el("li", { text: t }))) : el("p", { class: "small muted", style: "margin:0", text: empty }));
-  }
-  function reportSection() {
-    if (!state.reports.length) return emptyState("No reports yet", "Reports appear here after results are imported. Ask Claude to import this week's Instagram or LinkedIn export.");
-    const r = state.reports.find(x => x.id === state.reportId) || state.reports[0];
-    const sel = el("select", { id: "reportPick", "aria-label": "Report", onchange: e => { state.reportId = e.target.value; render(); } },
-      state.reports.map(x => { const o = el("option", { value: x.id, text: reportLabel(x) }); if (x.id === r.id) o.selected = true; return o; }));
-    const PL = PLATFORMS;
-    const table = el("div", { class: "tablewrap" }, el("table", {},
-      el("thead", {}, el("tr", {}, ["Account", "Platform", "Posts", "Reach / impr.", "Engagement / reach", "Shares / reach", "Saves / reach", "Non-followers", "Follower growth"].map((h, i) => el("th", { style: i > 1 ? "text-align:right" : null, text: h })))),
-      el("tbody", {}, (r.rows || []).map(k => el("tr", {},
-        el("td", { text: k.account_name }), el("td", { text: PL[k.platform] || k.platform }), el("td", { class: "n", text: k.posts }),
-        el("td", { class: "n" }, `${Math.round(k.exposure).toLocaleString("en-IN")} ${k.exposure_label === "impressions" ? "impr." : ""}`, change((k.change || {}).exposure)),
-        el("td", { class: "n" }, pct(k.engagement_rate), change((k.change || {}).engagement_rate)),
-        el("td", { class: "n", text: pct(k.share_rate) }), el("td", { class: "n", text: pct(k.save_rate) }),
-        el("td", { class: "n", text: pct(k.non_follower_share) }),
-        el("td", { class: "n", text: k.follower_growth == null ? "–" : (k.follower_growth >= 0 ? "+" : "") + k.follower_growth.toLocaleString("en-IN") }))))));
-    const enq = Object.entries(r.enquiries || {});
-    return el("section", { class: "notice", style: "gap:14px" },
-      el("div", { class: "row", style: "align-items:center" }, el("h3", { text: r.kind === "monthly" ? "Monthly growth report" : "Weekly performance report" }), sel),
-      (r.priorities || []).length ? el("div", {}, el("div", { class: "label", text: "Next month's three priorities" }), el("ol", { style: "margin:4px 0 0;padding-left:1.2rem;display:grid;gap:4px" }, r.priorities.map(t => el("li", { text: t })))) : null,
-      el("div", { class: "cols" }, bullets("What worked", r.worked, "Not enough data for a clear conclusion yet."), bullets("What didn't", r.didnt, "Nothing clearly underperformed.")),
-      table,
-      enq.length ? el("p", { class: "small", style: "margin:0" }, el("b", { text: "Inbound enquiries from social: " }), enq.map(([a, n]) => `${labelForAccount(a)} ${n}`).join(" · ")) : null,
-      (r.top_posts || []).length ? el("div", {}, el("div", { class: "label", text: "Top posts" }), el("ul", { style: "margin:4px 0 0;padding-left:1.1rem;display:grid;gap:4px" },
-        r.top_posts.map(t => el("li", {}, el("b", { text: `${pct(t.engagement_rate)} ` }), `${t.account_name} · ${PL[t.platform] || t.platform} · ${t.format}: ${t.text}`)))) : null,
-      bullets("Data notes", r.notes, "None."),
-      el("p", { class: "hint", style: "margin:0", text: "Engagement = likes + comments + shares + saves. Comparisons need at least 3 posts on each side." }));
-  }
-  function experimentSection() {
-    const head = el("h3", { text: "Experiments" });
-    if (!state.experiments.length) return el("section", { style: "display:grid;gap:8px" }, head, emptyState("No experiments running", "Ask Claude to start one: change one thing (format, time, theme) for 2-4 weeks and compare."));
-    const verdict = { better: ["ok", "Better"], worse: ["blocked", "Worse"], no_difference: ["draft", "No clear difference"], pending: ["needs_changes", "Collecting data"] };
-    return el("section", { style: "display:grid;gap:8px" }, head, el("div", { class: "list" }, state.experiments.map(e => {
-      const v = verdict[e.verdict] || (e.status === "running" ? verdict.pending : ["draft", e.status]);
-      return el("div", { class: "item" },
-        el("div", { class: "cardhead" }, el("b", { text: e.name }), el("span", { class: `pill ${v[0]}`, text: e.status === "running" ? "Running" : v[1] }),
-          el("span", { class: "small muted", text: `${labelForAccount(e.account)} · ${({ format: "Format", hour_band: "Time of day", theme: "Theme", pillar: "Pillar", slot_source: "Time source" })[e.variable] || e.variable}: ${String(e.value).replace(/_/g, " ")} · ${fmtDay(e.start, { day: "numeric", month: "short" })} – ${fmtDay(e.end, { day: "numeric", month: "short" })}` })),
-        el("p", { class: "small", text: `Hypothesis: ${e.hypothesis}` }),
-        e.result ? el("p", { class: "small", text: e.result }) : null);
-    })));
-  }
-
-  // Advocacy: people log their own LinkedIn results (personal analytics aren't available by API).
+  // ---------- advocacy ----------
   function resultForm(p) {
     const r = state.results.get(p.id) || {};
     if (state.me.canWrite === false) return null;
@@ -632,59 +1086,179 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
     const [rep, repL] = f("rep", "Reposts", "number", r.reposts);
     const [lnk, lnkL] = f("lnk", "Link to your post", "text", r.link);
     const num = i => i.value === "" ? null : Math.max(0, Number(i.value));
-    return el("details", { class: "resultbox" }, el("summary", { text: r.at ? `Results logged (${(r.impressions ?? 0).toLocaleString("en-IN")} impressions). Update` : "Posted it? Log your results" }),
-      el("form", { class: "edit", style: "margin-top:8px", onsubmit: async e => {
+    return el("details", { class: "fold resultbox" }, el("summary", { text: r.at ? `Results logged · ${(r.impressions ?? 0).toLocaleString("en-IN")} impressions · update` : "Posted it? Log your results" }),
+      el("form", { class: "edit", style: "margin-top:10px", onsubmit: async e => {
         e.preventDefault();
         try {
           await db.doc(`results/${p.id}`).set({ post_id: p.id, posted_at: when.value, impressions: num(imp), reactions: num(rea), comments: num(com), reposts: num(rep), link: lnk.value.trim(), by: state.me.id, at: new Date().toISOString() });
-          toast("Results saved. Thanks!");
+          toast("Results saved. Thank you!");
         } catch (err) { toast(errMsg(err)); }
       } }, el("div", { class: "grid2" }, whenL, impL, reaL, comL, repL, lnkL),
-        el("p", { class: "hint", style: "margin:0", text: "Check the numbers about 3 days after posting, from the post's analytics on LinkedIn." }),
+        el("p", { class: "hint", text: "Check the numbers about 3 days after posting, from the post's analytics on LinkedIn." }),
         el("div", { class: "actions" }, el("button", { class: "btn primary", type: "submit", text: "Save results" }))));
+  }
+  function viewKits() {
+    const wait = notReady(); if (wait) return wait;
+    const kits = weekPosts(false).filter(p => p.account_type === "person");
+    const intro = el("p", { class: "small muted", style: "max-width:70ch", text: "Rewrite each draft in your own words and post it from your own profile. The hub never posts for you. After posting, log your numbers so we can see what works." });
+    if (!kits.length) return [intro, emptyState("No drafts for you this week", "Ask Claude to include the founder and team in the plan, or use the arrows to check another week.")];
+    const byPerson = new Map();
+    for (const p of kits) { if (!byPerson.has(p.account_name)) byPerson.set(p.account_name, []); byPerson.get(p.account_name).push(p); }
+    return [intro, ...[...byPerson].map(([name, ps]) => el("section", { class: "cards" },
+      el("div", { class: "section-head" }, el("h2", { text: name }), el("span", { class: "small muted", text: `${ps.length} draft${ps.length === 1 ? "" : "s"}` })), ps.map(postCard)))];
+  }
+
+  // ---------- ideas & news ----------
+  function viewIdeas() {
+    const wait = notReady(); if (wait) return wait;
+    const ta = el("textarea", { id: "ideaText", rows: 3, placeholder: "A post idea, a story from the field, a question students keep asking…", "aria-label": "Idea" });
+    const sel = el("select", { id: "ideaAccount", "aria-label": "Account" }, el("option", { value: "", text: "Any account" }), accountsIn(allPosts()).map(([id, n]) => el("option", { value: id, text: n })));
+    const canAdd = state.me.canWrite !== false;
+    const form = el("section", { class: "card" }, el("h2", { text: "Add an idea" }), el("form", { class: "inline", onsubmit: async e => {
+      e.preventDefault();
+      const text = ta.value.trim(); if (!text) return;
+      try { await db.collection("ideas").add({ text, account: sel.value, by: state.me.id, at: new Date().toISOString(), status: "new" }); ta.value = ""; toast("Idea added"); }
+      catch (err) { toast(errMsg(err)); }
+    } }, ta, el("div", { class: "formrow" }, sel, el("button", { class: "btn primary", type: "submit", disabled: !canAdd, text: "Add idea" })),
+      el("p", { class: "hint", text: canAdd ? "Claude reads new ideas when it plans the next week." : "You have view-only access, so you can't add ideas." })));
+    const list = state.ideas.length ? el("div", { class: "list" }, state.ideas.map(i => el("div", { class: "item" },
+      el("p", { text: i.text }),
+      el("div", { class: "who" }, el("b", { text: nameOf(i.by) }), `· ${i.account ? accountName(i.account) : "Any account"} · ${ago(i.at)}`, i.status === "used" ? el("span", { class: "pill approved", text: "Used in a plan" }) : null))))
+      : emptyState("No ideas yet", "Add the first one.");
+    return el("div", { class: "grid g-main" }, el("div", { class: "grid" }, el("h2", { text: `${state.ideas.length} idea${state.ideas.length === 1 ? "" : "s"}` }), list), el("div", { class: "grid" }, form));
+  }
+  function viewNews() {
+    const wait = notReady(); if (wait) return wait;
+    let form = null;
+    if (state.me.canEdit) {
+      const t = el("input", { type: "text", id: "newsTitle", placeholder: "Title", "aria-label": "Title" });
+      const b = el("textarea", { id: "newsBody", rows: 4, placeholder: "What the team needs to know", "aria-label": "Message" });
+      form = el("section", { class: "card" }, el("h2", { text: "Post an announcement" }), el("form", { class: "inline", onsubmit: async e => {
+        e.preventDefault(); if (!t.value.trim()) return;
+        try { await db.collection("announcements").add({ title: t.value.trim(), body: b.value.trim(), by: state.me.id, at: new Date().toISOString() }); t.value = ""; b.value = ""; toast("Posted to the team"); }
+        catch (err) { toast(errMsg(err)); }
+      } }, t, b, el("div", { class: "actions" }, el("button", { class: "btn primary", type: "submit", text: "Post announcement" }))));
+    }
+    const list = state.news.length ? el("div", { class: "list" }, state.news.map(n => el("article", { class: "item" },
+      el("h3", { style: "font-size:1.02rem", text: n.title }), n.body ? el("p", { class: "small", text: n.body }) : null,
+      el("div", { class: "who" }, el("b", { text: nameOf(n.by) }), `· ${ago(n.at)}`))))
+      : emptyState("No announcements yet", state.me.canEdit ? "Post the first one." : "Editors post updates here.");
+    return form ? el("div", { class: "grid g-main" }, el("div", { class: "grid" }, list), el("div", { class: "grid" }, form)) : list;
+  }
+
+  // ---------- growth ----------
+  const pct = x => x == null ? "–" : `${(x * 100).toFixed(1)}%`;
+  const change = x => x == null ? null : el("span", { class: `xs ${x >= 0 ? "up" : "down"}`, text: ` ${x >= 0 ? "▲" : "▼"}${Math.abs(x * 100).toFixed(0)}%` });
+  function reportLabel(r) { return r.kind === "monthly" ? fmtDay(r.start, { month: "long", year: "numeric" }) + " (monthly)" : `Week of ${fmtDay(r.start, { day: "numeric", month: "short", year: "numeric" })}`; }
+  function bullets(title, items, empty) {
+    return el("div", { style: "display:grid;gap:8px;min-width:0;align-content:start" }, el("div", { class: "label", text: title }),
+      items && items.length ? el("ul", { class: "bullets" }, items.map(t => el("li", { text: t }))) : el("p", { class: "small muted", text: empty }));
+  }
+  function reportSection() {
+    if (!state.reports.length) return el("section", { class: "card" }, el("h2", { text: "Results" }),
+      emptyState("No reports yet", "Reports appear here after results are imported. Send Claude this week's Instagram or LinkedIn export, follower counts and enquiries."));
+    const r = state.reports.find(x => x.id === state.reportId) || state.reports[0];
+    const sel = el("select", { id: "reportPick", "aria-label": "Report", style: "width:auto", onchange: e => { state.reportId = e.target.value; render(); } },
+      state.reports.map(x => { const o = el("option", { value: x.id, text: reportLabel(x) }); if (x.id === r.id) o.selected = true; return o; }));
+    const rows = r.rows || [];
+    const tot = { posts: rows.reduce((a, k) => a + k.posts, 0), exp: rows.reduce((a, k) => a + (k.exposure || 0), 0), enq: Object.values(r.enquiries || {}).reduce((a, n) => a + n, 0) };
+    const table = el("div", { class: "tablewrap" }, el("table", {},
+      el("thead", {}, el("tr", {}, ["Account", "Platform", "Posts", "Reach / impr.", "Engagement / reach", "Shares / reach", "Saves / reach", "Non-followers", "Follower growth"].map((h, i) => el("th", { class: i > 1 ? "n" : null, text: h })))),
+      el("tbody", {}, rows.map(k => el("tr", {},
+        el("td", {}, el("span", { class: "acct" }, el("span", { class: "dot", style: `background:${KNOWN_ACCOUNTS.includes(k.account) ? `var(--a-${k.account})` : "var(--a-person)"}` }), k.account_name)),
+        el("td", {}, el("span", { class: "acct", style: "font-weight:500" }, pfBadge(k.platform), PLATFORMS[k.platform] || k.platform)), el("td", { class: "n", text: k.posts }),
+        el("td", { class: "n" }, `${Math.round(k.exposure).toLocaleString("en-IN")}${k.exposure_label === "impressions" ? " impr." : ""}`, change((k.change || {}).exposure)),
+        el("td", { class: "n" }, pct(k.engagement_rate), change((k.change || {}).engagement_rate)),
+        el("td", { class: "n", text: pct(k.share_rate) }), el("td", { class: "n", text: pct(k.save_rate) }), el("td", { class: "n", text: pct(k.non_follower_share) }),
+        el("td", { class: "n", text: k.follower_growth == null ? "–" : (k.follower_growth >= 0 ? "+" : "") + k.follower_growth.toLocaleString("en-IN") }))))));
+    return el("section", { class: "card" },
+      el("div", { class: "section-head" }, el("h2", { text: r.kind === "monthly" ? "Monthly growth report" : "Weekly performance report" }), sel),
+      el("div", { class: "grid g-3", style: "gap:10px" }, [["Posts measured", tot.posts], ["Total reach / impressions", Math.round(tot.exp).toLocaleString("en-IN")], ["Enquiries from social", tot.enq]].map(([k, v]) =>
+        el("div", { class: "kpi", style: "box-shadow:none;background:var(--surface-2);border-color:transparent" }, el("span", { class: "k", text: k }), el("span", { class: "v", style: "font-size:1.6rem", text: v })))),
+      (r.priorities || []).length ? el("div", { style: "display:grid;gap:6px" }, el("div", { class: "label", text: "Next month's three priorities" }), el("ol", { class: "bullets" }, r.priorities.map(t => el("li", { text: t })))) : null,
+      el("div", { class: "grid g-2" }, bullets("What worked", r.worked, "Not enough data for a clear conclusion yet."), bullets("What didn't", r.didnt, "Nothing clearly underperformed.")),
+      table,
+      (r.top_posts || []).length ? el("div", { style: "display:grid;gap:6px" }, el("div", { class: "label", text: "Top posts" }), el("ul", { class: "bullets" },
+        r.top_posts.map(t => el("li", {}, el("b", { text: `${pct(t.engagement_rate)} ` }), `${t.account_name} · ${PLATFORMS[t.platform] || t.platform} · ${FORMAT_LABEL[t.format] || t.format}: ${t.text}`)))) : null,
+      bullets("Data notes", r.notes, "None."),
+      el("p", { class: "hint", text: "Engagement = likes + comments + shares + saves. Comparisons need at least 3 posts on each side." }));
+  }
+  function experimentSection() {
+    const head = el("div", { class: "section-head" }, el("h2", { text: "Experiments" }));
+    if (!state.experiments.length) return el("section", { class: "card" }, head, el("p", { class: "small muted", text: "No experiments yet. Ask Claude to start one: change one thing (format, time of day, theme) for 2–4 weeks and compare." }));
+    const verdict = { better: ["approved", "Better"], worse: ["blocked", "Worse"], no_difference: ["draft", "No clear difference"], pending: ["needs_changes", "Collecting data"] };
+    const VAR = { format: "Format", hour_band: "Time of day", theme: "Theme", pillar: "Pillar", slot_source: "Time source" };
+    return el("section", { class: "card" }, head, el("div", { class: "list" }, state.experiments.map(e => {
+      const v = verdict[e.verdict] || (e.status === "running" ? verdict.pending : ["draft", e.status]);
+      return el("div", { class: "item", style: "box-shadow:none;background:var(--surface-2);border-color:transparent" },
+        el("div", { class: "post-head" }, el("b", { text: e.name }), el("span", { class: `pill ${v[0]}`, text: e.status === "running" ? "Running" : v[1] })),
+        el("div", { class: "who", text: `${accountName(e.account)} · ${VAR[e.variable] || e.variable}: ${String(e.value).replace(/_/g, " ")} · ${fmtDay(e.start, { day: "numeric", month: "short" })} – ${fmtDay(e.end, { day: "numeric", month: "short" })}` }),
+        el("p", { class: "small", text: `Hypothesis: ${e.hypothesis}` }), e.result ? el("p", { class: "small", text: e.result }) : null);
+    })));
+  }
+  function mixSection() {
+    const ps = weekPosts(false).filter(p => p.status !== "rejected");
+    const card = el("section", { class: "card" }, el("div", { class: "section-head" }, el("h2", { text: "This week's planned mix" }), el("span", { class: "xs muted", text: `${ps.length} posts` })));
+    if (!ps.length) { card.append(el("p", { class: "small muted", text: "The mix appears once a week is planned." })); return card; }
+    const themeKeys = Object.keys(THEMES);
+    card.append(el("div", { class: "legend" }, themeKeys.map((t, i) => el("span", {}, el("i", { style: `background:${THEME_COLORS[i]}` }), THEMES[t]))),
+      el("div", { style: "display:grid;gap:10px" }, accountsIn(ps).map(([id, name]) => {
+        const mine = ps.filter(p => p.account === id);
+        return el("div", { class: "mixrow" }, el("span", { style: "overflow:hidden;text-overflow:ellipsis;white-space:nowrap", text: name }),
+          el("div", { class: "stack lg", role: "img", "aria-label": `${name}: ` + themeKeys.map(t => `${mine.filter(p => p.theme === t).length} ${THEMES[t]}`).join(", ") },
+            themeKeys.map((t, i) => { const n = mine.filter(p => p.theme === t).length; return n ? el("span", { style: `width:${(n / mine.length) * 100}%;background:${THEME_COLORS[i]}` }) : null; })),
+          el("span", { class: "mono", style: "text-align:right", text: mine.length }));
+      })));
+    return card;
+  }
+  function viewGrowth() {
+    const wait = notReady(); if (wait) return wait;
+    return [reportSection(), el("div", { class: "grid g-2" }, experimentSection(), mixSection())];
   }
 
   // ---------- drawer ----------
-  function openPost(id) { state.open = id; renderDrawer(); }
-  function closeDrawer() { state.open = null; state.drawerFocus = false; renderDrawer(); if (state.pendingRender) render(); }
-  function renderDrawer() {
+  function openPost(id) { state.open = id; renderDrawer(true); }
+  function closeDrawer() { state.open = null; renderDrawer(); if (state.pendingRender) render(); }
+  function renderDrawer(fresh = false) {
     const root = $("#drawerRoot");
     const p = state.open && state.posts.get(state.open);
     if (!p) { root.replaceChildren(); return; }
     if (root.contains(document.activeElement) && document.activeElement.matches("textarea, input, select")) return;
+    const old = root.querySelector(".drawer");
+    const scroll = old && !fresh ? old.scrollTop : 0;
+    const list = allPosts().filter(x => inWeek(x) || x.id === p.id);
+    const idx = list.findIndex(x => x.id === p.id);
+    const nav = d => { const t = list[idx + d]; if (t) openPost(t.id); };
     const drawer = el("aside", { class: "drawer", role: "dialog", "aria-modal": "true", "aria-label": "Post details" },
-      el("button", { class: "btn close", onclick: closeDrawer, text: "Close" }), postCard(p, { editable: true }));
-    drawer.addEventListener("focusin", e => { if (e.target.matches("textarea, input, select")) state.drawerFocus = true; });
-    drawer.addEventListener("focusout", () => { state.drawerFocus = false; });
+      el("div", { class: "drawer-top" },
+        el("div", { class: "actions" }, el("button", { class: "btn", disabled: idx <= 0, onclick: () => nav(-1), text: "‹ Previous" }), el("button", { class: "btn", disabled: idx >= list.length - 1, onclick: () => nav(1), text: "Next ›" }),
+          el("span", { class: "xs muted", text: `${idx + 1} of ${list.length} this week` })),
+        el("button", { class: "btn", onclick: closeDrawer }, svg(ICONS.x), "Close")),
+      postCard(p));
     root.replaceChildren(el("div", { class: "scrim", onclick: closeDrawer }), drawer);
+    drawer.scrollTop = scroll;
   }
-  document.addEventListener("keydown", e => { if (e.key === "Escape" && state.open) closeDrawer(); });
-  // Wait a moment after an input loses focus, so a click on a button next to it lands before the redraw.
-  document.addEventListener("focusout", () => setTimeout(() => { if (state.pendingRender && !state.drawerFocus) render(); }, 300));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { if (state.open) closeDrawer(); $("#sheetRoot").replaceChildren(); } });
+  // Re-render once the person stops typing, after any click next to the field has landed.
+  document.addEventListener("focusout", () => setTimeout(() => { if (state.pendingRender && !editingNow()) render(); }, 300));
 
   // ---------- navigation ----------
-  $("#tabs").addEventListener("click", e => {
-    const b = e.target.closest("button[data-tab]"); if (!b) return;
-    state.tab = b.dataset.tab; try { history.replaceState(null, "", "#" + state.tab); } catch {}
-    render();
-  });
   $("#prevWeek").addEventListener("click", () => { state.week = addDays(state.week, -7); render(); });
   $("#nextWeek").addEventListener("click", () => { state.week = addDays(state.week, 7); render(); });
+  $("#thisWeek").addEventListener("click", () => { state.week = mondayOf(todayIST()); render(); });
   const hash = (location.hash || "").slice(1);
-  if (["week", "review", "kits", "ideas", "news", "growth"].includes(hash)) state.tab = hash;
+  if (VIEWS.some(v => v.id === hash)) state.view = hash;
   state.week = mondayOf(todayIST());
   render();
 
   // ---------- data ----------
   function pickWeek() {
-    // Open on the current week if it has posts, otherwise the next week that does.
-    const dates = [...state.posts.values()].map(p => p.date).sort();
+    const dates = allPosts().map(p => p.date);
     const cur = mondayOf(todayIST());
     if (!dates.length || dates.some(d => d >= cur && d <= addDays(cur, 6))) return cur;
     const next = dates.find(d => d >= cur);
     return mondayOf(next || dates[dates.length - 1]);
   }
-
   async function start() {
     const claude = window.claude;
     if (!claude || !claude.use) { state.unavailable = true; render(); return; }
@@ -692,7 +1266,7 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
     if (!db) { state.unavailable = true; render(); return; }
     if (user) {
       const me = await user.me();
-      state.me.id = me.id; state.me.canEdit = !!me.canEdit;
+      Object.assign(state.me, { id: me.id, name: me.name, avatar: me.avatarUrl, canEdit: !!me.canEdit });
       state.me.canWrite = await user.can("data.write");
       if (me.id && me.name) state.names[me.id] = me.name;
     }
@@ -705,12 +1279,8 @@ td.n { font-variant-numeric: tabular-nums; text-align: right; }
       resolveNames([...state.posts.values()].map(p => p.review && p.review.by));
     }, () => { state.unavailable = true; render(); });
     db.collection("plans").onSnapshot(snap => { state.plans = snap.docs.map(d => d.data()); render(); }, () => {});
-    db.collection("ideas").orderBy("at", "desc").limit(200).onSnapshot(snap => {
-      state.ideas = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); resolveNames(state.ideas.map(i => i.by));
-    }, () => {});
-    db.collection("announcements").orderBy("at", "desc").limit(50).onSnapshot(snap => {
-      state.news = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); resolveNames(state.news.map(n => n.by));
-    }, () => {});
+    db.collection("ideas").orderBy("at", "desc").limit(200).onSnapshot(snap => { state.ideas = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); resolveNames(state.ideas.map(i => i.by)); }, () => {});
+    db.collection("announcements").orderBy("at", "desc").limit(50).onSnapshot(snap => { state.news = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); resolveNames(state.news.map(n => n.by)); }, () => {});
     db.collection("reports").orderBy("end", "desc").limit(30).onSnapshot(snap => { state.reports = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); }, () => {});
     db.collection("experiments").orderBy("start", "desc").limit(50).onSnapshot(snap => { state.experiments = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); }, () => {});
     db.collection("results").onSnapshot(snap => { state.results = new Map(snap.docs.map(d => [d.id, d.data()])); render(); }, () => {});

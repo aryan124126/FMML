@@ -123,9 +123,12 @@ def test_hub_push_and_pull(store, tmp_path):
     inbox = tmp_path / "inbox" / "posts"
     inbox.mkdir(parents=True)
     (inbox / f"{clean['id']}.json").write_text(json.dumps(
-        {**doc, "status": "approved", "review": {"by": "u_1", "by_name": "Manager", "comment": "Good"}}))
+        {**doc, "status": "approved", "review": {"by": "u_1", "at": "2099-01-01T10:00:00Z", "comment": "Good"}}))
     other_doc = {**json.loads((tmp_path / "outbox" / "posts" / f"{other['id']}.json").read_text())}
-    other_doc.update(caption="The best ESG firm in India.", status="approved", review={"by_name": "Founder"})
+    other_doc.update(caption="The best ESG firm in India.", status="approved", edited_since_check=True,
+                     edits=[{"field": "caption", "old": other["caption"], "new": "The best ESG firm in India.",
+                             "by": "u_2", "at": "2099-01-01T09:00:00Z"}],
+                     review={"by": "u_2", "at": "2099-01-01T09:05:00Z"})
     (inbox / f"{other['id']}.json").write_text(json.dumps({"data": other_doc, "version": 3}))
 
     changes = hub.pull(store, CFG, tmp_path / "inbox")
@@ -134,6 +137,24 @@ def test_hub_push_and_pull(store, tmp_path):
     assert store.posts[other["id"]]["blocked"]
     assert any("NOT approved" in c for c in changes)
     assert store.recent_edits("hifuel_advisory")[-1]["after"] == "The best ESG firm in India."
+
+    # Pulling the same files again changes nothing.
+    assert hub.pull(store, CFG, tmp_path / "inbox") == []
+
+
+def test_stale_hub_copy_does_not_overwrite_local_changes(store, tmp_path):
+    post = _seed(store, idea_id="a")
+    hub.push(store, tmp_path / "outbox")
+    stale = json.loads((tmp_path / "outbox" / "posts" / f"{post['id']}.json").read_text())
+    # Locally, the post is rewritten and approved after the hub copy was made.
+    store.edit(post["id"], "caption", "New launch wording.", by="claude")
+    store.set_status(post["id"], "approved", by="Manager")
+    inbox = tmp_path / "inbox" / "posts"
+    inbox.mkdir(parents=True)
+    (inbox / f"{post['id']}.json").write_text(json.dumps(stale))
+    assert hub.pull(store, CFG, tmp_path / "inbox") == []
+    assert store.posts[post["id"]]["caption"] == "New launch wording."
+    assert store.posts[post["id"]]["status"] == "approved"
 
 
 def test_exports(store, tmp_path):

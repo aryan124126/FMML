@@ -9,7 +9,8 @@ An AI assistant that **plans, writes and times** social media posts for the Hi F
 | **Planner** | Drafts a week of posts per account and platform (Instagram, LinkedIn, Facebook, WhatsApp Channel, X): hook, caption, CTA, hashtags, alt text, and a design brief (slides, Reel script, layout, colours). |
 | **Claims check** | Every draft is checked against the hard content rules (CO2 figures, carbon-credit wording, superlatives, unsourced stats, job guarantees, prices, partner names, children, AI media, internal terms). "Must fix" items block approval; "Check" items are listed for the reviewer. |
 | **Best time to post** | Each post gets a time in IST, and it says where the time came from: your own audience data, your own past posts, or a benchmark (a starting guess until real data exists). About 20% of posts test new time slots. It also spaces posts out so the same account doesn't post too close together. |
-| **Team Hub** | A private web page for the team: the week's board, review queue (approve / needs changes / reject / edit), advocacy kits, ideas box, announcements, and the week's content mix. |
+| **Team Hub** | A private dashboard for the team: an overview of the week, a calendar (board or list), a review queue with platform-style previews (approve / needs changes / reject / edit), campaign tracking, advocacy kits, an ideas box, announcements, and results. Works on phone and desktop. |
+| **Campaigns** | A campaign file (e.g. `campaigns/pathvik-launch.yaml`) holds the goal, dates, calls to action and every post; the hub tracks its progress. |
 | **Exports** | Approved posts as a spreadsheet (CSV for Google Sheets/Excel), a calendar file with reminders (.ics), and a copy-ready caption document. |
 
 **Phase 2 (learning from results)** is also built:
@@ -47,6 +48,7 @@ export ANTHROPIC_API_KEY=your-key   # from console.anthropic.com; never commit i
 ```bash
 python -m hifuel plan --start 2026-10-26 --campaign "ICLC school outreach"   # needs an API key
 python -m hifuel import samples/sample_week.yaml --sample   # load drafts written in chat (no API key needed)
+python -m hifuel import campaigns/pathvik-launch.yaml      # a campaign file works the same way
 python -m hifuel list --start 2026-10-26
 python -m hifuel show <post-id>
 python -m hifuel status <post-id> approved --by "Manager"

@@ -67,33 +67,47 @@ def _load_doc(path: Path) -> dict:
 
 
 def pull(store: Store, cfg: Config, in_dir: Path) -> list[str]:
-    """Apply hub changes. Returns a plain-language list of what changed."""
+    """Apply what reviewers did on the hub. Returns a plain-language list of what changed.
+
+    Only real actions are applied: text edits the hub recorded in a post's `edits` list, and
+    status decisions newer than the one we already have. A hub copy that is merely out of date
+    (for example, before a fresh push) changes nothing.
+    """
     changes = []
     for path in sorted((in_dir / "posts").glob("*.json")):
         doc = _load_doc(path)
         post = store.posts.get(doc.get("id") or path.stem)
         if post is None:
             continue
-        review = doc.get("review") or {}
-        by = review.get("by_name") or review.get("by") or "hub"
+        known = {(e.get("field"), e.get("at"), e.get("by")) for e in post.get("edits", [])}
+        new_edits = [e for e in doc.get("edits") or [] if (e.get("field"), e.get("at"), e.get("by")) not in known]
         edited = False
-        for field in EDITABLE:
-            if field in doc and store.edit(post["id"], field, doc[field], by=by):
+        for e in sorted(new_edits, key=lambda e: e.get("at") or ""):
+            if e.get("field") in EDITABLE and store.edit(post["id"], e["field"], e.get("new"), by=e.get("by") or "hub"):
                 edited = True
-                changes.append(f"{post['id']}: {by} edited {field}")
+                changes.append(f"{post['id']}: edited {e['field']} on the hub")
+        post["edits"] = post.get("edits", []) + new_edits
+        if doc.get("edited_since_check") and doc.get("consent_confirmed") != post.get("consent_confirmed"):
+            store.edit(post["id"], "consent_confirmed", bool(doc.get("consent_confirmed")), by="hub")
+            edited = True
+            changes.append(f"{post['id']}: parental consent {'recorded' if doc.get('consent_confirmed') else 'removed'}")
         if edited or doc.get("edited_since_check"):
             post["issues"] = check_post(post, cfg)
             post["blocked"] = is_blocked(post["issues"])
             post["edited_since_check"] = False
+        review = doc.get("review") or {}
+        seen = max((post.get("review") or {}).get("at") or "", post.get("hub_review_seen_at") or "")
+        newer = review.get("at") and review["at"] > seen
         new_status = doc.get("status")
-        if new_status and new_status != post["status"]:
+        if newer and new_status and new_status != post["status"]:
+            by = review.get("by_name") or review.get("by") or "hub"
             try:
                 store.set_status(post["id"], new_status, by=by, comment=review.get("comment", ""))
+                post["review"] = {**post["review"], "at": review["at"], "by": review.get("by")}
                 changes.append(f"{post['id']}: {by} set status to {new_status}")
             except ValueError as e:
                 changes.append(f"{post['id']}: NOT {new_status}: {e}")
-        if doc.get("edits"):
-            post["edits"] = doc["edits"]
+            post["hub_review_seen_at"] = review["at"]  # handled; don't re-apply on the next pull
     store.save()
     return changes
 
