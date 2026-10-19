@@ -114,13 +114,14 @@ def finalise_posts(drafts: list[dict], cfg: Config, store: Store, start: str, en
                    analytics: Analytics | None = None) -> list[dict]:
     """Give drafts ids and times, run the claims check, and save them."""
     analytics = analytics or Analytics(store.dir)
-    valid = []
+    valid, taken = [], set()
     for d in drafts:
         if not (start <= d["date"] <= end):
             continue  # outside the period: drop rather than guess a date
         if d["account"] not in cfg.accounts:
             continue
-        d["id"] = store.new_id(d)
+        d["id"] = store.new_id(d, taken)
+        taken.add(d["id"])
         valid.append(d)
     placed = [p for p in store.posts.values() if start <= p["date"] <= end]
     slots = assign_slots(valid, cfg, history=analytics.history(),
@@ -197,17 +198,21 @@ def import_plan(cfg: Config, store: Store, data: dict, sample: bool = False) -> 
         raise PlanningError(f"Unknown account(s): {', '.join(unknown)}")
     start = str(data.get("start") or min(d["date"] for d in drafts))
     end = str(data.get("end") or max(d["date"] for d in drafts))
+    campaign = data.get("campaign") or {}
     for d in drafts:
         d["sample"] = sample
+        if campaign.get("id"):
+            d["campaign"] = campaign["id"]
     posts = finalise_posts(drafts, cfg, store, start, end)
-    plan_id = f"{start}_{end}"
+    plan_id = campaign.get("id") or f"{start}_{end}"
     previous = store.plans.get(plan_id, {})
     store.plans[plan_id] = {"id": plan_id, "start": start, "end": end,
                             "summaries": {**previous.get("summaries", {}), "_overview": plan.summary},
                             "questions_for_team": previous.get("questions_for_team", []) + plan.questions_for_team,
                             "campaigns": previous.get("campaigns", []), "notes": previous.get("notes", ""),
                             "post_ids": previous.get("post_ids", []) + [p["id"] for p in posts],
-                            "cost_usd": previous.get("cost_usd", 0.0)}
+                            "cost_usd": previous.get("cost_usd", 0.0),
+                            **({"campaign": campaign} if campaign else {})}
     store.log("import", plan_id=plan_id, posts=len(posts), sample=sample)
     store.save()
     return store.plans[plan_id]

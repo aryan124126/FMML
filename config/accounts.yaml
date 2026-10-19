@@ -108,8 +108,8 @@ accounts:
     enabled: true
     priority: 1
     approver: founder
-    platforms: {instagram: 4, linkedin: 1, x: 2}
-    audience: {instagram: students, linkedin: business, x: students}
+    platforms: {instagram: 6, linkedin: 3, x: 5, facebook: 2}  # launch volumes [CONFIRM]
+    audience: {instagram: students, linkedin: business, x: students, facebook: parents_community}
     colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
     voice: >-
       Friendly, honest, student-first. Short sentences, relatable doubts.
@@ -128,15 +128,19 @@ accounts:
       - 'Consulting, Strategy & Product Mentorship: 8 weeks, 16 live classes, ₹14,999 incl. GST'
       - Cohorts of 30
       - Placement assistance included, with no job guarantee
+      - 'Launched in October 2026: the website is live and registrations are open (confirmed by Aryan, 19 Oct 2026)'
+      - 'Calls to action: link in bio (Instagram), link in first comment/reply (LinkedIn, X, Facebook), or DM us'
       - 'Audiences: students aged about 19–24 (Instagram), their parents, colleges/placement cells (LinkedIn)'
     do_not_state:
+      - Any price in launch posts (Aryan, 19 Oct 2026: no prices for now)
       - First-cohort or founding-fee pricing (not decided)
+      - A cohort start date (not confirmed)
       - Week-1 diagnostic interview (not built yet)
       - Verifiable certificate IDs (not built yet)
       - The old name Catalystra, or its domain/email
       - Pathvik domain, email or handles (not confirmed)
     internal: [Catalystra, catalystra.in, hello@catalystra.in]
-    allowed_prices: ["4,999", "14,999"]
+    allowed_prices: []  # no prices in posts for now (19 Oct 2026); standard prices were 4,999 and 14,999
     confirmed_partners: []
 
   earth_osai:

@@ -99,7 +99,7 @@ rules:
       - '\bassured\s+(jobs?|placements?)\b'
       - '\b(salary|salaries|lpa|ctc|pay hike|package of)\b'
       - '\b(top|guaranteed|better)\s+(ranks?|marks|scores?)\b'
-    downgrade_if: "\\b(no|not|without|never|don't|doesn't|won't|can't|cannot|neither|nor|zero)\\b.{0,25}\\bguarantee"
+    downgrade_if: "\\b(no|not|without|never|don't|doesn't|won't|can't|cannot|isn't|aren't|neither|nor|zero)\\b.{0,25}\\bguarantee"
     message: No placement, job, salary, rank or marks promises (CCPA 2024 coaching guidelines).
 
   - id: pricing_tricks
@@ -169,6 +169,13 @@ rules:
     accounts: [pathvik]
     patterns: ['diagnostic interview', 'certificate\s+ids?\b', 'verifiable certificates?']
     message: Week-1 diagnostic interview and verifiable certificate IDs are not built yet.
+
+  - id: placeholder
+    rule: 0
+    severity: block
+    accounts: all
+    patterns: ['\[(link|url|website|handle|date|name|insert|add|tbc|tbd)[^\]]*\]', '\{\{[^}]*\}\}', '\bTBC\b', '\bTBD\b', '\bXXX\b']
+    message: Fill in the placeholder before this post can be approved.
 
 # Words that count as a statistic (rule 7): these need a source and year in claims_notes.
 statistic_patterns:

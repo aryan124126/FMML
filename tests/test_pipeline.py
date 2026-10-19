@@ -160,3 +160,20 @@ def test_import_sample_week(store):
     assert len(posts) == 10
     assert [p["idea_id"] for p in posts if p["blocked"]] == ["blocked-example"]
     assert all(p["sample"] and p["time"] for p in posts)
+
+
+
+def test_campaign_import_gives_unique_ids_and_tags_posts(store):
+    import yaml
+    from hifuel.config import ROOT
+    from hifuel.planner import import_plan
+    data = yaml.safe_load((ROOT / "campaigns" / "pathvik-launch.yaml").read_text(encoding="utf-8"))
+    plan = import_plan(CFG, store, data)
+    assert plan["id"] == "pathvik-launch" and plan["campaign"]["name"] == "Pathvik launch"
+    assert len(plan["post_ids"]) == len(data["posts"]) == len(set(plan["post_ids"]))
+    posts = [store.posts[i] for i in plan["post_ids"]]
+    assert all(p["campaign"] == "pathvik-launch" for p in posts)
+    assert not [p["id"] for p in posts if p["blocked"]]
+    # The launch-day Reel and Story share an idea, platform and day but must both survive.
+    launch = [p for p in posts if p["idea_id"] == "pathvik-is-live" and p["platform"] == "instagram"]
+    assert {p["format"] for p in launch} == {"reel", "story"}

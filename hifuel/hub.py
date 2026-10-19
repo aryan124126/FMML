@@ -20,7 +20,7 @@ HUB_FIELDS = [
     "slot_source", "slot_reason", "theme", "pillar", "format", "hook", "caption", "cta", "hashtags", "alt_text",
     "thread_parts", "personalise_prompt", "design_brief", "claims_notes", "uses_ai_media", "shows_children",
     "consent_confirmed", "collab_with", "key_date", "internal_notes", "issues", "blocked", "status", "review",
-    "updated_at", "sample", "edited_since_check",
+    "updated_at", "sample", "edited_since_check", "campaign",
 ]
 # What reviewers may change on the hub.
 EDITABLE = [*TEXT_FIELDS, "personalise_prompt", "consent_confirmed"]

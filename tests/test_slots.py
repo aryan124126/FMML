@@ -51,7 +51,7 @@ def test_same_idea_across_accounts_is_spaced():
 
 
 def test_already_placed_posts_are_respected():
-    existing = [{"account": "pathvik", "idea_id": "x", "date": MON, "time": "19:30"}]
+    existing = [{"account": "pathvik", "platform": "instagram", "idea_id": "x", "date": MON, "time": "19:30"}]
     [r] = assign_slots([post("p1")], NO_EXPLORE, already_placed=existing)
     assert abs(minutes(r["time"]) - minutes("19:30")) >= 180
 
@@ -116,3 +116,10 @@ def test_higher_priority_account_gets_first_pick():
 def test_times_are_valid():
     for r in assign_slots([post(f"p{i}", idea=f"i{i}") for i in range(2)], CFG):
         datetime.strptime(r["time"], "%H:%M")
+
+
+def test_other_platforms_only_need_an_hour_apart():
+    results = assign_slots([post("ig", idea="a"), post("x", platform="x", idea="b")], NO_EXPLORE)
+    gap = abs(minutes(results[0]["time"]) - minutes(results[1]["time"]))
+    assert gap >= 60
+    assert all("WARNING" not in r["slot_reason"] for r in results)

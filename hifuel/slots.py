@@ -113,10 +113,14 @@ def _candidates(post, cfg, history, audience_data):
 
 def _fits(when: datetime, post, placed, spacing) -> bool:
     same_account = [p for p in placed if p["account"] == post["account"] and p["dt"].date() == when.date()]
-    if len(same_account) >= spacing["max_posts_per_account_per_day"]:
+    same_platform = [p for p in same_account if p.get("platform") == post.get("platform")]
+    if len(same_platform) >= spacing["max_posts_per_platform_per_day"]:
         return False
-    gap = timedelta(hours=spacing["min_gap_hours_same_account"])
-    if any(abs(p["dt"] - when) < gap for p in same_account):
+    gap = timedelta(hours=spacing["min_gap_hours_same_platform"])
+    if any(abs(p["dt"] - when) < gap for p in same_platform):
+        return False
+    account_gap = timedelta(minutes=spacing["min_gap_minutes_same_account"])
+    if any(abs(p["dt"] - when) < account_gap for p in same_account):
         return False
     idea_gap = timedelta(hours=spacing["min_gap_hours_same_idea"])
     return not any(p["idea_id"] == post.get("idea_id") and p["account"] != post["account"]
@@ -127,11 +131,11 @@ def assign_slots(posts: list[dict], cfg: Config, history=None, audience_data=Non
     """Give every post a time. Returns {"time", "slot_source", "slot_reason"} per post, in input order.
 
     Posts must have id, account, platform, date and idea_id. Higher-priority accounts pick first.
-    `already_placed` lists posts that already have a time ({account, idea_id, date, time}).
+    `already_placed` lists posts that already have a time ({account, platform, idea_id, date, time}).
     """
     spacing = cfg.slots["spacing"]
     placed = [
-        {"account": p["account"], "idea_id": p.get("idea_id"),
+        {"account": p["account"], "platform": p.get("platform"), "idea_id": p.get("idea_id"),
          "dt": datetime.fromisoformat(f"{p['date']}T{p['time']}")}
         for p in already_placed or [] if p.get("time")
     ]
@@ -160,7 +164,7 @@ def assign_slots(posts: list[dict], cfg: Config, history=None, audience_data=Non
             when = datetime.fromisoformat(f"{post['date']}T{candidates[0][0]}")
             choice = (when, candidates[0][1], candidates[0][2] + " - WARNING: breaks spacing rules; move to another day")
         when, source, reason = choice
-        placed.append({"account": post["account"], "idea_id": post.get("idea_id"), "dt": when})
+        placed.append({"account": post["account"], "platform": post.get("platform"), "idea_id": post.get("idea_id"), "dt": when})
         results[i] = {"time": when.strftime("%H:%M"), "slot_source": source,
                       "slot_reason": f"{SOURCE_LABELS[source]}: {reason}"}
     return results

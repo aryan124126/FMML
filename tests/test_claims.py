@@ -65,6 +65,8 @@ def test_clean_post_has_no_blocks():
     ("pathvik", "Every student gets a week-1 diagnostic interview.", "pathvik_not_built"),
     ("iclc", "Inspired by the Shankargarh 11 format.", "internal_term"),
     ("pathvik", "Pathvik, formerly Catalystra, is live.", "internal_term"),
+    ("pathvik", "Register at [website link] today.", "placeholder"),
+    ("pathvik", "Classes start on {{start_date}}.", "placeholder"),
     ("tranzent_foundation", "Proud to work with MoEFCC on this.", "unconfirmed_partner"),
 ])
 def test_blocking_rules(account, text, check):
@@ -125,7 +127,9 @@ def test_statistics_need_sources():
 
 def test_prices():
     assert "price" in checks(make_post(account="pathvik", caption="Founding cohort fee: ₹999."))
-    confirmed = make_post(account="pathvik", caption="The Graduate Career Accelerator is ₹4,999 incl. GST.")
+    # Pathvik posts carry no prices for now (19 Oct 2026), so even the standard price is blocked.
+    assert "price" in checks(make_post(account="pathvik", caption="The Graduate Career Accelerator is ₹4,999."))
+    confirmed = make_post(account="born_green", caption="Plant a tree from ₹460 per tree.")
     assert "price" not in checks(confirmed)
     assert "price" in checks(confirmed, "flag")
 

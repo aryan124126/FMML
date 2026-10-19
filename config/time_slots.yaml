@@ -9,8 +9,9 @@
 timezone: Asia/Kolkata
 
 spacing:
-  max_posts_per_account_per_day: 2
-  min_gap_hours_same_account: 3
+  max_posts_per_platform_per_day: 2     # per account, per platform (Stories count)
+  min_gap_hours_same_platform: 3
+  min_gap_minutes_same_account: 60     # between any two posts of one account, across platforms
   min_gap_hours_same_idea: 2      # repurposed versions of one idea across accounts
   explore_share: 0.2
   min_posts_per_slot_for_history: 3  # need this many past posts in a slot before trusting it

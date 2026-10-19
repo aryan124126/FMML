@@ -44,11 +44,12 @@ class Store:
         with self.log_file.open("a", encoding="utf-8") as f:
             f.write(json.dumps({"at": _now(), "event": event, **fields}, ensure_ascii=False) + "\n")
 
-    def new_id(self, post: dict) -> str:
+    def new_id(self, post: dict, taken: set | None = None) -> str:
+        """A readable unique id. `taken` holds ids already given out in the same batch, not yet saved."""
         slug = re.sub(r"[^a-z0-9]+", "-", post.get("idea_id", "post").lower()).strip("-")[:30] or "post"
         base = f"{post['date']}-{post['account']}-{post['platform']}-{slug}"
         pid, n = base, 2
-        while pid in self.posts:
+        while pid in self.posts or pid in (taken or set()):
             pid, n = f"{base}-{n}", n + 1
         return pid
 

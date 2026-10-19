@@ -1,0 +1,726 @@
+# Pathvik launch campaign, 20 Oct - 1 Nov 2026. Drafted by Claude in chat.
+# Load with:  python -m hifuel import campaigns/pathvik-launch.yaml
+#
+# Facts used (CLAUDE.md §2.2 + Aryan, 19 Oct 2026): the website is live and registrations are open;
+# no prices; no cohort start date; no mentor names; no outcomes or testimonials (nothing has run yet).
+# Calls to action: link in bio (Instagram), link in the first comment/reply (LinkedIn, X, Facebook), DMs.
+#
+# Strategy for reach:
+#   - Instagram Reels built to be shared by DM (relatable, useful), carousels to be saved,
+#     a Story every day (polls, Q&A, link sticker) to turn reach into registrations.
+#   - X: one sharp line a day for students.  LinkedIn: graduates, placement cells and colleges.
+#   - Facebook: parents, who often help decide.
+#   - Founder and Aryan posts on LinkedIn (people reach far more than pages), flagged because
+#     they disclose that Pathvik comes from the Hi Fuel group [CONFIRM affiliation disclosure].
+
+campaign:
+  id: pathvik-launch
+  name: Pathvik launch
+  account: pathvik
+  start: "2026-10-20"
+  end: "2026-11-01"
+  goal: Get Pathvik in front of as many final-year students, recent graduates and parents as possible, and turn that reach into registrations.
+  kpis: [Reach to non-followers, Shares per reach, Saves per reach, Profile visits and link clicks, Registrations and DMs]
+  ctas: ["Link in bio (Instagram)", "Link in the first comment / reply (LinkedIn, X, Facebook)", "DM us"]
+
+start: "2026-10-20"
+end: "2026-11-01"
+summary: >-
+  Two-week launch push for Pathvik. Week 1 announces the launch and explains what Pathvik is (and isn't),
+  with shareable Reels, save-worthy carousels and a Story every day. Week 2 keeps the reach going with
+  career-clarity content for placement season, every post pointing to registrations. No prices, no dates,
+  no promises: honesty is the hook.
+questions_for_team:
+  - What is Pathvik's website URL and Instagram handle? Posts say "link in bio" / "link in the first comment" until we have them.
+  - Founder and team posts reveal that Pathvik comes from the Hi Fuel group. Is that OK to say publicly? If not, reject those three.
+  - Who appears on camera in the Reels? It must be a real team member or mentor who has agreed.
+  - Who is each programme for? The carousel on 21 Oct describes the two programmes from their names; please confirm the wording.
+  - Is there a Pathvik WhatsApp Channel or Facebook Page? If not, skip the Facebook posts or post them from Tranzent/Hi Fuel.
+
+posts:
+  # ======================= Week 1: launch =======================
+  - idea_id: pathvik-is-live
+    account: pathvik
+    platform: instagram
+    date: "2026-10-20"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: reel
+    hook: "You don't need more career advice. You need a plan you believe in."
+    caption: |-
+      Pathvik is live.
+
+      We run live, mentor-led career programmes for undergraduates and graduates. Small cohorts of 30. Live classes, not recordings. You leave with a real plan for the roles you're aiming at, plus placement assistance.
+
+      What we won't give you is a job guarantee, because nobody honest can.
+
+      Clarity before career.
+    cta: Registrations are open. Tap the link in bio, or DM us your questions.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity", "#FinalYear", "#Graduates"]
+    alt_text: "Reel cover: bold violet text on navy, 'Pathvik is live.'"
+    design_brief:
+      format_notes: 20-second Reel, 9:16, fast cuts with on-screen text. Built to be sent to a friend.
+      reel:
+        duration_seconds: 20
+        opening_hook: "On screen, 0-2s: 'You don't need more career advice.' Hard cut to: 'You need a plan.'"
+        shots:
+          - {seconds: "0-2", shot: "Phone screen scrolling endless career-advice videos", on_screen_text: "You don't need more career advice.", voiceover: ""}
+          - {seconds: "2-5", shot: "Hand stops scrolling, puts phone down", on_screen_text: "You need a plan you believe in.", voiceover: ""}
+          - {seconds: "5-11", shot: "Screen recording of a live online class (no student faces or names)", on_screen_text: "Live, mentor-led classes · cohorts of 30", voiceover: "Pathvik runs live career programmes with mentors, in small cohorts."}
+          - {seconds: "11-16", shot: "Notebook with a handwritten 'My plan' page", on_screen_text: "A real plan + placement assistance. No job guarantee.", voiceover: "You leave with a real plan. No job guarantees. Nobody honest can give you one."}
+          - {seconds: "16-20", shot: "Pathvik logo on navy", on_screen_text: "Pathvik is live. Link in bio.", voiceover: "Clarity before career."}
+      layout_notes: Captions burned in inside the safe zone; logo end card; original footage only (no reposted clips).
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    internal_notes: Use only footage we own. If anyone on camera is a mentor, don't name them until confirmed.
+
+  - idea_id: pathvik-is-live
+    account: pathvik
+    platform: instagram
+    date: "2026-10-20"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: story
+    hook: "We're live"
+    caption: "Pathvik is open for registrations. Tap the link to see the programmes, or reply to this Story with your questions."
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity"]
+    alt_text: "Story frame: 'We're live' in violet on navy with a link sticker."
+    design_brief:
+      format_notes: 3 Story frames. Frame 3 carries the link sticker to the website.
+      slides:
+        - {number: 1, text: "We're live.", visual: "Large violet type on navy"}
+        - {number: 2, text: "Live, mentor-led career programmes. Cohorts of 30.", visual: "Two simple icons: live class, small group"}
+        - {number: 3, text: "Registrations are open", visual: "Link sticker to the website; question sticker 'Ask us anything'"}
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    internal_notes: Add the website link sticker on frame 3.
+
+  - idea_id: pathvik-is-live
+    account: pathvik
+    platform: x
+    date: "2026-10-20"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: text
+    hook: "Pathvik is live."
+    caption: "Live, mentor-led career programmes for undergrads and grads. Small cohorts, a real plan, placement assistance. No job guarantees, because nobody honest can give you one. Registrations are open, link below."
+    hashtags: ["#ClarityBeforeCareer"]
+    internal_notes: Post the website link as the first reply.
+
+  - idea_id: pathvik-is-live
+    account: pathvik
+    platform: linkedin
+    date: "2026-10-20"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: text
+    hook: "Pathvik is live: career programmes built on clarity, not promises."
+    caption: |-
+      Pathvik runs live, mentor-led career programmes for undergraduates and graduates, in cohorts of 30:
+
+      • Graduate Career Accelerator: 6 weeks, 12 live classes
+      • Consulting, Strategy & Product Mentorship: 8 weeks, 16 live classes
+
+      Both include placement assistance. Neither comes with a job guarantee, and we say that up front. What participants get is a clear plan for the roles they're aiming at, built with mentors, live.
+
+      Registrations are open. If you're graduating soon, or you work with students who are, the link is in the first comment.
+    cta: Know a final-year student who's unsure what's next? Send this to them.
+    hashtags: ["#Pathvik", "#CareerClarity", "#Graduates", "#PlacementSeason"]
+    internal_notes: Put the website link in the first comment.
+
+  - idea_id: which-programme
+    account: pathvik
+    platform: instagram
+    date: "2026-10-21"
+    theme: educational
+    pillar: Programme details and application steps
+    format: carousel
+    hook: "Two programmes. Which one fits you?"
+    caption: |-
+      Pathvik has two live, mentor-led programmes. Swipe to see the difference:
+
+      Graduate Career Accelerator: 6 weeks, 12 live classes. For graduates who want a clear plan for their first role.
+
+      Consulting, Strategy & Product Mentorship: 8 weeks, 16 live classes. For people aiming at consulting, strategy or product roles.
+
+      Both: cohorts of 30, placement assistance, no job guarantee.
+    cta: Save this, then tap the link in bio to register. Not sure which? DM us.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#Consulting", "#ProductManagement", "#CareerClarity"]
+    alt_text: "Carousel cover: two cards side by side labelled with the two Pathvik programme names."
+    design_brief:
+      format_notes: 6-slide carousel, 4:5.
+      slides:
+        - {number: 1, text: "Two programmes. Which one fits you?", visual: "Two navy cards with violet and orange accents"}
+        - {number: 2, text: "Graduate Career Accelerator: 6 weeks · 12 live classes", visual: "Violet card"}
+        - {number: 3, text: "Best if you want a clear plan for your first role", visual: "Violet card, simple checklist"}
+        - {number: 4, text: "Consulting, Strategy & Product Mentorship: 8 weeks · 16 live classes", visual: "Orange card"}
+        - {number: 5, text: "Best if you're aiming at consulting, strategy or product", visual: "Orange card, three role tags"}
+        - {number: 6, text: "Both: cohorts of 30 · placement assistance · no job guarantee", visual: "Both cards together, 'Link in bio'"}
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    internal_notes: "[CONFIRM] the 'best if...' wording for each programme. No prices (decided 19 Oct)."
+
+  - idea_id: course-vs-job
+    account: pathvik
+    platform: x
+    date: "2026-10-21"
+    theme: engagement
+    pillar: Student doubts answered
+    format: text
+    hook: "How long did you spend choosing your college course?"
+    caption: "Now: how long are you planning to spend choosing your first job? Most of us give the second decision far less thought than it deserves."
+    hashtags: ["#CareerClarity"]
+    internal_notes: '"Most of us" is an observation, not a statistic; reword if the reviewer prefers.'
+
+  - idea_id: parents-launch
+    account: pathvik
+    platform: facebook
+    date: "2026-10-21"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: single_image
+    hook: "For parents of final-year students and recent graduates."
+    caption: |-
+      If your son or daughter is finishing college and isn't sure what comes next, they're not alone, and they're not behind.
+
+      Pathvik is a new set of live, mentor-led career programmes for undergraduates and graduates. Small cohorts of 30, live classes with mentors, a clear plan for the roles they're aiming at, and placement assistance.
+
+      We don't promise jobs. We help them choose well and prepare properly.
+    cta: Registrations are open; the link is in the first comment. Questions? Message us.
+    hashtags: ["#Pathvik", "#CareerClarity"]
+    alt_text: "A parent and a young adult looking at a laptop together at a dining table, seen from behind."
+    design_brief:
+      format_notes: Single 4:5 image, real photo (not AI). Faces not needed; shot from behind or over-the-shoulder.
+      layout_notes: Warm, natural light; small Pathvik logo bottom right.
+      colours: ["#140F2F", "#FE6A3C"]
+    internal_notes: "[CONFIRM] Pathvik has a Facebook Page. Use a photo of people who have agreed to appear."
+
+  - idea_id: career-myths
+    account: pathvik
+    platform: instagram
+    date: "2026-10-22"
+    theme: educational
+    pillar: Career-clarity tips
+    format: reel
+    hook: "3 career myths final-year students believe."
+    caption: |-
+      Myth 1: You need to know your dream job right now.
+      You need a direction you can test, not a lifelong answer.
+
+      Myth 2: More applications means better odds.
+      Fewer, better-aimed applications usually beat a spreadsheet of maybes.
+
+      Myth 3: The right course will land you a job.
+      Nothing can promise that. A clear plan and real preparation are what you control.
+    cta: Send this to the friend who's applying everywhere. Pathvik registrations are open, link in bio.
+    hashtags: ["#Pathvik", "#CareerClarity", "#FinalYear", "#PlacementSeason", "#ClarityBeforeCareer"]
+    alt_text: "Reel cover: '3 career myths' in large orange type on navy."
+    design_brief:
+      format_notes: 25-second Reel, one myth every ~7 seconds, big on-screen text, built to be shared.
+      reel:
+        duration_seconds: 25
+        opening_hook: "On screen, 0-2s: 'Myth: you need to know your dream job by now.' with a red cross appearing."
+        shots:
+          - {seconds: "0-2", shot: "Speaker to camera, plain background", on_screen_text: "Myth: you need to know your dream job by now ❌", voiceover: "Myth one: you need to know your dream job right now."}
+          - {seconds: "2-8", shot: "Same speaker", on_screen_text: "You need a direction you can test", voiceover: "You don't. You need a direction you can test."}
+          - {seconds: "8-15", shot: "Cut to a messy spreadsheet of job applications", on_screen_text: "Myth: more applications = better odds ❌", voiceover: "Myth two: more applications means better odds. Fewer, better-aimed ones usually win."}
+          - {seconds: "15-22", shot: "Speaker to camera", on_screen_text: "Myth: the right course will land you a job ❌", voiceover: "Myth three: the right course will land you a job. Nothing can promise that. A plan and real preparation do the work."}
+          - {seconds: "22-25", shot: "Pathvik end card", on_screen_text: "Clarity before career. Link in bio.", voiceover: ""}
+      colours: ["#140F2F", "#FE6A3C", "#8B7BFF"]
+    internal_notes: The speaker must be a real, agreeing team member.
+
+  - idea_id: not-behind
+    account: pathvik
+    platform: linkedin
+    date: "2026-10-22"
+    theme: educational
+    pillar: Career-clarity tips
+    format: text
+    hook: "Graduated and still unsure what you want to do? You're not behind."
+    caption: |-
+      LinkedIn can make it look as if everyone else has it figured out. Most people's first role is a best guess, and the ones who do well treat it that way: as something to test, not a life sentence.
+
+      Three things that help more than another application:
+      1. Name two or three roles you'd genuinely enjoy doing every day.
+      2. Talk to one person in each of those roles this month.
+      3. Write down what you'd need to learn to get there, and start on one thing this week.
+
+      That's the kind of plan we build with people at Pathvik, live, with mentors.
+    cta: Registrations are open; the link is in the first comment.
+    hashtags: ["#CareerClarity", "#Graduates", "#FirstJob", "#Pathvik"]
+    internal_notes: Website link in the first comment.
+
+  - idea_id: before-you-accept
+    account: pathvik
+    platform: x
+    date: "2026-10-22"
+    theme: educational
+    pillar: Career-clarity tips
+    format: thread
+    hook: "5 questions to ask yourself before you accept your first job offer:"
+    caption: ""
+    thread_parts:
+      - "5 questions to ask yourself before you accept your first job offer: 🧵"
+      - "1. What will I actually do on a normal Tuesday? Ask for specifics, not the job title."
+      - "2. Who will I learn from? Your first manager matters more than the logo."
+      - "3. What skills will I have in a year that I don't have now?"
+      - "4. Does this move me towards the roles I want next, or just away from uncertainty?"
+      - "5. If it doesn't work out, what will I have gained? Clarity before career. Pathvik registrations are open, link below."
+    hashtags: []
+    internal_notes: Website link as a reply to the last part.
+
+  - idea_id: which-programme-poll
+    account: pathvik
+    platform: instagram
+    date: "2026-10-22"
+    theme: engagement
+    pillar: Student doubts answered
+    format: story
+    hook: "Quick poll"
+    caption: "Which Pathvik programme are you leaning towards? Vote, and DM us if you're stuck between them."
+    hashtags: ["#Pathvik", "#CareerClarity", "#ClarityBeforeCareer"]
+    alt_text: "Story poll: 'Graduate Career Accelerator' or 'Consulting, Strategy & Product Mentorship'."
+    design_brief:
+      format_notes: 2 Story frames; poll sticker on frame 1, link sticker on frame 2.
+      slides:
+        - {number: 1, text: "Which programme are you leaning towards?", visual: "Poll sticker: Graduate Career Accelerator / Consulting, Strategy & Product"}
+        - {number: 2, text: "Still deciding? DM us. Or see both programmes here.", visual: "Link sticker"}
+      colours: ["#140F2F", "#8B7BFF"]
+
+  - idea_id: inside-a-live-class
+    account: pathvik
+    platform: instagram
+    date: "2026-10-23"
+    theme: behind_the_scenes
+    pillar: Programme details and application steps
+    format: carousel
+    hook: "What actually happens in a live, mentor-led class?"
+    caption: |-
+      "Live" is the point. You're in a small cohort of 30, with a mentor, asking questions as they come up, not watching a recording on fast-forward.
+
+      Swipe for how a Pathvik programme builds your plan, week by week.
+    cta: Registrations are open. Link in bio.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity", "#LiveLearning"]
+    alt_text: "Carousel cover: an illustrated laptop showing a small video-call grid, titled 'Inside a live class'."
+    design_brief:
+      format_notes: 5-slide illustrated carousel, 4:5. Illustrations only, no real faces.
+      slides:
+        - {number: 1, text: "Inside a live Pathvik class", visual: "Illustrated laptop with a small video grid"}
+        - {number: 2, text: "Small cohort: 30 people, one mentor, real conversation", visual: "Illustrated group of 30 dots around a mentor icon"}
+        - {number: 3, text: "Ask your questions live, about your own situation", visual: "Speech bubbles"}
+        - {number: 4, text: "Build your plan week by week", visual: "A plan page filling up"}
+        - {number: 5, text: "Placement assistance included. No job guarantee.", visual: "Pathvik logo, 'Link in bio'"}
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    claims_notes:
+      - {claim: "Cohorts of 30", source: "Pathvik programme facts (CLAUDE.md §2.2, config/accounts.yaml)", year: "2026"}
+    internal_notes: "[CONFIRM] the class format matches how the programmes actually run (questions live, plan built week by week)."
+
+  - idea_id: small-cohorts-line
+    account: pathvik
+    platform: x
+    date: "2026-10-23"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: text
+    hook: "Small cohorts. Live classes. A real plan."
+    caption: "That's Pathvik. No job guarantees, because nobody honest can give you one. Registrations are open, link below."
+    hashtags: ["#ClarityBeforeCareer"]
+    internal_notes: Website link as the first reply.
+
+  - idea_id: why-we-built-pathvik
+    account: founder_ashish
+    platform: linkedin
+    date: "2026-10-23"
+    theme: founder_team_voice
+    pillar: What the group is building
+    format: text
+    hook: "We just launched Pathvik, and the first decision we made was what not to promise."
+    caption: |-
+      Career programmes often sell certainty: promises about placements, packages and ranks. Students deserve better than promises nobody can keep.
+
+      Pathvik promises something smaller and more honest: live, mentor-led classes in small cohorts, a clear plan for the roles you're aiming at, and help with placements. No job guarantee.
+
+      Clarity before career.
+    cta: If you know a final-year student or recent graduate who's unsure what's next, I'd be grateful if you shared this with them. The link is in the comments.
+    hashtags: ["#Pathvik", "#Careers", "#Education"]
+    personalise_prompt: >-
+      Add why this matters to you personally: a conversation with a student, or something you wish someone had
+      told you at 21. Keep it in your own words.
+    internal_notes: "[CONFIRM] affiliation disclosure: this post tells people Pathvik comes from the founder of the Hi Fuel group. Reject it if that shouldn't be public yet."
+
+  - idea_id: relatives-pov
+    account: pathvik
+    platform: instagram
+    date: "2026-10-24"
+    theme: engagement
+    pillar: Student doubts answered
+    format: reel
+    hook: "POV: a relative asks what you're doing after graduation."
+    caption: |-
+      Every family function, the same question.
+
+      You don't need a perfect answer. "I'm working out which roles fit me, and here's my plan" is a great one.
+
+      Pathvik helps you get to that plan, live, with mentors.
+    cta: Send this to someone who dreads that question. Link in bio to register.
+    hashtags: ["#Pathvik", "#FinalYear", "#RelatableStudentLife", "#CareerClarity"]
+    alt_text: "Reel cover: a student smiling awkwardly at a family gathering, text 'What are you doing after graduation?'"
+    design_brief:
+      format_notes: 15-second relatable skit Reel, 9:16. Light humour, never mocking anyone.
+      reel:
+        duration_seconds: 15
+        opening_hook: "0-1s: off-screen voice 'So beta, what are you doing after graduation?' Student freezes mid-bite."
+        shots:
+          - {seconds: "0-3", shot: "Student at a family gathering freezes mid-bite", on_screen_text: "'So... what are you doing after graduation?'", voiceover: "So beta, what are you doing after graduation?"}
+          - {seconds: "3-7", shot: "Quick cuts of the student's panicked imagined answers", on_screen_text: "MBA? Job? Abroad? Startup??", voiceover: ""}
+          - {seconds: "7-12", shot: "Student calmly answers", on_screen_text: "'I'm working out which roles fit me. Here's my plan.'", voiceover: "I'm working out which roles fit me, and I have a plan."}
+          - {seconds: "12-15", shot: "Pathvik end card", on_screen_text: "Get to your plan. Link in bio.", voiceover: ""}
+      layout_notes: Actors must be team members or friends who have agreed; adults only.
+      colours: ["#140F2F", "#FE6A3C"]
+
+  - idea_id: weekend-question
+    account: pathvik
+    platform: x
+    date: "2026-10-24"
+    theme: engagement
+    pillar: Student doubts answered
+    format: text
+    hook: "Weekend question for final-year students:"
+    caption: "If you could shadow anyone at work for one day, whose job would it be? That answer is a better career clue than most aptitude tests."
+    hashtags: ["#CareerClarity"]
+    internal_notes: '"Better than most aptitude tests" is an opinion. Soften if the reviewer prefers.'
+
+  - idea_id: parents-better-questions
+    account: pathvik
+    platform: facebook
+    date: "2026-10-24"
+    theme: educational
+    pillar: Career-clarity tips
+    format: text
+    hook: "3 questions parents can ask instead of \"Which company are you applying to?\""
+    caption: |-
+      1. "What kind of work do you enjoy doing, even when it's hard?"
+      2. "Who could you talk to about what that job is really like?"
+      3. "What would help you decide?"
+
+      These open a conversation instead of ending one. And if your child wants help building a plan, Pathvik's live, mentor-led programmes are open for registrations.
+    cta: Link in the first comment.
+    hashtags: ["#Parenting", "#CareerClarity"]
+
+  - idea_id: ask-us-anything
+    account: pathvik
+    platform: instagram
+    date: "2026-10-25"
+    theme: engagement
+    pillar: Student doubts answered
+    format: story
+    hook: "Ask us anything"
+    caption: "Questions about Pathvik, the programmes or choosing a career? Drop them in the box. We'll answer the most common ones in a Reel next weekend."
+    hashtags: ["#Pathvik", "#CareerClarity", "#ClarityBeforeCareer"]
+    alt_text: "Story frame with a question sticker: 'Ask us anything about Pathvik'."
+    design_brief:
+      format_notes: 1 Story frame with a question sticker; second frame with the link sticker.
+      slides:
+        - {number: 1, text: "Ask us anything", visual: "Question sticker on navy"}
+        - {number: 2, text: "Or see the programmes here", visual: "Link sticker"}
+      colours: ["#140F2F", "#8B7BFF"]
+    internal_notes: Feeds the FAQ Reel on 1 Nov; save the questions.
+
+  - idea_id: launch-week-learning
+    account: team_aryan
+    platform: linkedin
+    date: "2026-10-25"
+    theme: founder_team_voice
+    pillar: What I'm working on
+    format: text
+    hook: "This week our team launched Pathvik. The hardest part of writing about it was leaving things out."
+    caption: |-
+      No job guarantees. No inflated numbers. No testimonials from cohorts that haven't run yet.
+
+      What's left is simple: live, mentor-led career programmes for undergraduates and graduates, in small cohorts, built around a real plan.
+
+      It turns out that saying less, honestly, is a strong position.
+    cta: If you know someone graduating soon, the link is in the comments.
+    hashtags: ["#Pathvik", "#LearningInPublic", "#Careers"]
+    personalise_prompt: Add the one thing you personally worked on for the launch, and what surprised you.
+    internal_notes: "[CONFIRM] affiliation disclosure (Aryan works at Hi Fuel Advisory)."
+
+  - idea_id: sunday-reset
+    account: pathvik
+    platform: x
+    date: "2026-10-25"
+    theme: educational
+    pillar: Career-clarity tips
+    format: text
+    hook: "Sunday reset for job hunters:"
+    caption: "Close the 20 tabs. Write down the 3 roles you actually want. Pick one person to message this week. That's the whole plan for Monday."
+    hashtags: ["#CareerClarity"]
+
+  # ======================= Week 2: keep the reach going =======================
+  - idea_id: placement-pulse
+    account: pathvik
+    platform: instagram
+    date: "2026-10-26"
+    theme: engagement
+    pillar: Student doubts answered
+    format: story
+    hook: "Placement season check-in"
+    caption: "How sure are you about the first job you want? Tap an answer. We'll share what you said, and what to do about it, later this week."
+    hashtags: ["#Pathvik", "#CareerClarity", "#PlacementSeason"]
+    alt_text: "Story frame with a poll: 'How sure are you about your first job?' Options: very sure, somewhat, no idea."
+    design_brief:
+      format_notes: 3-frame Story with a poll sticker, a question box and a link sticker.
+      slides:
+        - {number: 1, text: "Placement season check-in", visual: "Navy background, violet headline"}
+        - {number: 2, text: "How sure are you about the first job you want?", visual: "Poll sticker: Very sure / Somewhat / No idea"}
+        - {number: 3, text: "Want a plan? Pathvik registrations are open.", visual: "Link sticker"}
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    internal_notes: Share real poll results in a Story on Friday; don't publish a percentage unless it comes from this poll.
+
+  - idea_id: registrations-open-reminder
+    account: pathvik
+    platform: x
+    date: "2026-10-26"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: text
+    hook: "Placement season is here. So is Pathvik."
+    caption: "Live, mentor-led career programmes in small cohorts, with placement assistance and zero false promises. Registrations are open, link below."
+    hashtags: ["#PlacementSeason", "#ClarityBeforeCareer"]
+    internal_notes: Website link as the first reply.
+
+  - idea_id: career-choice-check
+    account: pathvik
+    platform: instagram
+    date: "2026-10-27"
+    theme: educational
+    pillar: Career-clarity tips
+    format: carousel
+    hook: "Job offer, MBA prep, or a gap year? You don't have to guess."
+    caption: |-
+      If you're in final year, you probably aren't short of options. You're short of a way to compare them.
+
+      Swipe for a 4-question check you can do this week:
+      1. What did you enjoy doing, not just score well in?
+      2. Which roles use that every day?
+      3. What would you need to learn to get there?
+      4. Who could you ask, this month, about what the job is really like?
+
+      Write the answers down. Comparing them on paper beats going round in circles in your head.
+    cta: Save this for the weekend. Want help building the plan? Pathvik registrations are open, link in bio.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity", "#FinalYear"]
+    alt_text: "Navy carousel cover with violet text: 'Job, MBA or gap year? A 4-question check.'"
+    design_brief:
+      format_notes: 6-slide carousel, 4:5. Cover, one question per slide, closing slide.
+      slides:
+        - {number: 1, text: "Job, MBA or gap year? A 4-question check", visual: "Bold violet type on navy, small orange arrow bottom right"}
+        - {number: 2, text: "1. What did you enjoy doing, not just score well in?", visual: "Question in large type"}
+        - {number: 3, text: "2. Which roles use that every day?", visual: "Same layout"}
+        - {number: 4, text: "3. What would you need to learn to get there?", visual: "Same layout"}
+        - {number: 5, text: "4. Who could you ask this month?", visual: "Same layout"}
+        - {number: 6, text: "Write it down. Compare on paper. Clarity before career.", visual: "Pathvik wordmark, 'Link in bio'"}
+      layout_notes: Generous margins, one idea per slide, no stock photos.
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+
+  - idea_id: three-roles-first
+    account: pathvik
+    platform: x
+    date: "2026-10-27"
+    theme: educational
+    pillar: Career-clarity tips
+    format: text
+    hook: "Before you apply everywhere, write down the 3 roles you'd actually want to do every day."
+    caption: "Then apply to those. Fewer, better applications beat a spreadsheet of maybes."
+    hashtags: ["#ClarityBeforeCareer"]
+
+  - idea_id: placement-cells
+    account: pathvik
+    platform: linkedin
+    date: "2026-10-28"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: text
+    hook: "Placement officers: what if students arrived at placement season already knowing which roles they want?"
+    caption: |-
+      Pathvik runs live, mentor-led career programmes for undergraduates and graduates, in cohorts of 30:
+
+      • Graduate Career Accelerator: 6 weeks, 12 live classes
+      • Consulting, Strategy & Product Mentorship: 8 weeks, 16 live classes
+
+      Both include placement assistance. Neither comes with a job guarantee, and we say so up front. What students get is a clear plan for the roles they're aiming at, built with mentors over live classes.
+
+      Registrations are open now. We'd also like to work with colleges and placement cells who want their students to apply with more clarity.
+    cta: If you run a placement cell, message us and we'll walk you through the programmes. Website link in the first comment.
+    hashtags: ["#Pathvik", "#PlacementSeason", "#CareerReadiness", "#HigherEducation"]
+    internal_notes: Website link in the first comment.
+
+  - idea_id: placement-week-plan
+    account: pathvik
+    platform: instagram
+    date: "2026-10-28"
+    theme: educational
+    pillar: Career-clarity tips
+    format: reel
+    hook: "It's placement season. Here's what to do this week, not this year."
+    caption: |-
+      Monday: pick 3 roles you'd genuinely want.
+      Tuesday: rewrite your CV for one of them.
+      Wednesday: message one person who does that job.
+      Thursday: practise answering "Why this role?" out loud.
+      Friday: apply to the roles that still feel right.
+
+      Small, specific, doable. That's how clarity starts.
+    cta: Save this. Want to build your plan with a mentor? Link in bio.
+    hashtags: ["#Pathvik", "#PlacementSeason", "#FinalYear", "#CareerClarity", "#JobSearch"]
+    alt_text: "Reel cover: a weekly planner page titled 'Placement week plan'."
+    design_brief:
+      format_notes: 20-second Reel, planner close-ups, one day per beat.
+      reel:
+        duration_seconds: 20
+        opening_hook: "0-2s: a planner page flips open; on screen 'Placement season: your plan for THIS week'."
+        shots:
+          - {seconds: "0-2", shot: "Planner flips open", on_screen_text: "Placement season: your plan for THIS week", voiceover: ""}
+          - {seconds: "2-6", shot: "Hand writes 'Mon: pick 3 roles'", on_screen_text: "Mon: pick 3 roles", voiceover: ""}
+          - {seconds: "6-10", shot: "Laptop with a CV document", on_screen_text: "Tue: tailor your CV to one", voiceover: ""}
+          - {seconds: "10-13", shot: "Phone typing a message", on_screen_text: "Wed: message someone in that job", voiceover: ""}
+          - {seconds: "13-16", shot: "Student practising in front of a mirror (from behind)", on_screen_text: "Thu: practise 'Why this role?'", voiceover: ""}
+          - {seconds: "16-20", shot: "Pathvik end card", on_screen_text: "Fri: apply. Clarity before career.", voiceover: ""}
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+
+  - idea_id: no-guarantee-promise
+    account: pathvik
+    platform: instagram
+    date: "2026-10-29"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: reel
+    hook: "We won't promise you a job. Here's what we do promise."
+    caption: |-
+      Pathvik runs live, mentor-led career programmes for undergraduates and graduates. The Graduate Career Accelerator is 6 weeks of 12 live classes, in cohorts of 30.
+
+      You get a real plan, live classes and placement assistance. You don't get a job guarantee, because nobody honest can give you one.
+    cta: Registrations are open. Link in bio.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity"]
+    alt_text: "Reel cover: orange text on navy reading 'We won't promise you a job.'"
+    design_brief:
+      format_notes: 20-second talking-head Reel with on-screen text, 9:16.
+      reel:
+        duration_seconds: 20
+        opening_hook: "On screen: 'We won't promise you a job.' Speaker looks straight at camera."
+        shots:
+          - {seconds: "0-2", shot: "Close-up of a team member, plain background", on_screen_text: "We won't promise you a job.", voiceover: "We won't promise you a job."}
+          - {seconds: "2-8", shot: "Same speaker, slight push-in", on_screen_text: "6 weeks · 12 live classes · cohorts of 30", voiceover: "What we will give you is six weeks of live classes with mentors, in small cohorts."}
+          - {seconds: "8-15", shot: "Screen recording of a live class (no student faces or names)", on_screen_text: "A real plan + placement assistance", voiceover: "You leave with a real plan, and help with placements."}
+          - {seconds: "15-20", shot: "Back to speaker", on_screen_text: "Clarity before career. Link in bio.", voiceover: "No guarantees. Just clarity before career."}
+      layout_notes: Captions burned in, large type inside the safe zone.
+      colours: ["#140F2F", "#FE6A3C", "#8B7BFF"]
+    internal_notes: The person on camera must be a real, agreeing team member; don't name them in the caption until confirmed. Blur any student on the call.
+
+  - idea_id: honest-career-education
+    account: founder_ashish
+    platform: linkedin
+    date: "2026-10-29"
+    theme: founder_team_voice
+    pillar: Lessons from building
+    format: text
+    hook: "One week after launching Pathvik, the question we hear most is \"Do you guarantee a job?\""
+    caption: |-
+      Our answer is no, and it surprises people.
+
+      Nobody can honestly guarantee a job. What we can do is help someone choose the right roles, prepare properly, and apply with a plan. That's what Pathvik is for.
+
+      If a programme promises you a placement, ask what happens if it doesn't come through.
+    cta: The link to Pathvik is in the comments, for anyone it might help.
+    hashtags: ["#Pathvik", "#Careers", "#Education"]
+    personalise_prompt: >-
+      Only post this if that really is the most common question by then; otherwise swap the opening for the
+      question you are hearing most. Add a line about how it feels to say "no" to it.
+    internal_notes: "[CONFIRM] affiliation disclosure. The opening line must be true when posted; the founder should check."
+
+  - idea_id: placement-season-question
+    account: pathvik
+    platform: x
+    date: "2026-10-30"
+    theme: engagement
+    pillar: Student doubts answered
+    format: text
+    hook: "Placement season question for final-year students:"
+    caption: "What's one thing you wish someone had told you about choosing your first job? Reply and we'll answer the most common ones next week."
+    hashtags: ["#CareerClarity"]
+    internal_notes: Add the follow-up post to next week's plan.
+
+  - idea_id: parents-what-pathvik-is
+    account: pathvik
+    platform: facebook
+    date: "2026-10-30"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: text
+    hook: "What Pathvik is, and what it isn't."
+    caption: |-
+      Pathvik is: live, mentor-led career programmes for undergraduates and graduates. Small cohorts of 30. A clear plan for the roles your child is aiming at, and placement assistance.
+
+      Pathvik isn't: a job guarantee, or a recorded video course you watch alone.
+
+      We think parents deserve that kind of honesty up front.
+    cta: Registrations are open; link in the first comment. Message us with any questions.
+    hashtags: ["#Pathvik", "#CareerClarity"]
+
+  - idea_id: day-in-life-strategy-analyst
+    account: pathvik
+    platform: instagram
+    date: "2026-10-31"
+    theme: educational
+    pillar: '"A day in the life of" industry roles'
+    format: carousel
+    hook: "What does a strategy analyst actually do all day?"
+    caption: |-
+      "Strategy" sounds big. Most days, the work is smaller and more concrete: finding the right numbers, checking them, and turning them into a clear recommendation someone can act on.
+
+      Swipe for what a typical day can involve, and the skills behind each part. If it sounds like you, Pathvik's Consulting, Strategy & Product Mentorship is open for registrations.
+    cta: Save this, and tell us which role we should break down next. Link in bio.
+    hashtags: ["#Pathvik", "#CareerClarity", "#Consulting", "#StrategyJobs"]
+    alt_text: "Carousel cover: a laptop with a simple chart and the title 'A day as a strategy analyst'."
+    design_brief:
+      format_notes: 7-slide carousel, 4:5, illustrated (no real people).
+      slides:
+        - {number: 1, text: "A day as a strategy analyst", visual: "Flat illustration of a desk with a laptop and chart"}
+        - {number: 2, text: "Morning: understand the question. What decision is the team trying to make?", visual: "Question mark icon"}
+        - {number: 3, text: "Find the data: reports, spreadsheets, interviews", visual: "Stack of documents icon"}
+        - {number: 4, text: "Check it: do the numbers add up? What's missing?", visual: "Magnifying glass"}
+        - {number: 5, text: "Build the story: 3-5 slides that answer the question", visual: "Slide thumbnails"}
+        - {number: 6, text: "Skills behind it: structured thinking, Excel, clear writing", visual: "Three skill tags"}
+        - {number: 7, text: "Curious? That's where clarity starts. Link in bio.", visual: "Pathvik wordmark"}
+      layout_notes: Illustrations only; no salary figures, no company names.
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    internal_notes: Ask a confirmed mentor with strategy experience to sanity-check the slides before approval.
+
+  - idea_id: pathvik-faq
+    account: pathvik
+    platform: instagram
+    date: "2026-11-01"
+    theme: educational
+    pillar: Student doubts answered
+    format: reel
+    hook: "Your top questions about Pathvik, answered in 20 seconds."
+    caption: |-
+      Will I definitely get a job? No one honest can promise that, and we don't.
+      Is it live or recorded? Live, with mentors.
+      How big are the cohorts? 30 people.
+      Is there placement help? Yes, placement assistance is included.
+      How do I register? Link in bio.
+    cta: Still have a question? DM us.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity", "#FAQ"]
+    claims_notes:
+      - {claim: "Cohorts of 30", source: "Pathvik programme facts (CLAUDE.md §2.2, config/accounts.yaml)", year: "2026"}
+    alt_text: "Reel cover: 'Your Pathvik questions, answered' in violet on navy."
+    design_brief:
+      format_notes: 20-second Reel, question on screen then a one-line answer, quick rhythm.
+      reel:
+        duration_seconds: 20
+        opening_hook: "0-2s: 'Will I definitely get a job?' on screen, then 'No one honest can promise that.'"
+        shots:
+          - {seconds: "0-4", shot: "Text on navy", on_screen_text: "Definitely get a job? No one honest can promise that.", voiceover: ""}
+          - {seconds: "4-8", shot: "Screen recording of a live class (no faces)", on_screen_text: "Live or recorded? Live, with mentors.", voiceover: ""}
+          - {seconds: "8-12", shot: "Grid of 30 dots", on_screen_text: "Cohort size? 30.", voiceover: ""}
+          - {seconds: "12-16", shot: "Checklist ticking", on_screen_text: "Placement help? Yes, assistance included.", voiceover: ""}
+          - {seconds: "16-20", shot: "Pathvik end card", on_screen_text: "Register: link in bio.", voiceover: ""}
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    internal_notes: Swap in the real most-asked questions from the 25 Oct Story box if they differ.

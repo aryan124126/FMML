@@ -33,8 +33,8 @@ Three questions to ask a CSR plantation partner before you sign.,https://lnkd.in
 @pytest.fixture
 def setup(tmp_path):
     store, an = Store(tmp_path), Analytics(tmp_path)
-    data = yaml.safe_load((ROOT / "weeks" / "2026-10-26.yaml").read_text(encoding="utf-8"))
-    import_plan(CFG, store, data)
+    for path in ("weeks/2026-10-26.yaml", "campaigns/pathvik-launch.yaml"):
+        import_plan(CFG, store, yaml.safe_load((ROOT / path).read_text(encoding="utf-8")))
     return store, an, tmp_path
 
 
