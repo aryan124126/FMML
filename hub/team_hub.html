@@ -1,0 +1,635 @@
+<title>Hi Fuel Team Hub</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a compact operations board. Sticky header with week + counts, tabbed views below,
+   a side drawer for one post. Emerald from Hi Fuel Advisory's brand is the only accent. */
+:root {
+  --bg: #f5f7f5;
+  --surface: #ffffff;
+  --surface-2: #eef2ef;
+  --line: #d9e1dc;
+  --fg: #142019;
+  --muted: #5b6b62;
+  --accent: #064e3b;
+  --accent-fg: #ffffff;
+  --accent-soft: #dcefe6;
+  --block: #b42318;
+  --block-soft: #fde8e6;
+  --flag: #946200;
+  --flag-soft: #fdf3d7;
+  --ok: #18794e;
+  --ok-soft: #ddf3e6;
+  --info-soft: #e6ecf7;
+  --info: #2c4f8c;
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --font-body: "Public Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --a-hifuel_advisory: #064e3b; --a-tranzent_foundation: #2f7d4f; --a-pathvik: #6d5ce8;
+  --a-earth_osai: #1f6f8b; --a-iclc: #c2571a; --a-person: #6b5b4b; --a-other: #7a8a80;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1512; --surface: #161e1a; --surface-2: #1d2722; --line: #2b3832; --fg: #e4ece7; --muted: #9aaba1;
+    --accent: #5cc79c; --accent-fg: #06261c; --accent-soft: #1b3a2e;
+    --block: #ff8a80; --block-soft: #3a1c1a; --flag: #f0c45a; --flag-soft: #3a3016; --ok: #6fd6a0; --ok-soft: #173426;
+    --info-soft: #1c2840; --info: #9db9ec;
+    --a-hifuel_advisory: #5cc79c; --a-tranzent_foundation: #7fcf94; --a-pathvik: #a89cff;
+    --a-earth_osai: #6ec1dd; --a-iclc: #f29a5e; --a-person: #c9b29a; --a-other: #9aaba1;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1512; --surface: #161e1a; --surface-2: #1d2722; --line: #2b3832; --fg: #e4ece7; --muted: #9aaba1;
+  --accent: #5cc79c; --accent-fg: #06261c; --accent-soft: #1b3a2e;
+  --block: #ff8a80; --block-soft: #3a1c1a; --flag: #f0c45a; --flag-soft: #3a3016; --ok: #6fd6a0; --ok-soft: #173426;
+  --info-soft: #1c2840; --info: #9db9ec;
+  --a-hifuel_advisory: #5cc79c; --a-tranzent_foundation: #7fcf94; --a-pathvik: #a89cff;
+  --a-earth_osai: #6ec1dd; --a-iclc: #f29a5e; --a-person: #c9b29a; --a-other: #9aaba1;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); }
+body { color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+button, input, textarea, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding-block: 12px; }
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand h1 { font-family: var(--font-display); font-size: 1.35rem; margin: 0; letter-spacing: -0.01em; }
+.brand span { color: var(--muted); font-size: 0.85rem; }
+.week { display: flex; align-items: center; gap: 6px; }
+.week strong { font-variant-numeric: tabular-nums; min-width: 12ch; text-align: center; font-weight: 600; }
+.iconbtn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; width: 34px; height: 34px; cursor: pointer; }
+.iconbtn:hover { background: var(--surface-2); }
+.counts { display: flex; flex-wrap: wrap; gap: 6px; }
+.count { font-size: 0.8rem; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); white-space: nowrap; }
+.count b { font-variant-numeric: tabular-nums; }
+.count.block { background: var(--block-soft); color: var(--block); }
+.count.review { background: var(--flag-soft); color: var(--flag); }
+.count.ok { background: var(--ok-soft); color: var(--ok); }
+nav.tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+nav.tabs button { border: 0; background: none; padding: 10px 14px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; white-space: nowrap; font-weight: 500; }
+nav.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+
+main { padding-block: 20px 60px; display: grid; gap: 20px; }
+h2 { font-family: var(--font-display); font-size: 1.15rem; margin: 0; text-wrap: balance; }
+h3 { font-size: 0.95rem; margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+.label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+.mono { font-family: var(--font-mono); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+
+.notice { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 8px; }
+.notice ul { margin: 0; padding-left: 1.1rem; }
+.empty { border: 1px dashed var(--line); border-radius: var(--radius); padding: 28px 20px; text-align: center; color: var(--muted); }
+.empty strong { display: block; color: var(--fg); font-size: 1rem; margin-bottom: 4px; }
+
+/* Week board */
+.board { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
+.day { display: grid; align-content: start; gap: 8px; min-width: 0; }
+.dayhead { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 2px; border-bottom: 1px solid var(--line); }
+.dayhead b { font-weight: 600; }
+.daytag { font-size: 0.7rem; color: var(--info); background: var(--info-soft); border-radius: 6px; padding: 1px 6px; }
+.daytag.sensitive { color: var(--block); background: var(--block-soft); }
+.chip { text-align: left; width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 8px 9px 8px 11px; cursor: pointer; display: grid; gap: 4px; position: relative; min-width: 0; }
+.chip::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; border-radius: 3px; background: var(--acct, var(--a-other)); }
+.chip:hover { border-color: var(--muted); }
+.chip .top { display: flex; gap: 6px; align-items: center; font-size: 0.75rem; color: var(--muted); }
+.chip .hook { font-size: 0.85rem; line-height: 1.35; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.pill { font-size: 0.7rem; font-weight: 600; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+.pill.draft { background: var(--surface-2); color: var(--muted); }
+.pill.needs_changes { background: var(--flag-soft); color: var(--flag); }
+.pill.approved, .pill.scheduled { background: var(--ok-soft); color: var(--ok); }
+.pill.posted { background: var(--accent-soft); color: var(--accent); }
+.pill.rejected { background: var(--surface-2); color: var(--muted); text-decoration: line-through; }
+.pill.blocked { background: var(--block-soft); color: var(--block); }
+.pill.sample { background: var(--info-soft); color: var(--info); }
+
+/* Post cards */
+.cards { display: grid; gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.card.is-blocked { border-color: color-mix(in srgb, var(--block) 45%, var(--line)); }
+.cardhead { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.acct { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.acct i { width: 9px; height: 9px; border-radius: 50%; background: var(--acct, var(--a-other)); display: inline-block; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 0.82rem; color: var(--muted); }
+.cols { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; }
+.posttext { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface-2); border-radius: 8px; padding: 12px 14px; font-size: 0.92rem; max-width: 70ch; }
+.issues { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.issue { font-size: 0.84rem; border-radius: 8px; padding: 7px 10px; display: grid; gap: 2px; }
+.issue.block { background: var(--block-soft); color: var(--block); }
+.issue.flag { background: var(--flag-soft); color: var(--flag); }
+.issue q { color: var(--fg); font-size: 0.8rem; opacity: 0.85; }
+details { border-top: 1px solid var(--line); padding-top: 10px; }
+summary { cursor: pointer; font-weight: 600; font-size: 0.88rem; }
+.brief { display: grid; gap: 8px; font-size: 0.86rem; margin-top: 8px; }
+.brief ol, .brief ul { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
+.swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+.swatch { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 0.75rem; }
+.swatch i { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line); display: inline-block; }
+.edit { display: grid; gap: 8px; }
+.edit label { display: grid; gap: 3px; font-size: 0.8rem; color: var(--muted); }
+textarea, input[type="text"], select { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 8px 10px; font-size: 0.9rem; }
+textarea { resize: vertical; min-height: 2.6em; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 7px 14px; cursor: pointer; font-weight: 500; font-size: 0.88rem; }
+.btn:hover:not(:disabled) { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.btn.primary:hover:not(:disabled) { background: var(--accent); filter: brightness(1.08); }
+.btn.danger { color: var(--block); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.hint { font-size: 0.8rem; color: var(--muted); }
+
+/* Drawer */
+.scrim { position: fixed; inset: 0; background: rgb(0 0 0 / 0.35); z-index: 20; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(640px, 100%); background: var(--bg); z-index: 21; overflow-y: auto; border-left: 1px solid var(--line);
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) 16px; display: grid; align-content: start; gap: 12px; }
+.drawer .close { justify-self: end; }
+
+/* Lists */
+.list { display: grid; gap: 10px; }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 4px; }
+.item .who { font-size: 0.8rem; color: var(--muted); }
+.item p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+form.inline { display: grid; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+
+/* Growth */
+.mix { display: grid; gap: 8px; }
+.mixrow { display: grid; grid-template-columns: 11rem minmax(0, 1fr) 3rem; gap: 10px; align-items: center; font-size: 0.85rem; }
+.track { height: 12px; background: var(--surface-2); border-radius: 6px; overflow: hidden; display: flex; }
+.track span { display: block; height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+td.n { font-variant-numeric: tabular-nums; text-align: right; }
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 9px 16px; border-radius: 8px; z-index: 30; font-size: 0.88rem; max-width: calc(100% - 32px); }
+
+@media (max-width: 900px) {
+  .board { grid-template-columns: minmax(0, 1fr); }
+  .day { border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+  .cols { grid-template-columns: minmax(0, 1fr); }
+  .mixrow { grid-template-columns: 7rem minmax(0, 1fr) 2.5rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .drawer { animation: slide 0.18s ease-out; }
+  @keyframes slide { from { transform: translateX(24px); opacity: 0.6; } }
+}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="bar">
+      <div class="brand"><h1>Hi Fuel Team Hub</h1><span>Plan · review · post</span></div>
+      <div class="week" aria-label="Week">
+        <button class="iconbtn" id="prevWeek" aria-label="Previous week">‹</button>
+        <strong id="weekLabel">This week</strong>
+        <button class="iconbtn" id="nextWeek" aria-label="Next week">›</button>
+      </div>
+      <div class="counts" id="counts"></div>
+    </div>
+    <nav class="tabs" role="tablist" id="tabs">
+      <button role="tab" data-tab="week" aria-selected="true">Week</button>
+      <button role="tab" data-tab="review" aria-selected="false">Review queue</button>
+      <button role="tab" data-tab="kits" aria-selected="false">Advocacy kits</button>
+      <button role="tab" data-tab="ideas" aria-selected="false">Ideas</button>
+      <button role="tab" data-tab="news" aria-selected="false">Announcements</button>
+      <button role="tab" data-tab="growth" aria-selected="false">Growth</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <div class="empty"><strong>Loading the team's plan…</strong>Posts appear here once Claude loads a week's drafts.</div>
+</main>
+
+<div id="drawerRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+(() => {
+  "use strict";
+  const PLATFORMS = { instagram: "Instagram", linkedin: "LinkedIn", facebook: "Facebook", whatsapp_channel: "WhatsApp Channel", x: "X" };
+  const STATUS_LABEL = { draft: "Draft", needs_changes: "Needs changes", approved: "Approved", scheduled: "Scheduled", posted: "Posted", rejected: "Rejected" };
+  const THEMES = { educational: "Educational", impact_story: "Impact story", initiative_promo: "Initiative / promo", behind_the_scenes: "Behind the scenes", founder_team_voice: "Founder / team voice", engagement: "Engagement" };
+  const THEME_COLORS = ["var(--a-earth_osai)", "var(--a-tranzent_foundation)", "var(--a-iclc)", "var(--a-other)", "var(--a-pathvik)", "var(--a-person)"];
+  const KNOWN_ACCOUNTS = ["hifuel_advisory", "tranzent_foundation", "pathvik", "earth_osai", "iclc"];
+  const KEY_DATES = {
+    "2026-11-08": ["Diwali", ""], "2026-11-14": ["Children's Day", ""], "2026-11-24": ["Guru Nanak Jayanti", ""],
+    "2026-11-26": ["Constitution Day", ""], "2026-12-05": ["World Soil Day", ""], "2026-12-25": ["Christmas", ""],
+    "2027-01-26": ["Republic Day", ""], "2027-01-30": ["Martyrs' Day", "sensitive"], "2027-03-21": ["Intl Day of Forests", ""],
+    "2027-03-22": ["World Water Day", ""], "2027-03-23": ["Holi", ""], "2027-03-26": ["Good Friday", "sensitive"],
+    "2027-04-22": ["Earth Day", ""], "2027-06-05": ["World Environment Day", ""], "2027-06-16": ["Muharram", "sensitive"],
+    "2027-07-01": ["Van Mahotsav", ""], "2027-08-15": ["Independence Day", ""], "2027-10-02": ["Gandhi Jayanti", ""], "2027-10-29": ["Diwali", ""]
+  };
+
+  const state = {
+    posts: new Map(), plans: [], ideas: [], news: [],
+    tab: "week", week: null, open: null, loaded: false, unavailable: false,
+    me: { id: null, canEdit: false, canWrite: null }, names: {}, pendingRender: false
+  };
+  let db = null, user = null;
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const main = $("#main");
+
+  // ---------- helpers ----------
+  function el(tag, attrs = {}, ...kids) {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v == null || v === false) continue;
+      if (k === "class") n.className = v;
+      else if (k === "style") n.setAttribute("style", v);
+      else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+      else if (k === "text") n.textContent = v;
+      else n.setAttribute(k, v === true ? "" : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+    return n;
+  }
+  const iso = d => d.toISOString().slice(0, 10);
+  function mondayOf(dateStr) { const d = new Date(dateStr + "T00:00:00Z"); const wd = (d.getUTCDay() + 6) % 7; d.setUTCDate(d.getUTCDate() - wd); return iso(d); }
+  function addDays(dateStr, n) { const d = new Date(dateStr + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return iso(d); }
+  function fmtDay(dateStr, opts) { return new Date(dateStr + "T00:00:00Z").toLocaleDateString("en-IN", { timeZone: "UTC", ...opts }); }
+  function todayIST() { return new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 10); }
+  const acctVar = p => p.account_type === "person" ? "var(--a-person)" : (KNOWN_ACCOUNTS.includes(p.account) ? `var(--a-${p.account})` : "var(--a-other)");
+  function publishText(p) { return [p.hook, p.caption, p.cta, (p.hashtags || []).join(" ")].map(s => (s || "").trim()).filter(Boolean).join("\n\n"); }
+  const blocks = p => (p.issues || []).filter(i => i.severity === "block");
+  const flags = p => (p.issues || []).filter(i => i.severity === "flag");
+  const weekPosts = () => [...state.posts.values()].filter(p => p.date >= state.week && p.date <= addDays(state.week, 6)).sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")));
+  const nameOf = id => (id && state.names[id]) || (id === state.me.id ? "you" : "a teammate");
+
+  function toast(msg) {
+    const root = $("#toastRoot"); root.replaceChildren(el("div", { class: "toast", role: "status", text: msg }));
+    clearTimeout(toast.t); toast.t = setTimeout(() => root.replaceChildren(), 3200);
+  }
+  async function copy(text, btn) {
+    try { await navigator.clipboard.writeText(text); toast("Copied"); }
+    catch { const ta = el("textarea", { "aria-label": "Text to copy" }); ta.value = text; btn.after(ta); ta.select(); toast("Select-all is ready: press copy on your keyboard"); }
+  }
+  function errMsg(e) {
+    if (e && e.code === "invalid_argument") return "You don't have permission to change this. Ask Aryan for Editor access.";
+    if (e && e.code === "quota_exceeded") return "The hub's storage is full. Ask Aryan to archive old weeks.";
+    return "That didn't save. Check your connection and try again.";
+  }
+  async function resolveNames(ids) {
+    const need = [...new Set(ids.filter(Boolean))];
+    if (!user || !need.length) return;
+    const ps = await user.profiles(need);
+    let changed = false;
+    for (const id of need) { const n = ps[id] && ps[id].name; if (n && state.names[id] !== n) { state.names[id] = n; changed = true; } }
+    if (changed) render();
+  }
+
+  // ---------- rendering ----------
+  function render() {
+    if (main.contains(document.activeElement) && document.activeElement.matches("textarea, input, select")) { state.pendingRender = true; return; }
+    if (state.drawerFocus) { state.pendingRender = true; return; }
+    state.pendingRender = false;
+    renderHeader();
+    const view = { week: viewWeek, review: viewReview, kits: viewKits, ideas: viewIdeas, news: viewNews, growth: viewGrowth }[state.tab];
+    main.replaceChildren(...[].concat(view()));
+    renderDrawer();
+  }
+
+  function renderHeader() {
+    $("#weekLabel").textContent = `${fmtDay(state.week, { day: "numeric", month: "short" })} – ${fmtDay(addDays(state.week, 6), { day: "numeric", month: "short" })}`;
+    const ps = weekPosts();
+    const count = (cls, n, label) => el("span", { class: `count ${cls}` }, el("b", { text: n }), " ", label);
+    const review = ps.filter(p => ["draft", "needs_changes"].includes(p.status) && !blocks(p).length).length;
+    $("#counts").replaceChildren(
+      count("", ps.length, "posts"),
+      count("review", review, "to review"),
+      count("block", ps.filter(p => blocks(p).length && !["rejected", "posted"].includes(p.status)).length, "blocked"),
+      count("ok", ps.filter(p => ["approved", "scheduled", "posted"].includes(p.status)).length, "approved")
+    );
+    for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", String(b.dataset.tab === state.tab));
+  }
+
+  function emptyState(title, body) { return el("div", { class: "empty" }, el("strong", { text: title }), body); }
+  function notReady() {
+    if (state.unavailable) return emptyState("The hub can't load here", "Open this page from claude.ai while signed in to see the team's plan.");
+    if (!state.loaded) return emptyState("Loading the team's plan…", "One moment.");
+    return null;
+  }
+
+  function planNotice() {
+    const plans = state.plans.filter(pl => pl.start <= addDays(state.week, 6) && pl.end >= state.week);
+    if (!plans.length) return null;
+    const qs = plans.flatMap(pl => pl.questions_for_team || []);
+    const sums = plans.flatMap(pl => Object.entries(pl.summaries || {}));
+    return el("section", { class: "notice" },
+      el("h2", { text: "This week's plan" }),
+      sums.length ? el("ul", {}, sums.map(([a, s]) => el("li", {}, a.startsWith("_") ? null : el("b", { text: labelForAccount(a) + ": " }), s))) : null,
+      qs.length ? el("div", {}, el("div", { class: "label", text: "Questions for the team" }), el("ul", {}, qs.map(q => el("li", { text: q })))) : null
+    );
+  }
+  function labelForAccount(a) { const p = [...state.posts.values()].find(x => x.account === a); return p ? p.account_name : a; }
+
+  function chip(p) {
+    const st = blocks(p).length && !["rejected", "posted"].includes(p.status) ? el("span", { class: "pill blocked", text: "Blocked" }) : el("span", { class: `pill ${p.status}`, text: STATUS_LABEL[p.status] || p.status });
+    return el("button", { class: "chip", style: `--acct:${acctVar(p)}`, onclick: () => openPost(p.id), "aria-label": `${p.account_name} ${PLATFORMS[p.platform]} at ${p.time}: ${p.hook}` },
+      el("div", { class: "top" }, el("span", { class: "mono", text: p.time || "--:--" }), el("span", { text: `${PLATFORMS[p.platform]} · ${p.format}` })),
+      el("div", { class: "hook", text: p.hook }),
+      el("div", { class: "top" }, el("span", { text: p.account_name }), st, p.sample ? el("span", { class: "pill sample", text: "Sample" }) : null)
+    );
+  }
+
+  function viewWeek() {
+    const wait = notReady(); if (wait) return wait;
+    const ps = weekPosts();
+    const out = [planNotice()];
+    if (!ps.length) {
+      out.push(emptyState("No posts planned for this week", "Ask Claude in chat to plan this week, or use the arrows to see another week."));
+      return out.filter(Boolean);
+    }
+    const days = [...Array(7)].map((_, i) => addDays(state.week, i));
+    out.push(el("section", { class: "board", "aria-label": "Posts by day" }, days.map(d => {
+      const kd = KEY_DATES[d];
+      return el("div", { class: "day" },
+        el("div", { class: "dayhead" }, el("b", { text: fmtDay(d, { weekday: "short", day: "numeric" }) }), kd ? el("span", { class: `daytag ${kd[1]}`, text: kd[0] }) : null),
+        ps.filter(p => p.date === d).map(chip));
+    })));
+    out.push(el("p", { class: "hint", text: "Times are IST. Click a post to see the full text, design brief and checks." }));
+    return out.filter(Boolean);
+  }
+
+  function issueList(p) {
+    const is = p.issues || [];
+    if (!is.length) return el("p", { class: "small muted", text: "No issues found by the claims check." });
+    return el("ul", { class: "issues" }, is.map(i => el("li", { class: `issue ${i.severity}` },
+      el("span", {}, el("b", { text: i.severity === "block" ? "Must fix" : "Check" }), i.rule ? ` · rule ${i.rule}` : "", ` · ${i.message}`),
+      i.excerpt ? el("q", { text: i.excerpt }) : null)));
+  }
+
+  function designBrief(p) {
+    const b = p.design_brief || {};
+    const reel = b.reel || {};
+    const parts = [];
+    if (b.format_notes) parts.push(el("p", { class: "small", style: "margin:0", text: b.format_notes }));
+    if ((b.slides || []).length) parts.push(el("div", {}, el("div", { class: "label", text: "Slides" }), el("ol", {}, b.slides.map(s => el("li", {}, s.text, el("span", { class: "muted", text: ` (visual: ${s.visual})` }))))));
+    if ((reel.shots || []).length) parts.push(el("div", {}, el("div", { class: "label", text: `Reel · ${reel.duration_seconds}s · opening: ${reel.opening_hook}` }),
+      el("ul", {}, reel.shots.map(s => el("li", {}, el("span", { class: "mono", text: `${s.seconds}s ` }), s.shot, s.on_screen_text ? ` · on screen: “${s.on_screen_text}”` : "", s.voiceover ? ` · VO: “${s.voiceover}”` : "")))));
+    if (b.layout_notes) parts.push(el("p", { class: "small", style: "margin:0" }, el("b", { text: "Layout: " }), b.layout_notes));
+    if ((b.colours || []).length) parts.push(el("div", { class: "swatches" }, b.colours.map(c => el("span", { class: "swatch" }, el("i", { style: `background:${/^#[0-9a-f]{3,8}$/i.test(c) ? c : "transparent"}` }), c))));
+    if (b.image_prompt) parts.push(el("p", { class: "small", style: "margin:0" }, el("b", { text: "AI image prompt: " }), b.image_prompt));
+    if (p.alt_text) parts.push(el("p", { class: "small", style: "margin:0" }, el("b", { text: "Alt text: " }), p.alt_text));
+    if (!parts.length) return null;
+    return el("details", {}, el("summary", { text: "Design brief" }), el("div", { class: "brief" }, parts));
+  }
+
+  function notes(p) {
+    const items = [];
+    if (p.internal_notes) items.push(el("p", { class: "small", style: "margin:0" }, el("b", { text: "Notes for reviewer: " }), p.internal_notes));
+    if ((p.claims_notes || []).length) items.push(el("div", { class: "small" }, el("b", { text: "Sources: " }), el("ul", { style: "margin:4px 0 0;padding-left:1.1rem" }, p.claims_notes.map(c => el("li", { text: `${c.claim} — ${c.source} (${c.year})` })))));
+    items.push(el("p", { class: "small muted", style: "margin:0", text: `Time: ${p.slot_reason || "not set"}` }));
+    return el("details", {}, el("summary", { text: "Notes, sources and timing" }), el("div", { class: "brief" }, items));
+  }
+
+  function postCard(p, { editable }) {
+    const isBlocked = blocks(p).length > 0;
+    const text = (p.thread_parts || []).length ? p.thread_parts.map((t, i) => `${i + 1}/${p.thread_parts.length} ${t}`).join("\n\n") : publishText(p);
+    const card = el("article", { class: `card${isBlocked ? " is-blocked" : ""}`, style: `--acct:${acctVar(p)}` },
+      el("div", { class: "cardhead" },
+        el("span", { class: "acct" }, el("i"), p.account_name),
+        el("span", { class: `pill ${isBlocked && !["rejected", "posted"].includes(p.status) ? "blocked" : p.status}`, text: isBlocked && !["rejected", "posted"].includes(p.status) ? "Blocked" : (STATUS_LABEL[p.status] || p.status) }),
+        p.sample ? el("span", { class: "pill sample", text: "Sample" }) : null,
+        el("div", { class: "meta" },
+          el("span", { class: "mono", text: `${fmtDay(p.date, { weekday: "short", day: "numeric", month: "short" })} · ${p.time || "--:--"} IST` }),
+          el("span", { text: `${PLATFORMS[p.platform]} · ${p.format}` }), el("span", { text: THEMES[p.theme] || p.theme }),
+          el("span", { text: p.pillar }))),
+      p.personalise_prompt ? el("div", { class: "notice small" }, el("b", { text: "Make it yours: " }), p.personalise_prompt) : null,
+      el("div", { class: "cols" },
+        el("div", { style: "display:grid;gap:8px;min-width:0" }, el("div", { class: "posttext", text: text }),
+          el("div", { class: "actions" }, el("button", { class: "btn", onclick: e => copy(text, e.currentTarget), text: "Copy text" }),
+            p.collab_with ? el("span", { class: "hint", text: `Collab with ${p.collab_with}: post manually` }) : null)),
+        el("div", { style: "display:grid;gap:8px;align-content:start;min-width:0" }, el("div", { class: "label", text: "Claims check" }), issueList(p),
+          p.edited_since_check ? el("p", { class: "hint", text: "Edited since the last check. Claude re-checks it at the next sync." }) : null)),
+      designBrief(p), notes(p),
+      p.review && p.review.at ? el("p", { class: "hint", text: `${STATUS_LABEL[p.status]} by ${nameOf(p.review.by)} on ${new Date(p.review.at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" })}${p.review.comment ? `: “${p.review.comment}”` : ""}` }) : null
+    );
+    if (editable) card.append(reviewControls(p, isBlocked));
+    return card;
+  }
+
+  function reviewControls(p, isBlocked) {
+    const wrap = el("div", { class: "edit" });
+    if (!state.me.canEdit) { wrap.append(el("p", { class: "hint", text: "Only editors (Aryan, the manager, the founder) can approve or edit posts." })); return wrap; }
+    const fields = [["hook", "Hook (first line)", 1], ["caption", "Caption", 5], ["cta", "Call to action", 1]];
+    const inputs = {};
+    const ed = el("details", {}, el("summary", { text: "Edit text" }));
+    const box = el("div", { class: "edit", style: "margin-top:8px" });
+    for (const [f, label, rows] of fields) { const t = el("textarea", { id: `${p.id}-${f}`, rows }); t.value = p[f] || ""; inputs[f] = t; box.append(el("label", { for: `${p.id}-${f}` }, label, t)); }
+    const tags = el("input", { type: "text", id: `${p.id}-hashtags` }); tags.value = (p.hashtags || []).join(" "); inputs.hashtags = tags;
+    box.append(el("label", { for: `${p.id}-hashtags` }, "Hashtags (space-separated)", tags));
+    box.append(el("div", { class: "actions" }, el("button", { class: "btn", onclick: () => saveEdits(p, inputs), text: "Save text" })));
+    ed.append(box);
+    wrap.append(ed);
+
+    if (p.shows_children) {
+      const cb = el("input", { type: "checkbox", id: `${p.id}-consent` }); cb.checked = !!p.consent_confirmed;
+      cb.addEventListener("change", () => write(p, { consent_confirmed: cb.checked, edited_since_check: true }, cb.checked ? "Consent recorded" : "Consent removed"));
+      wrap.append(el("label", { for: `${p.id}-consent`, style: "display:flex;gap:8px;align-items:center;font-size:0.85rem" }, cb, "Verifiable parental consent is on file for the children shown"));
+    }
+
+    const comment = el("input", { type: "text", id: `${p.id}-comment`, placeholder: "Comment for the team (optional)" });
+    const act = (status, label, cls = "btn", disabled = false) => el("button", { class: cls, disabled, onclick: () => setStatus(p, status, comment.value.trim()), text: label });
+    const buttons = el("div", { class: "actions" });
+    if (["draft", "needs_changes", "rejected"].includes(p.status)) {
+      buttons.append(act("approved", "Approve", "btn primary", isBlocked), act("needs_changes", "Needs changes"), act("rejected", "Reject", "btn danger"));
+    } else if (p.status === "approved") {
+      buttons.append(act("scheduled", "Mark scheduled", "btn primary"), act("needs_changes", "Send back"));
+    } else if (p.status === "scheduled") {
+      buttons.append(act("posted", "Mark posted", "btn primary"), act("approved", "Unschedule"));
+    }
+    wrap.append(el("label", { for: `${p.id}-comment` }, "Comment", comment), buttons);
+    if (isBlocked) wrap.append(el("p", { class: "hint", text: "Fix the “Must fix” items before approving. Edit the text above; Claude re-checks it at the next sync." }));
+    return wrap;
+  }
+
+  async function write(p, fields, okMsg) {
+    try {
+      await db.doc(`posts/${p.id}`).update({ ...fields, updated_at: new Date().toISOString() });
+      toast(okMsg);
+    } catch (e) { toast(errMsg(e)); }
+  }
+  function setStatus(p, status, comment) {
+    write(p, { status, review: { by: state.me.id, at: new Date().toISOString(), comment } }, `${STATUS_LABEL[status]}`);
+  }
+  function saveEdits(p, inputs) {
+    const next = { hook: inputs.hook.value.trim(), caption: inputs.caption.value.trim(), cta: inputs.cta.value.trim(),
+      hashtags: inputs.hashtags.value.split(/\s+/).filter(Boolean) };
+    const at = new Date().toISOString();
+    const changes = Object.entries(next).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify(p[k] || (k === "hashtags" ? [] : "")))
+      .map(([field, v]) => ({ field, old: p[field] ?? null, new: v, by: state.me.id, at }));
+    if (!changes.length) { toast("No changes to save"); return; }
+    write(p, { ...next, edits: [...(p.edits || []), ...changes], edited_since_check: true }, "Saved. Claude re-checks it at the next sync");
+  }
+
+  function viewReview() {
+    const wait = notReady(); if (wait) return wait;
+    const queue = weekPosts().filter(p => ["draft", "needs_changes"].includes(p.status));
+    const head = el("div", { style: "display:grid;gap:4px" }, el("h2", { text: "Review queue" }),
+      el("p", { class: "small muted", style: "margin:0", text: "Every post needs a human yes before anyone schedules it. Blocked posts can't be approved until fixed." }));
+    if (!queue.length) return [head, emptyState("Nothing waiting for review this week", "Approved posts are on the Week tab.")];
+    queue.sort((a, b) => (blocks(b).length > 0) - (blocks(a).length > 0) || (a.date + a.time).localeCompare(b.date + b.time));
+    return [head, el("div", { class: "cards" }, queue.map(p => postCard(p, { editable: true })))];
+  }
+
+  function viewKits() {
+    const wait = notReady(); if (wait) return wait;
+    const kits = weekPosts().filter(p => p.account_type === "person");
+    const head = el("div", { style: "display:grid;gap:4px" }, el("h2", { text: "Advocacy kits" }),
+      el("p", { class: "small muted", style: "margin:0", text: "Drafts for founder and team LinkedIn posts. Edit them in your own words and post from your own profile; the hub never posts for you." }));
+    if (!kits.length) return [head, emptyState("No kit drafts this week", "Ask Claude to include the founder and team in this week's plan.")];
+    const byPerson = new Map();
+    for (const p of kits) { if (!byPerson.has(p.account_name)) byPerson.set(p.account_name, []); byPerson.get(p.account_name).push(p); }
+    return [head, ...[...byPerson].map(([name, ps]) => el("section", { class: "cards" }, el("h3", { text: name }), ps.map(p => postCard(p, { editable: true }))))];
+  }
+
+  function viewIdeas() {
+    const wait = notReady(); if (wait) return wait;
+    const ta = el("textarea", { id: "ideaText", rows: 3, placeholder: "A post idea, a story from the field, a question students keep asking…" });
+    const sel = el("select", { id: "ideaAccount" }, el("option", { value: "", text: "Any account" }),
+      [...new Map([...state.posts.values()].map(p => [p.account, p.account_name]))].map(([id, n]) => el("option", { value: id, text: n })));
+    const canAdd = state.me.canWrite !== false;
+    const form = el("form", { class: "inline", onsubmit: async e => {
+      e.preventDefault();
+      const text = ta.value.trim(); if (!text) return;
+      try { await db.collection("ideas").add({ text, account: sel.value, by: state.me.id, at: new Date().toISOString(), status: "new" }); ta.value = ""; toast("Idea added"); }
+      catch (err) { toast(errMsg(err)); }
+    } }, el("label", { class: "label", for: "ideaText", text: "Add an idea" }), ta,
+      el("div", { class: "row" }, sel, el("button", { class: "btn primary", type: "submit", disabled: !canAdd, text: "Add idea" })),
+      canAdd ? el("p", { class: "hint", style: "margin:0", text: "Claude reads new ideas when it plans the next week." }) : el("p", { class: "hint", style: "margin:0", text: "You have view-only access, so you can't add ideas." }));
+    const list = state.ideas.length ? el("div", { class: "list" }, state.ideas.map(i => el("div", { class: "item" },
+      el("div", { class: "who", text: `${nameOf(i.by)} · ${i.account ? labelForAccount(i.account) : "Any account"} · ${new Date(i.at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}${i.status === "used" ? " · used in a plan" : ""}` }),
+      el("p", { text: i.text }))))
+      : emptyState("No ideas yet", "Add the first one above.");
+    return [el("h2", { text: "Ideas" }), form, list];
+  }
+
+  function viewNews() {
+    const wait = notReady(); if (wait) return wait;
+    const out = [el("h2", { text: "Announcements" })];
+    if (state.me.canEdit) {
+      const t = el("input", { type: "text", id: "newsTitle", placeholder: "Title" });
+      const b = el("textarea", { id: "newsBody", rows: 3, placeholder: "What the team needs to know" });
+      out.push(el("form", { class: "inline", onsubmit: async e => {
+        e.preventDefault(); if (!t.value.trim()) return;
+        try { await db.collection("announcements").add({ title: t.value.trim(), body: b.value.trim(), by: state.me.id, at: new Date().toISOString() }); t.value = ""; b.value = ""; toast("Posted to the team"); }
+        catch (err) { toast(errMsg(err)); }
+      } }, el("label", { class: "label", for: "newsTitle", text: "New announcement" }), t, b, el("div", { class: "actions" }, el("button", { class: "btn primary", type: "submit", text: "Post announcement" }))));
+    }
+    out.push(state.news.length ? el("div", { class: "list" }, state.news.map(n => el("div", { class: "item" },
+      el("h3", { text: n.title }), n.body ? el("p", { text: n.body }) : null,
+      el("div", { class: "who", text: `${nameOf(n.by)} · ${new Date(n.at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}` }))))
+      : emptyState("No announcements yet", state.me.canEdit ? "Post the first one above." : "Editors post updates here."));
+    return out;
+  }
+
+  function viewGrowth() {
+    const wait = notReady(); if (wait) return wait;
+    const ps = weekPosts().filter(p => p.status !== "rejected");
+    const out = [el("div", { style: "display:grid;gap:4px" }, el("h2", { text: "Growth" }),
+      el("p", { class: "small muted", style: "margin:0", text: "This week's mix from the plan. Reach and engagement reports start once analytics exports are imported (Phase 2)." }))];
+    if (!ps.length) return [...out, emptyState("No posts this week", "The mix appears once a week is planned.")];
+    const themeKeys = Object.keys(THEMES);
+    const accounts = [...new Map(ps.map(p => [p.account, p.account_name]))];
+    const legend = el("div", { class: "legend" }, themeKeys.map((t, i) => el("span", {}, el("i", { style: `background:${THEME_COLORS[i]}` }), THEMES[t])));
+    const rows = accounts.map(([id, name]) => {
+      const mine = ps.filter(p => p.account === id);
+      return el("div", { class: "mixrow" }, el("span", { text: name }),
+        el("div", { class: "track", role: "img", "aria-label": `${name}: ` + themeKeys.map(t => `${mine.filter(p => p.theme === t).length} ${THEMES[t]}`).join(", ") },
+          themeKeys.map((t, i) => { const n = mine.filter(p => p.theme === t).length; return n ? el("span", { style: `width:${(n / mine.length) * 100}%;background:${THEME_COLORS[i]}` }) : null; })),
+        el("span", { class: "mono", text: mine.length }));
+    });
+    out.push(el("section", { class: "notice" }, el("h3", { text: "Theme mix by account" }), legend, el("div", { class: "mix" }, rows)));
+    const statuses = ["draft", "needs_changes", "approved", "scheduled", "posted"];
+    out.push(el("div", { class: "tablewrap" }, el("table", {},
+      el("thead", {}, el("tr", {}, el("th", { text: "Account" }), statuses.map(s => el("th", { style: "text-align:right", text: STATUS_LABEL[s] })), el("th", { style: "text-align:right", text: "Blocked" }))),
+      el("tbody", {}, accounts.map(([id, name]) => { const mine = ps.filter(p => p.account === id);
+        return el("tr", {}, el("td", { text: name }), statuses.map(s => el("td", { class: "n", text: mine.filter(p => p.status === s).length })), el("td", { class: "n", text: mine.filter(p => blocks(p).length).length })); })))));
+    return out;
+  }
+
+  // ---------- drawer ----------
+  function openPost(id) { state.open = id; renderDrawer(); }
+  function closeDrawer() { state.open = null; state.drawerFocus = false; renderDrawer(); if (state.pendingRender) render(); }
+  function renderDrawer() {
+    const root = $("#drawerRoot");
+    const p = state.open && state.posts.get(state.open);
+    if (!p) { root.replaceChildren(); return; }
+    if (root.contains(document.activeElement) && document.activeElement.matches("textarea, input, select")) return;
+    const drawer = el("aside", { class: "drawer", role: "dialog", "aria-modal": "true", "aria-label": "Post details" },
+      el("button", { class: "btn close", onclick: closeDrawer, text: "Close" }), postCard(p, { editable: true }));
+    drawer.addEventListener("focusin", e => { if (e.target.matches("textarea, input, select")) state.drawerFocus = true; });
+    drawer.addEventListener("focusout", () => { state.drawerFocus = false; });
+    root.replaceChildren(el("div", { class: "scrim", onclick: closeDrawer }), drawer);
+  }
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && state.open) closeDrawer(); });
+  // Wait a moment after an input loses focus, so a click on a button next to it lands before the redraw.
+  document.addEventListener("focusout", () => setTimeout(() => { if (state.pendingRender && !state.drawerFocus) render(); }, 300));
+
+  // ---------- navigation ----------
+  $("#tabs").addEventListener("click", e => {
+    const b = e.target.closest("button[data-tab]"); if (!b) return;
+    state.tab = b.dataset.tab; try { history.replaceState(null, "", "#" + state.tab); } catch {}
+    render();
+  });
+  $("#prevWeek").addEventListener("click", () => { state.week = addDays(state.week, -7); render(); });
+  $("#nextWeek").addEventListener("click", () => { state.week = addDays(state.week, 7); render(); });
+  const hash = (location.hash || "").slice(1);
+  if (["week", "review", "kits", "ideas", "news", "growth"].includes(hash)) state.tab = hash;
+  state.week = mondayOf(todayIST());
+  render();
+
+  // ---------- data ----------
+  function pickWeek() {
+    // Open on the current week if it has posts, otherwise the next week that does.
+    const dates = [...state.posts.values()].map(p => p.date).sort();
+    const cur = mondayOf(todayIST());
+    if (!dates.length || dates.some(d => d >= cur && d <= addDays(cur, 6))) return cur;
+    const next = dates.find(d => d >= cur);
+    return mondayOf(next || dates[dates.length - 1]);
+  }
+
+  async function start() {
+    const claude = window.claude;
+    if (!claude || !claude.use) { state.unavailable = true; render(); return; }
+    [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    if (!db) { state.unavailable = true; render(); return; }
+    if (user) {
+      const me = await user.me();
+      state.me.id = me.id; state.me.canEdit = !!me.canEdit;
+      state.me.canWrite = await user.can("data.write");
+      if (me.id && me.name) state.names[me.id] = me.name;
+    }
+    let firstPosts = true;
+    db.collection("posts").onSnapshot(snap => {
+      state.posts = new Map(snap.docs.map(d => [d.id, { ...d.data(), id: d.id }]));
+      state.loaded = true;
+      if (firstPosts) { firstPosts = false; state.week = pickWeek(); }
+      render();
+      resolveNames([...state.posts.values()].map(p => p.review && p.review.by));
+    }, () => { state.unavailable = true; render(); });
+    db.collection("plans").onSnapshot(snap => { state.plans = snap.docs.map(d => d.data()); render(); }, () => {});
+    db.collection("ideas").orderBy("at", "desc").limit(200).onSnapshot(snap => {
+      state.ideas = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); resolveNames(state.ideas.map(i => i.by));
+    }, () => {});
+    db.collection("announcements").orderBy("at", "desc").limit(50).onSnapshot(snap => {
+      state.news = snap.docs.map(d => ({ ...d.data(), id: d.id })); render(); resolveNames(state.news.map(n => n.by));
+    }, () => {});
+  }
+  start().catch(() => { state.unavailable = true; render(); });
+})();
+</script>

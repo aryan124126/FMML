@@ -1,0 +1,241 @@
+# Sample week (26 Oct - 1 Nov 2026), drafted by Claude in chat to show how the system works.
+# Load with:  python -m hifuel import samples/sample_week.yaml --sample
+# The last post is a deliberately bad draft, so you can see what the claims check blocks.
+
+summary: >-
+  Sample week. Pathvik focuses on placement-season doubts, Earth.OSAI and Hi Fuel Advisory on CSR
+  evidence and credit terms, ICLC opens conversations with principals, Tranzent Foundation tells a
+  Born Green story, and the founder and Aryan get one advocacy draft each.
+questions_for_team:
+  - Are Earth.OSAI's survival checks and verifier workflow live features we can describe?
+  - Does every ICLC participant receive a certificate? The principals' post assumes not, so it doesn't say so.
+  - What scientific source sits behind the 22 kg CO2 per tree per year figure? Reviewers will want it in the notes.
+
+posts:
+  - idea_id: career-choice-check
+    account: pathvik
+    platform: instagram
+    date: "2026-10-27"
+    theme: educational
+    pillar: Career-clarity tips
+    format: carousel
+    hook: "Job offer, MBA prep, or a gap year? You don't have to guess."
+    caption: |-
+      If you're in final year, you probably aren't short of options. You're short of a way to compare them.
+
+      Swipe for a 4-question check you can do this week:
+      1. What did you enjoy doing, not just score well in?
+      2. Which roles use that every day?
+      3. What would you need to learn to get there?
+      4. Who could you ask, this month, about what the job is really like?
+
+      Write the answers down. Comparing them on paper beats going round in circles in your head.
+    cta: Save this for the weekend and send it to a friend who's deciding too.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity", "#FinalYear"]
+    alt_text: "Navy carousel cover with violet text: 'Job, MBA or gap year? A 4-question check.'"
+    design_brief:
+      format_notes: 6-slide carousel, 4:5. Cover plus one question per slide, closing slide with the save prompt.
+      slides:
+        - {number: 1, text: "Job, MBA or gap year? A 4-question check", visual: "Bold violet type on navy, small orange arrow bottom right"}
+        - {number: 2, text: "1. What did you enjoy doing, not just score well in?", visual: "Question in large type, short helper line in orange"}
+        - {number: 3, text: "2. Which roles use that every day?", visual: "Same layout"}
+        - {number: 4, text: "3. What would you need to learn to get there?", visual: "Same layout"}
+        - {number: 5, text: "4. Who could you ask this month?", visual: "Same layout"}
+        - {number: 6, text: "Write it down. Compare on paper. Clarity before career.", visual: "Pathvik wordmark, save icon"}
+      layout_notes: Generous margins, one idea per slide, no stock photos.
+      colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    internal_notes: No claims or numbers beyond the 4 questions.
+
+  - idea_id: no-guarantee-promise
+    account: pathvik
+    platform: instagram
+    date: "2026-10-29"
+    theme: initiative_promo
+    pillar: Programme details and application steps
+    format: reel
+    hook: "We won't promise you a job. Here's what we do promise."
+    caption: |-
+      Pathvik runs live, mentor-led career programmes for undergraduates and graduates. The Graduate Career Accelerator is 6 weeks of 12 live classes, in cohorts of 30.
+
+      You get a real plan, live classes and placement assistance. You don't get a job guarantee, because nobody honest can give you one.
+    cta: Follow Pathvik for a career-clarity tip every week.
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity"]
+    alt_text: "Reel cover: orange text on navy reading 'We won't promise you a job.'"
+    design_brief:
+      format_notes: 20-second talking-head Reel with on-screen text, 9:16.
+      reel:
+        duration_seconds: 20
+        opening_hook: "On screen: 'We won't promise you a job.' Speaker looks straight at camera."
+        shots:
+          - {seconds: "0-2", shot: "Close-up of a mentor, plain background", on_screen_text: "We won't promise you a job.", voiceover: "We won't promise you a job."}
+          - {seconds: "2-8", shot: "Same speaker, slight push-in", on_screen_text: "6 weeks · 12 live classes · cohorts of 30", voiceover: "What we will give you is six weeks of live classes with mentors, in small cohorts."}
+          - {seconds: "8-15", shot: "Cut to screen recording of a live class (no student faces or names)", on_screen_text: "A real plan + placement assistance", voiceover: "You leave with a real plan, and help with placements."}
+          - {seconds: "15-20", shot: "Back to speaker", on_screen_text: "Clarity before career.", voiceover: "No guarantees. Just clarity before career."}
+      layout_notes: Captions burned in, large type in the safe zone.
+      colours: ["#140F2F", "#FE6A3C", "#8B7BFF"]
+    internal_notes: >-
+      Price left out on purpose: first-cohort pricing isn't decided. The mentor on camera must be a real,
+      confirmed team member; don't name them in the caption until confirmed. Blur any student on the call.
+
+  - idea_id: placement-season-question
+    account: pathvik
+    platform: x
+    date: "2026-10-30"
+    theme: engagement
+    pillar: Student doubts answered
+    format: text
+    hook: "Placement season question for final-year students:"
+    caption: "What's one thing you wish someone had told you about choosing your first job? Reply and we'll answer the most common ones next week."
+    hashtags: ["#CareerClarity"]
+    internal_notes: Promise a follow-up post next week; add it to next week's plan.
+
+  - idea_id: proof-not-photo-albums
+    account: earth_osai
+    platform: linkedin
+    date: "2026-10-27"
+    theme: educational
+    pillar: Why CSR plantations need proof
+    format: document
+    hook: "A CSR plantation report full of photos tells you trees were planted. It doesn't tell you they're still alive."
+    caption: |-
+      Section 135 of the Companies Act asks qualifying companies to spend on CSR and report on it. Tree planting is a popular choice, and one of the hardest to verify a year later.
+
+      What a useful plantation record shows:
+      • Where each tree is, with a geo-tag
+      • When it was planted, and which species
+      • Whether it made it through the first monsoon and the first summer
+      • Who checked, and how
+
+      That's the difference between proof and a photo album. The document below walks through each step.
+    cta: If you run CSR or ESG reporting, what do you ask your implementing partner for today?
+    hashtags: ["#CSR", "#Reforestation", "#ESG", "#BRSR"]
+    alt_text: "Document cover: a map with geo-tagged pins and the title 'Proof, not photo albums'."
+    design_brief:
+      format_notes: 5-page LinkedIn document (PDF carousel), 4:5.
+      slides:
+        - {number: 1, text: "Proof, not photo albums", visual: "Satellite-style map with tree pins"}
+        - {number: 2, text: "Where: every tree geo-tagged", visual: "Zoomed map pin with coordinates"}
+        - {number: 3, text: "What and when: species and planting date", visual: "Simple record card"}
+        - {number: 4, text: "Still alive? Checks after the first monsoon and summer", visual: "Two-point timeline"}
+        - {number: 5, text: "Who verified it, and how", visual: "Checklist with a verifier field"}
+      layout_notes: Data-led, muted palette, maps over photos, no adjectives on slides.
+      colours: []
+    claims_notes:
+      - {claim: "Section 135 asks qualifying companies to spend on CSR and report on it", source: "Companies Act, 2013, Section 135", year: "2013"}
+    internal_notes: "[CONFIRM] Earth.OSAI brand colours, and that survival checks and the verifier field are live features."
+
+  - idea_id: green-vs-carbon-credits
+    account: hifuel_advisory
+    platform: linkedin
+    date: "2026-10-28"
+    theme: educational
+    pillar: Green credits vs carbon credits, India's carbon market (carefully sourced explainers)
+    format: text
+    hook: "Green credits and carbon credits are not the same thing. Mixing them up is an easy way to lose a CSR committee's trust."
+    caption: |-
+      Carbon credits represent verified emission reductions or removals, issued by a registry such as Verra or Gold Standard.
+
+      India's Green Credit Programme, under rules notified by the central government in 2023, rewards specific environmental actions, such as plantation on degraded land.
+
+      The practical test for a CSR or ESG head: before a project goes into a report, check which of these, if either, has actually been issued for it.
+
+      If nothing has been issued, describe what you can show: plantation impact, survival records, estimated sequestration.
+    cta: "Founders and CSR heads: which one comes up more in your board conversations?"
+    hashtags: ["#ESG", "#CSR", "#CarbonMarkets", "#Sustainability"]
+    claims_notes:
+      - {claim: "Green Credit Programme rules notified by the central government in 2023", source: "Green Credit Rules, 2023 (Gazette of India notification, October 2023)", year: "2023"}
+    internal_notes: Verify the notification date against the gazette before approving.
+
+  - idea_id: principals-championship
+    account: iclc
+    platform: linkedin
+    date: "2026-10-29"
+    theme: initiative_promo
+    pillar: For principals and Eco Club teachers
+    format: text
+    hook: "Principals: what if your Eco Club had a championship to work towards?"
+    caption: |-
+      We're building a sustainability championship for students in Classes 6–9. Students work on real environmental problems from their own surroundings, in a format designed around the school day.
+
+      We've designed it with teachers in mind: ready content for Eco Club teachers, a simple process for the school, and a safe format where no student names or faces are shared publicly.
+
+      Before the first edition, we'd like to hear from principals and Eco Club teachers about what would make this easy to run.
+    cta: If you lead a school, message us and we'll share the outline.
+    hashtags: ["#ICLC", "#SustainabilityEducation", "#EcoClub"]
+    internal_notes: "[CONFIRM] certificate, session length and launch timing before mentioning any of them. ICLC acronym not expanded."
+
+  - idea_id: born-green-child-tree
+    account: tranzent_foundation
+    platform: instagram
+    date: "2026-10-31"
+    theme: impact_story
+    pillar: Movement updates (Born Green, Greenpreneur, S.H.I.N.E)
+    format: single_image
+    hook: "A tree planted in your child's name grows up alongside them."
+    caption: |-
+      Born Green plants a native tree in a child's name and geo-tags it, so the family can always find where it is growing.
+
+      Estimated sequestration: about 22 kg of CO2 per tree per year. Small on its own, and it adds up when a whole RWA or school plants together.
+
+      Plant one from ₹460 per tree. An initiative of Tranzent Foundation.
+    cta: Tap the link in bio to plant one.
+    hashtags: ["#BornGreen", "#TranzentFoundation", "#Sustainability", "#NativeTrees"]
+    alt_text: "An adult's hands pressing soil around a young native sapling, with a small name tag on a stake."
+    design_brief:
+      format_notes: Single 4:5 photo, real (not AI).
+      layout_notes: Hands and sapling only; no child in frame. Small Tranzent Foundation mark bottom left.
+      colours: []
+    claims_notes:
+      - {claim: "about 22 kg of CO2 per tree per year (estimated sequestration)", source: "Hi Fuel group content standard (CLAUDE.md rule 1); add the underlying scientific source", year: "2026"}
+    internal_notes: "[CONFIRM] Tranzent Foundation brand colours."
+
+  - idea_id: proof-in-a-year
+    account: founder_ashish
+    platform: linkedin
+    date: "2026-10-28"
+    theme: founder_team_voice
+    pillar: Opinions on ESG/CSR and growth
+    format: text
+    hook: "The question I now ask before every CSR conversation: what will we be able to prove in a year?"
+    caption: |-
+      In our work with companies and NGOs, the hardest part is rarely the budget or the intent. It's the evidence. A year on, can anyone show what changed, where, and for whom?
+
+      So we're building our programmes around proof from day one: geo-tagged trees, checks on whether they survived, and records a CSR committee can actually audit.
+
+      I'd rather report a smaller number we can stand behind than a big one we can't.
+    cta: "CSR and ESG leaders: what evidence do you ask for today?"
+    hashtags: ["#CSR", "#ESG", "#Impact"]
+    personalise_prompt: >-
+      Open with a real moment when a project looked good on paper but couldn't show results a year later.
+      Add one detail only you would know: a place, a conversation, a number you can source.
+    internal_notes: Draft for Ashish to rewrite in his own words and post himself.
+
+  - idea_id: record-keeping-lesson
+    account: team_aryan
+    platform: linkedin
+    date: "2026-10-30"
+    theme: founder_team_voice
+    pillar: What I learned this week
+    format: text
+    hook: "This week I learned how much of sustainability work is just good record-keeping."
+    caption: |-
+      I'm an analyst in R&D at Hi Fuel Advisory. This week I looked at how a tree-planting project should be documented so a CSR team can check it a year later.
+
+      The short version: location, date, species, a survival check, and who verified it. None of it is glamorous. All of it decides whether a report can be trusted.
+
+      Still learning, so pointers from people who audit these programmes are very welcome.
+    hashtags: ["#Sustainability", "#CSR", "#LearningInPublic"]
+    personalise_prompt: Swap in the exact thing you worked on this week and one thing that surprised you.
+
+  - idea_id: blocked-example
+    account: hifuel_advisory
+    platform: instagram
+    date: "2026-10-30"
+    theme: initiative_promo
+    pillar: Insights launches (ESG Readiness Index, etc.)
+    format: single_image
+    hook: "India's first execution-led growth ecosystem."
+    caption: "Hi Fuel Advisory helps 80% of clients grow faster. Not reports. Not decks. Outcomes."
+    hashtags: ["#HiFuelAdvisory", "#MSME", "#Growth"]
+    alt_text: "Emerald card with the Hi Fuel Advisory wordmark."
+    internal_notes: "SAMPLE OF A BAD DRAFT, included to show what the claims check catches. Reject it."

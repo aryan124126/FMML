@@ -125,6 +125,11 @@ def test_prices():
     assert "price" in checks(confirmed, "flag")
 
 
+def test_parent_account_may_quote_initiative_prices():
+    post = make_post(account="tranzent_foundation", caption="Plant a Born Green tree from ₹460 per tree.")
+    assert "price" not in checks(post)
+
+
 def test_children_need_consent():
     post = make_post(account="iclc", shows_children=True)
     assert "children" in checks(post)

@@ -106,7 +106,9 @@ def _statistics(post, cfg: Config, sentences) -> list[dict]:
 
 def _numbers_and_prices(post, cfg: Config, texts) -> list[dict]:
     issues = []
-    allowed = {p.replace(",", "") for p in cfg.account(post["account"]).get("allowed_prices", [])}
+    # An account may quote its own prices and those of its initiatives (e.g. Tranzent Foundation -> Born Green).
+    family = [a for a in cfg.accounts.values() if a.get("parent") == post["account"]] + [cfg.account(post["account"])]
+    allowed = {p.replace(",", "") for a in family for p in a.get("allowed_prices", [])}
     for t in texts:
         for m in PRICE_RE.finditer(t):
             amount = (m.group(1) or m.group(2)).replace(",", "").split(".")[0]

@@ -19,7 +19,7 @@ HUB_FIELDS = [
     "slot_source", "slot_reason", "theme", "pillar", "format", "hook", "caption", "cta", "hashtags", "alt_text",
     "thread_parts", "personalise_prompt", "design_brief", "claims_notes", "uses_ai_media", "shows_children",
     "consent_confirmed", "collab_with", "key_date", "internal_notes", "issues", "blocked", "status", "review",
-    "updated_at",
+    "updated_at", "sample", "edited_since_check",
 ]
 # What reviewers may change on the hub.
 EDITABLE = [*TEXT_FIELDS, "personalise_prompt", "consent_confirmed"]
@@ -65,9 +65,10 @@ def pull(store: Store, cfg: Config, in_dir: Path) -> list[str]:
             if field in doc and store.edit(post["id"], field, doc[field], by=by):
                 edited = True
                 changes.append(f"{post['id']}: {by} edited {field}")
-        if edited:
+        if edited or doc.get("edited_since_check"):
             post["issues"] = check_post(post, cfg)
             post["blocked"] = is_blocked(post["issues"])
+            post["edited_since_check"] = False
         new_status = doc.get("status")
         if new_status and new_status != post["status"]:
             try:

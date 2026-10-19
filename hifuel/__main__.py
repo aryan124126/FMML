@@ -8,18 +8,22 @@
   python -m hifuel export --start ... [--days ...] [--status approved,scheduled]
   python -m hifuel hub-push [--start ... --days ...]
   python -m hifuel hub-pull <folder>
+  python -m hifuel import <plan.yaml|plan.json> [--sample]   load drafts written outside the API
   python -m hifuel request <account> --start ...   show what would be sent to Claude
 """
 
 import argparse
+import json
 import sys
 from datetime import date, timedelta
 from pathlib import Path
 
+import yaml
+
 from . import export, hub
 from .config import load_config
 from .models import publish_text
-from .planner import PlanningError, dump_request, plan_period, recheck_all
+from .planner import PlanningError, dump_request, import_plan, plan_period, recheck_all
 from .store import Store
 
 
@@ -79,6 +83,10 @@ def main(argv=None) -> int:
 
     p = sub.add_parser("hub-pull", help="apply reviewers' changes downloaded from the Team Hub")
     p.add_argument("folder")
+
+    p = sub.add_parser("import", help="load a plan file (YAML or JSON) through the same checks")
+    p.add_argument("file")
+    p.add_argument("--sample", action="store_true", help="mark the posts as samples")
 
     p = sub.add_parser("request", help="show what would be sent to Claude for one account")
     p.add_argument("account")
@@ -142,6 +150,16 @@ def main(argv=None) -> int:
     elif args.cmd == "hub-pull":
         changes = hub.pull(store, cfg, Path(args.folder))
         print("\n".join(changes) or "No changes from the hub.")
+    elif args.cmd == "import":
+        text = Path(args.file).read_text(encoding="utf-8")
+        data = yaml.safe_load(text) if args.file.endswith((".yaml", ".yml")) else json.loads(text)
+        try:
+            plan = import_plan(cfg, store, data, sample=args.sample)
+        except PlanningError as e:
+            print(e)
+            return 1
+        for pid in plan["post_ids"]:
+            print(_summary_line(store.posts[pid]))
     elif args.cmd == "request":
         start = date.fromisoformat(args.start) if args.start else _next_monday()
         print(dump_request(cfg, store, args.account, start, args.days))

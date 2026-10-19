@@ -158,6 +158,44 @@ def plan_period(cfg: Config, store: Store, start: date, days: int = 7, accounts:
     return store.plans[plan_id]
 
 
+def _with_defaults(post: dict) -> dict:
+    """Fill fields a hand-written draft may leave out."""
+    empty_brief = {"format_notes": "", "slides": [], "reel": {"duration_seconds": 0, "opening_hook": "", "shots": []},
+                   "layout_notes": "", "colours": [], "image_prompt": ""}
+    defaults = {"cta": "", "hashtags": [], "alt_text": "", "thread_parts": [], "personalise_prompt": "",
+                "claims_notes": [], "uses_ai_media": False, "shows_children": False, "collab_with": "",
+                "key_date": "", "internal_notes": "", "pillar": ""}
+    out = {**defaults, **post}
+    out["design_brief"] = {**empty_brief, **(post.get("design_brief") or {})}
+    out["design_brief"]["reel"] = {**empty_brief["reel"], **out["design_brief"]["reel"]}
+    return out
+
+
+def import_plan(cfg: Config, store: Store, data: dict, sample: bool = False) -> dict:
+    """Load a plan written outside the API (e.g. drafted by Claude in chat) through the same checks."""
+    plan = WeekPlan(summary=data.get("summary", ""), questions_for_team=data.get("questions_for_team", []),
+                    posts=[_with_defaults(p) for p in data["posts"]])
+    drafts = [p.model_dump() for p in plan.posts]
+    unknown = sorted({d["account"] for d in drafts} - set(cfg.accounts))
+    if unknown:
+        raise PlanningError(f"Unknown account(s): {', '.join(unknown)}")
+    start, end = min(d["date"] for d in drafts), max(d["date"] for d in drafts)
+    for d in drafts:
+        d["sample"] = sample
+    posts = finalise_posts(drafts, cfg, store, start, end)
+    plan_id = f"{start}_{end}"
+    previous = store.plans.get(plan_id, {})
+    store.plans[plan_id] = {"id": plan_id, "start": start, "end": end,
+                            "summaries": {**previous.get("summaries", {}), "_overview": plan.summary},
+                            "questions_for_team": previous.get("questions_for_team", []) + plan.questions_for_team,
+                            "campaigns": previous.get("campaigns", []), "notes": previous.get("notes", ""),
+                            "post_ids": previous.get("post_ids", []) + [p["id"] for p in posts],
+                            "cost_usd": previous.get("cost_usd", 0.0)}
+    store.log("import", plan_id=plan_id, posts=len(posts), sample=sample)
+    store.save()
+    return store.plans[plan_id]
+
+
 def recheck_all(cfg: Config, store: Store) -> int:
     """Re-run the claims check on every post (e.g. after editing rules or confirming facts)."""
     changed = 0

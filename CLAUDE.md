@@ -297,3 +297,14 @@ The platform facts below come from third-party industry reports (2026). Treat th
 - Explain decisions in plain language (the operator is an analyst, not a full-time developer).
 - Write tests for the claims checker and the time-slot scoring.
 - Accuracy over volume: a smaller set of correct, on-brand posts beats a full calendar with risky claims.
+
+---
+
+## 12. Build status and how to operate (kept up to date by Claude)
+
+- **Phase 1 is built**: `hifuel/` (planner, claims check, time slots, store, exports, hub sync), `config/`, `prompts/system.md`, tests in `tests/`. See README.md for commands.
+- **v1 decisions (19 Oct 2026, from Aryan):** review in a private web page (Team Hub); platforms Instagram, LinkedIn, Facebook, WhatsApp Channel and X; English only; design briefs only (no image generation).
+- **Team Hub:** https://claude.ai/artifact/JoZnLiaiVKUBVYFB3TbNxM (source `hub/team_hub.html`). Collections: `posts`, `plans`, `announcements` (write: Editors only), `ideas` (write: Contributors). Give the manager and founder Editor access; team members Contributor.
+- **Sync loop:** `python -m hifuel hub-push` writes `data/hub_outbox/<collection>/<id>.json`; load them with the ArtifactData `batch` action (`file_path` per doc, `if_version` for docs that already exist). To pull, ArtifactData `list` the `posts` collection with `out_dir`, then `python -m hifuel hub-pull <out_dir>`, then push again so the hub shows the re-checked issues. Reviewer ids in `review.by` are opaque; resolve names with ArtifactData `profiles`.
+- **Sample data:** the week of 26 Oct 2026 in the hub is a sample (`sample: true`) from `samples/sample_week.yaml`, drafted in chat without the API. Delete it when real plans start.
+- `data/` is git-ignored (posts, logs, exports). Back it up or move it to shared storage before more than one person runs the planner.

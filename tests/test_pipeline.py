@@ -148,3 +148,15 @@ def test_exports(store, tmp_path):
     assert "\\;" in ics and "\\," in ics
     md = export.write_captions(posts, tmp_path / "c.md").read_text()
     assert "Tuesday 27 October 2026" in md and "LinkedIn Page scheduler" in md
+
+
+def test_import_sample_week(store):
+    import yaml
+    from hifuel.config import ROOT
+    from hifuel.planner import import_plan
+    data = yaml.safe_load((ROOT / "samples" / "sample_week.yaml").read_text(encoding="utf-8"))
+    plan = import_plan(CFG, store, data, sample=True)
+    posts = [store.posts[i] for i in plan["post_ids"]]
+    assert len(posts) == 10
+    assert [p["idea_id"] for p in posts if p["blocked"]] == ["blocked-example"]
+    assert all(p["sample"] and p["time"] for p in posts)
