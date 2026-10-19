@@ -1,0 +1,55 @@
+# India calendar for planning. Add dates freely.
+# kind: festival | national | environment | awareness | sensitive
+#   sensitive = no promotional posts that day (respectful content only, or skip).
+# Movable dates: 2026 from the central government list; 2027 from the DoPT list for Delhi
+# offices (OM F.No. 12/2/2023-JCA, 16 Jul 2026). Moon-dependent dates can move by a day.
+
+dates:
+  # 2026
+  - {date: 2026-11-08, name: Diwali, kind: festival}
+  - {date: 2026-11-14, name: Children's Day, kind: awareness}
+  - {date: 2026-11-24, name: Guru Nanak Jayanti, kind: festival}
+  - {date: 2026-11-26, name: Constitution Day, kind: national}
+  - {date: 2026-12-02, name: National Pollution Control Day, kind: environment}
+  - {date: 2026-12-05, name: World Soil Day, kind: environment}
+  - {date: 2026-12-14, name: National Energy Conservation Day, kind: environment}
+  - {date: 2026-12-25, name: Christmas, kind: festival}
+  # 2027
+  - {date: 2027-01-12, name: National Youth Day, kind: awareness}
+  - {date: 2027-01-26, name: Republic Day, kind: national}
+  - {date: 2027-01-30, name: Martyrs' Day, kind: sensitive}
+  - {date: 2027-03-10, name: Id-ul-Fitr, kind: festival}
+  - {date: 2027-03-21, name: International Day of Forests, kind: environment}
+  - {date: 2027-03-22, name: World Water Day, kind: environment}
+  - {date: 2027-03-23, name: Holi, kind: festival}
+  - {date: 2027-03-26, name: Good Friday, kind: sensitive}
+  - {date: 2027-04-22, name: Earth Day, kind: environment}
+  - {date: 2027-05-17, name: Id-ul-Zuha (Bakrid), kind: festival}
+  - {date: 2027-05-22, name: International Day for Biological Diversity, kind: environment}
+  - {date: 2027-06-05, name: World Environment Day, kind: environment}
+  - {date: 2027-06-16, name: Muharram, kind: sensitive}
+  - {date: 2027-07-01, name: Van Mahotsav (week starts), kind: environment, until: 2027-07-07}
+  - {date: 2027-08-15, name: Independence Day, kind: national}
+  - {date: 2027-09-05, name: Teachers' Day, kind: awareness}
+  - {date: 2027-10-02, name: Gandhi Jayanti, kind: national}
+  - {date: 2027-10-09, name: Dussehra, kind: festival}
+  - {date: 2027-10-29, name: Diwali, kind: festival}
+
+# Seasons that shape what to post. [CONFIRM] the exact months with Aryan.
+seasons:
+  - name: CSR planning for next financial year (April-March)
+    months: [1, 2, 3]
+    accounts: [earth_osai, hifuel_advisory]
+    note: "[CONFIRM best pitch months] Companies plan CSR budgets before the April start."
+  - name: School exams (avoid ICLC launches)
+    months: [2, 3, 9, 10]
+    accounts: [iclc]
+    note: "[CONFIRM] Typical half-yearly (Sep-Oct) and annual (Feb-Mar) exam periods."
+  - name: Principals plan the school year's activities
+    months: [3, 4]
+    accounts: [iclc]
+    note: "[CONFIRM] Pitch the championship while activity calendars are being set."
+  - name: Campus placement season
+    months: [8, 9, 10, 11, 12]
+    accounts: [pathvik]
+    note: "[CONFIRM] Students think hardest about careers now."

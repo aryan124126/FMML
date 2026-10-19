@@ -1,0 +1,318 @@
+# Accounts, initiatives and people the assistant plans for.
+# Add a new initiative by copying a block. No code changes needed.
+#
+# Fields
+#   type:        company | initiative | person
+#   enabled:     include in plans by default
+#   platforms:   platform -> posts per week  [CONFIRM volumes with Aryan]
+#   audience:    platform -> audience clock (see time_slots.yaml)
+#   facts:       confirmed facts the agent may state
+#   do_not_state: things that are unconfirmed or not built yet (block if mentioned)
+#   internal:    [INTERNAL] terms that must never appear in any public post
+#   internal_in_own_posts: terms blocked only in this account's posts
+#   allowed_prices: the only prices that may appear in posts (others are blocked)
+#   confirmed_partners: partner/school/company names cleared for posts
+#   approver:    who signs off posts for this account
+
+accounts:
+  hifuel_advisory:
+    name: Hi Fuel Advisory
+    type: company
+    enabled: true
+    priority: 1
+    approver: manager
+    website: hifueladvisory.lovable.app
+    platforms: {linkedin: 3, instagram: 2, x: 3, facebook: 1}
+    audience: {linkedin: business, instagram: business, x: business, facebook: business}
+    colours: ["#064e3b"]
+    voice: >-
+      Confident, outcome-led, crisp business English for founders, CXOs, CSR and ESG heads.
+      Specific, no fluff, no jargon stacking.
+    pillars:
+      - ESG and BRSR explainers
+      - CSR law and practice (Section 135)
+      - Green credits vs carbon credits, India's carbon market (carefully sourced explainers)
+      - Founder point of view
+      - Frameworks as carousels (HI-FUEL, O.L.I.V.E.R)
+      - Insights launches (ESG Readiness Index, etc.)
+      - Client stories (only with written consent)
+      - Team and culture
+    hashtags: ["#ESG", "#CSR", "#BRSR", "#Sustainability", "#MSME"]
+    facts:
+      - 'Tagline: "Fueling businesses. Powering growth. Building legacies."'
+      - 'Positioning: "Not reports. Not decks. Outcomes."'
+      - 10 practices, including Sustainability & ESG and CSR & Social Impact
+      - Hi Fuel Growth Framework™ = Hear → Identify → Fuel → Upgrade → Expand → Lead
+      - O.L.I.V.E.R Framework = Outcome Led Integrated Value & Execution Roadmap
+      - 'Process: Discover → Diagnose → Design → Deliver → Drive Growth'
+      - 'Upcoming insights: ESG Readiness Index, CSR & Social Impact Review, India Business Growth Outlook 2027'
+      - Based in Noida (Logix Mall, Wave City Center, Sector 32), office in Okhla, New Delhi
+    do_not_state:
+      - The "80%" and "70%" figures on the website (unsourced)
+    internal: []
+    allowed_prices: []
+    confirmed_partners: []
+
+  tranzent_foundation:
+    name: Tranzent Foundation
+    type: company
+    enabled: true
+    priority: 1
+    approver: manager
+    website: tranzentfoundation.in
+    handles: {instagram: "@tranzentfoundation"}
+    platforms: {instagram: 3, linkedin: 2, facebook: 2, whatsapp_channel: 2}
+    audience: {instagram: parents_community, linkedin: business, facebook: parents_community, whatsapp_channel: parents_community}
+    colours: []  # [CONFIRM]
+    voice: >-
+      Warm, hopeful, community-driven, grounded in real people and places (RWAs, schools, villages).
+    pillars:
+      - Field stories (one person, one place, one change)
+      - Movement updates (Born Green, Greenpreneur, S.H.I.N.E)
+      - Calls to volunteer/partner (RWAs, schools, CSR)
+      - Press coverage (link to the article)
+      - Behind-the-scenes
+    hashtags: ["#TranzentFoundation", "#SocialImpact", "#Sustainability"]
+    facts:
+      - 'Tagline: "Navigating Change, Creating Impact."'
+      - 'Verticals: Advisors, Compound, Data Insights, Media (Impact Sandesh), Research, Design & Implement, Waste Management'
+      - 'Green Credits service: Carbon Footprint Assessment → Offset Strategy → Implementation → Monitoring & Reporting'
+      - 'Press coverage shown on site: Hindustan Times, Dainik Jagran, Amar Ujala, I-next (link to the article when posting)'
+    do_not_state: []
+    internal: []
+    allowed_prices: []
+    confirmed_partners: []
+
+  hifuel_media:
+    name: Hi Fuel Media
+    type: company
+    enabled: false  # [CONFIRM] whether it has its own accounts
+    priority: 3
+    approver: manager
+    platforms: {}
+    audience: {}
+    colours: []  # [CONFIRM]
+    voice: Group PR/media arm. Factual, news-style.
+    pillars: [Press releases, Digital PR-Media Movement]
+    hashtags: []
+    facts: [Issued the Pathvik press release, Runs the Digital PR-Media Movement]
+    do_not_state: []
+    internal: []
+    allowed_prices: []
+    confirmed_partners: []
+
+  pathvik:
+    name: Pathvik
+    type: initiative
+    parent: hifuel_advisory  # [CONFIRM] whether Pathvik discloses its affiliation
+    enabled: true
+    priority: 1
+    approver: founder
+    platforms: {instagram: 4, linkedin: 1, x: 2}
+    audience: {instagram: students, linkedin: business, x: students}
+    colours: ["#140F2F", "#8B7BFF", "#FE6A3C"]
+    voice: >-
+      Friendly, honest, student-first. Short sentences, relatable doubts.
+      Signature: honesty. No job guarantees, just a real plan.
+    pillars:
+      - Career-clarity tips
+      - '"A day in the life of" industry roles'
+      - Mentor insights (named only when confirmed)
+      - Programme details and application steps
+      - Student doubts answered
+    hashtags: ["#Pathvik", "#ClarityBeforeCareer", "#CareerClarity"]
+    facts:
+      - 'Tagline: "Clarity before career."'
+      - Live online, mentor-led career programmes for undergraduates and graduates
+      - 'Graduate Career Accelerator: 6 weeks, 12 live classes, ₹4,999 incl. GST'
+      - 'Consulting, Strategy & Product Mentorship: 8 weeks, 16 live classes, ₹14,999 incl. GST'
+      - Cohorts of 30
+      - Placement assistance included, with no job guarantee
+      - 'Audiences: students aged about 19–24 (Instagram), their parents, colleges/placement cells (LinkedIn)'
+    do_not_state:
+      - First-cohort or founding-fee pricing (not decided)
+      - Week-1 diagnostic interview (not built yet)
+      - Verifiable certificate IDs (not built yet)
+      - The old name Catalystra, or its domain/email
+      - Pathvik domain, email or handles (not confirmed)
+    internal: [Catalystra, catalystra.in, hello@catalystra.in]
+    allowed_prices: ["4,999", "14,999"]
+    confirmed_partners: []
+
+  earth_osai:
+    name: Earth.OSAI
+    type: initiative
+    parent: tranzent_foundation  # [CONFIRM]
+    enabled: true
+    priority: 1
+    approver: manager
+    website: earthosai.lovable.app
+    platforms: {linkedin: 3, x: 2}
+    audience: {linkedin: business, x: business}
+    colours: []  # [CONFIRM]
+    voice: Precise, evidence-first, quietly technical. Data and maps over adjectives.
+    pillars:
+      - How verification works
+      - Why CSR plantations need proof ("proof, not photo albums")
+      - Dashboard/map walkthroughs
+      - Field visuals
+      - Regulation explainers (Section 135, CSR impact assessment, BRSR)
+    hashtags: ["#CSR", "#Reforestation", "#ESG", "#BRSR"]
+    facts:
+      - '"Verified Reforestation Infrastructure": plant, track and verify environmental impact at scale'
+      - Geo-tagged trees, ESG reports and APIs
+    do_not_state:
+      - That Earth.OSAI issues carbon credits (never)
+      - Specific product features, team or numbers beyond the facts above (not confirmed)
+      - CSR-verification positioning as final (suggested, not confirmed)
+    internal: []
+    allowed_prices: []
+    confirmed_partners: []
+
+  iclc:
+    name: ICLC Sustainability Championship
+    type: initiative
+    parent: tranzent_foundation  # [CONFIRM]
+    enabled: true
+    priority: 2
+    approver: founder
+    platforms: {linkedin: 2, instagram: 2, facebook: 1, whatsapp_channel: 1}
+    audience: {linkedin: business, instagram: parents_community, facebook: parents_community, whatsapp_channel: parents_community}
+    colours: []  # [CONFIRM]
+    voice: >-
+      Two registers. With schools and CSR funders: credible and outcome-focused.
+      With students and parents: energetic and playful, never childish.
+    pillars:
+      - Why real-world sustainability learning matters
+      - What the championship looks like
+      - For principals and Eco Club teachers
+      - Teaser countdown
+      - (Live) daily themes and shout-outs
+    hashtags: ["#ICLC", "#SustainabilityEducation", "#EcoClub"]
+    facts:
+      - A sustainability championship for students in Classes 6–9
+      - 'Goal: pitch to schools and publicise widely; sign 3–4 schools in the coming months'
+      - 'Messages: principals = outcomes, low teacher workload, credible certificate, safe simple process;
+        Eco Club teachers = easier reporting and ready content; parents = certificate and recognition,
+        real-world learning without extra study load; CSR funders = sponsor schools/districts with measurable reach'
+    do_not_state:
+      - The full form of "ICLC" (not confirmed; never expand the acronym)
+      - Launch date, format, price or prizes (not confirmed)
+      - Eco Club / Mission LiFE / National Green Corps figures (verify before quoting)
+    internal: [RWLOS, Real World Learning Operating System, Shankargarh 11]
+    internal_in_own_posts: [Shankargarh, Loni river, Prayagraj]  # fine in other accounts' field stories
+    allowed_prices: []
+    confirmed_partners: []
+
+  born_green:
+    name: Born Green
+    type: initiative
+    parent: tranzent_foundation
+    enabled: false  # featured on Tranzent Foundation's accounts as impact stories
+    priority: 3
+    approver: manager
+    platforms: {}
+    audience: {}
+    colours: []
+    voice: Warm, hopeful, family-focused.
+    pillars: [Trees planted in a child's name, RWA and school leaderboards]
+    hashtags: ["#BornGreen"]
+    facts:
+      - Geo-tagged trees planted in a child's name, from ₹460 per tree
+      - Native species
+    do_not_state:
+      - Blockchain tracking as fact (say "claimed")
+      - '"2 t per 10 trees" or any CO2 figure other than ~22 kg per tree per year (estimated sequestration)'
+    internal: []
+    allowed_prices: ["460"]
+    confirmed_partners: []
+
+  greenpreneur:
+    name: Greenpreneur
+    type: initiative
+    parent: tranzent_foundation
+    enabled: false
+    priority: 3
+    approver: manager
+    platforms: {}
+    audience: {}
+    colours: []
+    voice: Warm, practical, rural-entrepreneur focused.
+    pillars: [Agri-waste micro-enterprises (biochar, vermicompost, biogas, pellets)]
+    hashtags: ["#Greenpreneur"]
+    facts: [Agri-waste micro-enterprises (biochar, vermicompost, biogas, pellets), NSDC-certified training]
+    do_not_state: [MNNIT Allahabad incubator partnership (claimed, not confirmed)]
+    internal: []
+    allowed_prices: []
+    confirmed_partners: []
+
+  shine:
+    name: S.H.I.N.E
+    type: initiative
+    parent: tranzent_foundation
+    enabled: false
+    priority: 3
+    approver: manager
+    platforms: {}
+    audience: {}
+    colours: []
+    voice: Warm, inspiring.
+    pillars: [Changemaker stories]
+    hashtags: []
+    facts: [Social Heroes Inspiring New Era, a changemaker programme]
+    do_not_state: []
+    internal: []
+    allowed_prices: []
+    confirmed_partners: []
+
+  # People: the agent only DRAFTS. They edit and post from their own profiles.
+  founder_ashish:
+    name: Ashish Srivastava (founder)
+    type: person
+    enabled: true
+    priority: 1
+    approver: founder
+    platforms: {linkedin: 3}
+    audience: {linkedin: business}
+    colours: []
+    voice: >-
+      First person, real experience, opinions in his own words. Lessons, field visits,
+      what the group is building. Never corporate copy pasted onto a person.
+    pillars: [Opinions on ESG/CSR and growth, Lessons from building, Field visits, What the group is building]
+    hashtags: []
+    facts: [Founder of Hi Fuel Advisory and Tranzent Foundation]
+    do_not_state: []
+    internal: []
+    allowed_prices: []
+    confirmed_partners: []
+
+  team_aryan:
+    name: Aryan Srivastava
+    type: person
+    enabled: true
+    priority: 2
+    approver: self
+    platforms: {linkedin: 2}
+    audience: {linkedin: business}
+    colours: []
+    voice: First person, Analyst in R&D at Hi Fuel Advisory. Curious, specific, learning in public.
+    pillars: [What I'm working on, What I learned this week, Reshare with my own angle]
+    hashtags: []
+    facts: [Analyst, R&D, Hi Fuel Advisory]
+    do_not_state: []
+    internal: []
+    allowed_prices: []
+    confirmed_partners: []
+  # [CONFIRM] Add other team members who will join the advocacy kit.
+
+# Applies to every account.
+global:
+  company_spelling: Hi Fuel Advisory
+  unconfirmed_partners:  # never name these until confirmed (rule 4)
+    - MoEFCC
+    - Ministry of Environment
+    - SBI Foundation
+    - MNNIT
+  collab_pairs:  # Instagram Collab posts: "post manually" (native scheduler doesn't support them)
+    - [tranzent_foundation, born_green]
+    - [hifuel_advisory, pathvik]

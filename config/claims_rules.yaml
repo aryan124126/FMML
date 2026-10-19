@@ -1,0 +1,177 @@
+# Pattern rules for the claims check (CLAUDE.md §3).
+# Every draft is checked; a "block" stops approval until fixed, a "flag" is listed for the reviewer.
+#
+#   rule:        rule number in CLAUDE.md §3
+#   severity:    block | flag
+#   accounts:    "all", or a list of account ids
+#   patterns:    regular expressions (case-insensitive unless case_sensitive: true)
+#   downgrade_if: if this also matches in the same sentence, the block becomes a flag
+#   require_in_sentence: the rule only fires if this also matches in the same sentence
+#
+# Checks that need logic (CO2 per tree, statistics without sources, prices, partner names,
+# internal terms, children, AI media, length) live in hifuel/claims.py.
+
+groups:
+  education: [pathvik, iclc]
+  environmental: [tranzent_foundation, born_green, earth_osai, iclc, greenpreneur]
+
+rules:
+  - id: tree_carbon_credit
+    rule: 2
+    severity: block
+    accounts: all
+    patterns: ['carbon[- ]credits?', '\boffset(s|ting)?\b']
+    require_in_sentence: '\b(trees?|plant(ed|ing|s|ation)?|saplings?|forests?|reforest\w*|afforest\w*)\b'
+    downgrade_if: '\b(verra|gold standard|green credit programme|registry)\b'
+    message: >-
+      Tree planting must not be called a carbon credit or offset unless a registry issuance exists.
+      Say "plantation impact" or "estimated sequestration".
+
+  - id: earth_osai_carbon_credit
+    rule: 2
+    severity: block
+    accounts: [earth_osai]
+    patterns: ['carbon[- ]credits?']
+    downgrade_if: "\\b(not|never|no|doesn't|does not|isn't|is not|without)\\b"
+    message: Earth.OSAI must never be presented as issuing carbon credits.
+
+  - id: cars_equivalence
+    rule: 3
+    severity: block
+    accounts: all
+    patterns: ['cars? off the road', '\b6\s*(m|mn|million)\s+cars\b']
+    message: Don't use the "cars off the road" equivalence (it mixes lifetime and annual tonnes).
+
+  - id: programme_numbers
+    rule: 5
+    severity: block
+    accounts: all
+    patterns: ['survival rate', '\b2050\b', '\b9\d\s*%\s*(of\s+)?(trees|saplings|survival)']
+    downgrade_if: '\b(target|targets|aim|aims|goal|goals|claimed|planned|plan|aspire)\b'
+    message: Survival rates, 2050 targets and programme numbers only as "target" or "claimed", never as verified results.
+
+  - id: superlatives
+    rule: 6
+    severity: block
+    accounts: all
+    patterns:
+      - "\\b(india|world|asia)'?s\\s+(first|only|largest|biggest|best|leading)\\b"
+      - '\bfirst[- ]ever\b'
+      - '\bno\.?\s*1\b'
+      - '\bnumber one\b'
+      - '(^|\s)#1\b'
+      - '\bthe best\b'
+      - '\bbest[- ]in[- ]class\b'
+      - "\\b(a|the|india's)\\s+leading\\b"
+      - '\bworld[- ]class\b'
+      - '\b(unmatched|unparalleled|unbeatable|revolutionary|game[- ]changing)\b'
+      - '\b(the\s+)?(largest|biggest)\b'
+      - '\bthe only (platform|company|programme|program|firm|organisation|organization)\b'
+    message: No superlatives ("India's first", "the best", "leading", "largest"...).
+
+  - id: engagement_bait
+    rule: 8
+    severity: block
+    accounts: all
+    patterns:
+      - "\\bcomment\\s+[\"'“]?(yes|done|interested|below to win|me)\\b"
+      - '\btag\s+(\d+|a|your|two|three|five|ten)\s+(friends?|people)\b'
+      - '\blike\s+(and|&)\s+share\b'
+      - '\bshare\s+to\s+win\b'
+      - '\bfollow\s+(and|&)\s+tag\b'
+      - '\bhurry\b'
+      - '\blast chance\b'
+      - '\bact now\b'
+      - "\\bdon'?t miss out\\b"
+      - '\blimited time only\b'
+      - "\\bbefore it'?s too late\\b"
+    message: No engagement bait or fake urgency.
+
+  - id: education_guarantees
+    rule: 9
+    severity: block
+    accounts: education
+    patterns:
+      - '\b100\s*%\s*(placement|job)'
+      - '\bguarantee(d|s)?\b'
+      - '\b(job|placement)s?\s+assur(ed|ance)\b'
+      - '\bassured\s+(jobs?|placements?)\b'
+      - '\b(salary|salaries|lpa|ctc|pay hike|package of)\b'
+      - '\b(top|guaranteed|better)\s+(ranks?|marks|scores?)\b'
+    downgrade_if: "\\b(no|not|without|never|don't|doesn't|zero)\\b.{0,25}\\bguarantee"
+    message: No placement, job, salary, rank or marks promises (CCPA 2024 coaching guidelines).
+
+  - id: pricing_tricks
+    rule: 10
+    severity: block
+    accounts: all
+    patterns:
+      - '~~'
+      - '\bwas\s*(₹|rs\.?|inr)'
+      - '\b(originally|mrp|slashed|strike[- ]?through)\b'
+      - '\bonly\s+\d+\s+(seats?|spots?|places?)\b'
+      - '\b(seats?|spots?)\s+(are\s+)?filling\s+fast\b'
+      - '\bfew\s+(seats?|spots?)\s+left\b'
+    message: No struck-through "original" prices and no fake scarcity.
+
+  - id: unrun_outcomes
+    rule: 11
+    severity: block
+    accounts: education
+    patterns:
+      - '\b(our|past|previous)\s+(students|alumni|learners|participants|winners|cohorts?)\s+(got|landed|secured|say|said|were|have been)\b'
+      - '\balumni\b'
+      - '\bgot placed\b'
+      - '\bplaced (at|in|with)\b'
+      - '\bsuccess stor(y|ies)\b'
+      - '\btestimonials?\b'
+    message: No outcomes or testimonials from cohorts or championships that haven't run.
+
+  - id: named_institutions
+    rule: 12
+    severity: block
+    accounts: education
+    patterns:
+      - '\b(IIT|IIM|NIT|ISB|XLRI|AIIMS)s?\b'
+      - '\b(google|mckinsey|bcg|bain|deloitte|kpmg|ey|pwc|amazon|microsoft|accenture|infosys|tcs|wipro)\b'
+    message: No named mentors, colleges, schools or companies unless confirmed in writing.
+
+  - id: child_identifiers
+    rule: 13
+    severity: flag
+    accounts: all
+    patterns:
+      - '\bclass\s*(\d{1,2}|[ivx]+)\s*[a-z]?\b.{0,60}\b(school|vidyalaya|academy|convent)\b'
+      - '\b(school|vidyalaya|academy|convent)\b.{0,60}\bclass\s*(\d{1,2}|[ivx]+)\b'
+    message: >-
+      Looks like a school + class combination. Child names, faces, school+class or location need
+      verifiable parental consent.
+
+  - id: company_spelling
+    rule: 0
+    severity: block
+    accounts: all
+    case_sensitive: true
+    patterns: ['\bHi-Fuel\b', '\bHiFuel\b(?!\w)', '\bHifuel\b', '\bHi fuel\b', '\bHI-FUEL\b']
+    message: Spell it exactly "Hi Fuel" (space, no hyphen).
+
+  - id: iclc_acronym
+    rule: 0
+    severity: block
+    accounts: all
+    patterns: ['\bICLC\s*\(', '\(\s*ICLC\s*\)', '\bICLC\s+(stands for|means|is short for)\b']
+    message: Don't expand the ICLC acronym until its full form is confirmed.
+
+  - id: pathvik_not_built
+    rule: 0
+    severity: block
+    accounts: [pathvik]
+    patterns: ['diagnostic interview', 'certificate\s+ids?\b', 'verifiable certificates?']
+    message: Week-1 diagnostic interview and verifiable certificate IDs are not built yet.
+
+# Words that count as a statistic (rule 7): these need a source and year in claims_notes.
+statistic_patterns:
+  - '\d+(\.\d+)?\s*%'
+  - '\b\d[\d,.]*\s*(lakh|crore|million|billion|mn|bn)\b'
+  - '\b\d[\d,.]*\s*(trees|saplings|students|schools|tonnes|tons|t|kg|companies|people|villages|farmers|families|hectares|acres|followers|members|teachers|ngos)\b'
+  - '\b\d[\d,.]*\s*x\b'

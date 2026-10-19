@@ -1,0 +1,44 @@
+# Platform rules used when drafting and checking posts.
+# max_chars: hard limit for the post text (caption + hashtags).
+# soft_chars: what we aim for; going over is flagged, not blocked.
+platforms:
+  instagram:
+    name: Instagram
+    max_chars: 2200
+    soft_chars: 1200
+    hashtags: [3, 5]
+    formats: [single_image, carousel, reel, story]
+    notes: >-
+      Reels for discovery (hook in the first 1-2 seconds, 15-30 s, on-screen text, built to be
+      shared by DM). Carousels for saveable explainers. Stories for polls, Q&A, behind-the-scenes.
+      Put keywords in the caption (Instagram search reads captions). Alt text on every image.
+  linkedin:
+    name: LinkedIn
+    max_chars: 3000
+    soft_chars: 1300
+    hashtags: [3, 5]
+    formats: [text, single_image, document, poll]
+    notes: >-
+      Specific, expert, original. Document/carousel posts for frameworks and explainers, short text
+      posts with a clear point of view, polls only for genuine questions, photos with real people.
+  facebook:
+    name: Facebook
+    max_chars: 63206
+    soft_chars: 600
+    hashtags: [0, 3]
+    formats: [text, single_image, carousel, reel]
+    notes: Community-friendly, links allowed, shorter than LinkedIn.
+  whatsapp_channel:
+    name: WhatsApp Channel
+    max_chars: 1000
+    soft_chars: 500
+    hashtags: [0, 0]
+    formats: [channel_message]
+    notes: Short update, one link at most, no hashtags, plain language. Light emoji is fine.
+  x:
+    name: X (Twitter)
+    max_chars: 280
+    soft_chars: 260
+    hashtags: [0, 2]
+    formats: [text, single_image, thread]
+    notes: Punchy single point. For threads, each part must fit 280 characters.
