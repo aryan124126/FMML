@@ -11,7 +11,7 @@
 #   - X: one sharp line a day for students.  LinkedIn: graduates, placement cells and colleges.
 #   - Facebook: parents, who often help decide.
 #   - Founder and Aryan posts on LinkedIn (people reach far more than pages), flagged because
-#     they disclose that Pathvik comes from the Hi Fuel group [CONFIRM affiliation disclosure].
+#     they disclose that Pathvik comes from the Hi Fuel group (approved by Aryan, 19 Oct 2026).
 
 campaign:
   id: pathvik-launch
@@ -32,7 +32,6 @@ summary: >-
   no promises: honesty is the hook.
 questions_for_team:
   - What is Pathvik's website URL and Instagram handle? Posts say "link in bio" / "link in the first comment" until we have them.
-  - Founder and team posts reveal that Pathvik comes from the Hi Fuel group. Is that OK to say publicly? If not, reject those three.
   - Who appears on camera in the Reels? It must be a real team member or mentor who has agreed.
   - Who is each programme for? The carousel on 21 Oct describes the two programmes from their names; please confirm the wording.
   - Is there a Pathvik WhatsApp Channel or Facebook Page? If not, skip the Facebook posts or post them from Tranzent/Hi Fuel.
@@ -343,7 +342,7 @@ posts:
     personalise_prompt: >-
       Add why this matters to you personally: a conversation with a student, or something you wish someone had
       told you at 21. Keep it in your own words.
-    internal_notes: "[CONFIRM] affiliation disclosure: this post tells people Pathvik comes from the founder of the Hi Fuel group. Reject it if that shouldn't be public yet."
+    internal_notes: Draft for Ashish to rewrite in his own words and post himself. Affiliation disclosure approved by Aryan (19 Oct 2026).
 
   - idea_id: relatives-pov
     account: pathvik
@@ -440,7 +439,7 @@ posts:
     cta: If you know someone graduating soon, the link is in the comments.
     hashtags: ["#Pathvik", "#LearningInPublic", "#Careers"]
     personalise_prompt: Add the one thing you personally worked on for the launch, and what surprised you.
-    internal_notes: "[CONFIRM] affiliation disclosure (Aryan works at Hi Fuel Advisory)."
+    internal_notes: Affiliation disclosure approved (19 Oct 2026).
 
   - idea_id: sunday-reset
     account: pathvik
@@ -632,7 +631,7 @@ posts:
     personalise_prompt: >-
       Only post this if that really is the most common question by then; otherwise swap the opening for the
       question you are hearing most. Add a line about how it feels to say "no" to it.
-    internal_notes: "[CONFIRM] affiliation disclosure. The opening line must be true when posted; the founder should check."
+    internal_notes: The opening line must be true when posted; the founder should check. Affiliation disclosure approved (19 Oct 2026).
 
   - idea_id: placement-season-question
     account: pathvik

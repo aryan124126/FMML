@@ -104,7 +104,7 @@ accounts:
   pathvik:
     name: Pathvik
     type: initiative
-    parent: hifuel_advisory  # [CONFIRM] whether Pathvik discloses its affiliation
+    parent: hifuel_advisory  # affiliation may be disclosed (Aryan, 19 Oct 2026)
     enabled: true
     priority: 1
     approver: founder
